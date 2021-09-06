@@ -1,0 +1,3 @@
+[submodule "lib/MobiusCore"]
+	path = lib/MobiusCore
+	url = https://github.com/GTNewHorizons/MobiusCore.git

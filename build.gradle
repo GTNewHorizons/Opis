@@ -3,16 +3,20 @@ buildscript {
         mavenCentral()
         //jcenter()
         maven {
-            name = "forge"
-            url = "http://files.minecraftforge.net/maven"
+            name = "gt"
+            url = "https://gregtech.overminddl1.com/"
         }
         maven {
             name = "sonatype"
             url = "https://oss.sonatype.org/content/repositories/snapshots/"
         }
+        maven {
+            name = "jitpack.io"
+            url = "https://jitpack.io"
+        }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+        classpath 'com.github.GTNH2:ForgeGradle:FG_1.2-SNAPSHOT'
     }
 }
 
@@ -24,77 +28,107 @@ version = "1.2.5_1.7.10"
 group= "mcp.mobius.opis" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "Opis"
 
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven {
+        name = "gt"
+        url = "https://gregtech.overminddl1.com/"
+    }
+    maven {
+        name "Mobius Repo"
+        url "http://mobiusstrip.eu/maven"
+    }
+}
+
 minecraft {
-    version = "1.7.10-10.13.0.1208"
-    assetDir = "eclipse/assets"
+    // Forge version
+    version = "1.7.10-10.13.4.1614-1.7.10"
+    runDir  = "debug"
+
+    // Replace MOD_VERSION token with one specified in Gradle
+    // From https://github.com/GoryMoon/MoarSigns/blob/master/build.gradle#L46
+    replaceIn "CoreContainer.java"
+    replaceIn "modOpis.java"
+    replace "@MOD_VERSION@", project.version
+
+    // Shading - https://forgegradle.readthedocs.org/en/latest/user-guide/shading/
+    // math3 is shaded in case another mod decides to use a differing version
     srgExtra "PK: org/apache/commons/math3 opisapache/math3"
 }
 
 configurations {
     deployerJars
     shade
-    compile.extendsFrom shade    
-}
-
-repositories {
-    mavenLocal()
-    mavenCentral()
-    maven {
-        name "Mobius Repo"
-        url "http://mobiusstrip.eu/maven"
-    }    
+    compile.extendsFrom shade
 }
 
 dependencies {
+    // Custom-built Netty for Opis
+    shade 'io.netty-opis:Netty-opis:4.0.23'
+
+    // Standard Maven repository dependencies
     shade 'org.apache.commons:commons-math3:3.2'
-    shade 'org.jfree:jcommon:1.0.21'
     shade 'org.jfree:jfreechart:1.0.17'
     shade 'com.miglayout:miglayout-swing:4.2'
-    shade 'net.sf.opencsv:opencsv:2.3'    
-    shade 'io.netty-opis:Netty-opis:4.0.23'
-//  shade 'io.netty:netty-all:4.0.23.Final'
-//  compile 'io.netty:netty-all:4.0.15.Final'
-    compile "mcp.mobius.mobiuscore:MobiusCore:1.2.4_1.7.10:dev"
+
+    // Necessary for deployment
     deployerJars "org.apache.maven.wagon:wagon-ssh:2.2"
 }
 
-def root = project.projectDir.parentFile
-sourceSets {
-    main {
-        java {
-            srcDir new File(root, "src")
-        }
-        resources {
-            srcDir new File(root, "resources")
-        }
-    }
+// Includes MobiusCore submodule directory into the built jar as coremod
+sourceSets.main {
+    java.srcDir      project.projectDir.path + '/lib/MobiusCore/src/main/java'
+    resources.srcDir project.projectDir.path + '/lib/MobiusCore/src/main/resources'
 }
 
+compileJava {
+    sourceCompatibility = "1.8"
+    targetCompatibility = "1.8"
+}
+
+def commonManifest = {
+    // Allows Forge to find MobuisCore's coremod
+    attributes 'FMLCorePlugin': 'mcp.mobius.mobiuscore.asm.CoreDescription'
+    // Without this, Forge ignores Opis as it thinks there is only a coremod
+    attributes 'FMLCorePluginContainsFMLMod': 'true'
+}
+
+jar {
+    // Attach FMLCorePlugin attribute
+    manifest commonManifest
+}
+
+// Extra task for building a "sources" jar, for uncompiled code + comments
 task sourceJar(type: Jar) {
     from sourceSets.main.java
-    from new File(root, "dev")
+    // Attaches the name 'sources' to the jar
     classifier = 'sources'
 }
 
+// Extra task for building a "dev" jar; built code pre-obsfucation
 task devJar(type: Jar) {
     from sourceSets.main.output
+
+    // Attaches the name 'dev' to the jar
     classifier = 'dev'
+
+    // Attach FMLCorePlugin attribute
+    manifest commonManifest
 }
 
-// some crazy stuff to make sure the chicken stuff is in the mods folder...
-// because it wont work otherwise... because FML doesnt laod coremods from the classpath
-task copyCoreMods(type: Copy, dependsOn: "extractUserDev") {
-    from configurations.compile
-    include "**/*Mobius*.jar"
-    //include "**/*Chicken*.jar", "**/*NotEnoughItems*.jar"
-    //exclude "**/CodeChickenLib*" // because CCC downloads it anyways.. -_-    
-    into file(minecraft.runDir + "/../mods") // paralell to the assets dir
+// Fixes issues with debugging in IntelliJ
+idea.module.inheritOutputDirs = true
+
+// Fixes issues with µ character in source files
+// From https://discuss.gradle.org/t/special-characters-in-java-string-literals-arent-interpreted-correctly/4665
+tasks.withType(JavaCompile)
+{
+    options.encoding = "UTF-8"
 }
-tasks.setupDevWorkspace.dependsOn copyCoreMods
-tasks.setupDecompWorkspace.dependsOn copyCoreMods
 
 artifacts {
-    archives sourceJar, devJar
+    archives jar, sourceJar, devJar
 }
 
 processResources
