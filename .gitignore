@@ -6,3 +6,6 @@ debug/
 classes/
 output/
 out/
+*.bat
+opis.ipr
+opis.iws
