@@ -173,16 +173,38 @@ public enum TileEntityManager {
 
 		for (int dim : DimensionManager.getIDs()){
 			World world = DimensionManager.getWorld(dim);
-			if (world == null) continue;		
-		
-			if (!(world.loadedTileEntityList instanceof MonitoredTileList)){
+			if (world == null) continue;
+
+			if (!(world.loadedTileEntityList instanceof MonitoredTileList)) {
 				modOpis.log.info("Improper type detected for tile entity list in world " + dim + ". Regenerating tracking list.");
+
+				/*
+				 * MonitoredTileList will, whenever a tile entity is added to it, load the block at the tile
+				 * entity's position. This can cause Minecraft to load chunks, which will result in more tile
+				 * entities being added to world.loadedTileEntityList.
+				 *
+				 * If we iterate through world.loadedTileEntityList and add its entries to newList, this would
+				 * result in getting a ConcurrentModificationException. We get around this by using a regular
+				 * for-loop instead of a for-each loop.
+				 *
+				 * As a bonus, since the for-loop checks world.loadedTileEntityList.size() at the start of each
+				 * loop iteration, it'll pick up any new entries in world.loadedTileEntityList immediately, and will
+				 * add them to newList without requiring us to check separately. However, this does require a few
+				 * assumptions about what can happen in the for-loop body:
+				 *   1. New entries are always added at the end of world.loadedTileEntityList
+				 *   2. Entries are never removed from world.loadedTileEntityList
+				 * WARNING: if any of those assumptions are broken, we will likely get unexpected behavior that is
+				 * also extremely difficult to debug!
+				 */
+				
 				List<TileEntity> newList = new MonitoredTileList<TileEntity>();
-				for (Object o : world.loadedTileEntityList)
-					newList.add((TileEntity)o);
+				for (int i = 0; i < world.loadedTileEntityList.size(); i++) {
+					newList.add((TileEntity) world.loadedTileEntityList.get(i));
+				}
+
 				world.loadedTileEntityList = newList;
-			}			
-			
+			}
+
 			Table<Block, Integer, Integer> count = ((MonitoredTileList)world.loadedTileEntityList).getCount();
 			Table<String, String, Integer> reducedCount = HashBasedTable.create();
 			
