@@ -1,10 +1,9 @@
-[
-{
-  "modid": "Opis",
-  "name": "Opis",
+[{
+  "modid": "${modId}",
+  "name": "${modName}",
   "description": "Contextual server profiler",
-  "version": "${version}",
-  "mcversion": "${mcversion}",
+  "version": "${modVersion}",
+  "mcversion": "${minecraftVersion}",
   "url": "",
   "updateUrl": "",
   "authors": ["ProfMobius", "RoyCurtis"],
@@ -12,5 +11,4 @@
   "logoFile": "",
   "screenshots": [],
   "dependencies": []
-}
-]
+}]
