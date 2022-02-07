@@ -1,11 +1,9 @@
 // Add your dependencies here
 
 dependencies {
-    // Custom-built Netty for Opis
-    shadowCompile 'io.netty-opis:Netty-opis:4.0.23'
+    shadeCompile 'io.netty-opis:Netty-opis:4.0.23'
 
-    // Standard Maven repository dependencies
     shadowCompile 'org.apache.commons:commons-math3:3.2'
-    shadowCompile 'org.jfree:jfreechart:1.0.17'
-    shadowCompile 'com.miglayout:miglayout-swing:4.2'
+    shadeCompile 'org.jfree:jfreechart:1.0.17'
+    shadeCompile 'com.miglayout:miglayout-swing:4.2'
 }
