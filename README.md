@@ -25,7 +25,7 @@ as I did not find any use for overlay functionality.
 Subjectively, I found it too cumbersome in development to work with MobiusCore as a
 separate mod and codebase whilst attempting to update Opis. I found that MobiusCore is
 [not depended upon by any other mods](http://minecraft.curseforge.com/projects/mobiuscore/relations/dependents?filter-related-dependents=3),
-so I thought it OK to integrate as a git submodule instead.
+so I thought it OK to integrate it directly.
 
 # Building
 
