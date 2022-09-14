@@ -1,12 +1,11 @@
 package mcp.mobius.mobiuscore.asm;
 
-import java.io.File;
-import java.util.Map;
-
+import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
+import java.io.File;
+import java.util.Map;
 
 @IFMLLoadingPlugin.TransformerExclusions("mcp.mobius.mobiuscore.asm")
 public class CoreDescription implements IFMLLoadingPlugin {
@@ -30,14 +29,15 @@ public class CoreDescription implements IFMLLoadingPlugin {
 
 	@Override
 	public void injectData(Map<String, Object> data) {
-		if(data.containsKey("coremodLocation"))
+		if (data.containsKey("coremodLocation")) {
 			location = (File) data.get("coremodLocation");
+		}
 	}
 
 	public static File location;
 
 	@Override
 	public String getAccessTransformerClass() {
-        return "mcp.mobius.mobiuscore.asm.CoreAccessTransformer";
-    }
+		return null;
+	}
 }
