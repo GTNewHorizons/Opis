@@ -13,9 +13,9 @@ public class MonitoredTileList<E> extends MonitoredList<E> {
 
     // private Map<String, Integer> count = new HashMap<String, Integer>();
     private Table<Block, Integer, Integer> count = HashBasedTable.create();
-    private Map<Object, BlockData> blockdata = new WeakHashMap();
+    private Map<Object, BlockData> blockdata = new WeakHashMap<>();
 
-    private class BlockData {
+    private static class BlockData {
         public final Block block;
         public final int meta;
 
@@ -81,7 +81,7 @@ public class MonitoredTileList<E> extends MonitoredList<E> {
 
     @Override
     public void printCount() {
-        for (Cell c : this.count.cellSet())
+        for (Cell<Block, Integer, Integer> c : this.count.cellSet())
             CoreDescription.log.info(String.format("%s | %s : %s", c.getRowKey(), c.getColumnKey(), c.getValue()));
     }
 

@@ -54,8 +54,8 @@ public class StatsChunk extends StatAbstract {
     }
 
     @Override
-    public int compareTo(Object o) {
-        double value = ((StatAbstract) o).getDataSum() - this.getDataSum();
+    public int compareTo(StatAbstract o) {
+        double value = o.getDataSum() - this.getDataSum();
         if (value > 0) return 1;
         if (value < 0) return -1;
         return 0;

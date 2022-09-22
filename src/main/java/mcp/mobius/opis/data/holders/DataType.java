@@ -107,8 +107,8 @@ public enum DataType {
         return type;
     }
 
-    public static Class getForOrdinal(int ordinal) {
-        Class retVal;
+    public static Class<?> getForOrdinal(int ordinal) {
+        Class<?> retVal;
         try {
             DataType type = DataType.values()[ordinal];
             retVal = bimap.get(type);

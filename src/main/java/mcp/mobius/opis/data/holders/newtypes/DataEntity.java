@@ -11,7 +11,7 @@ import mcp.mobius.opis.data.profilers.ProfilerEntityUpdate;
 import net.minecraft.entity.Entity;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
-public class DataEntity implements ISerializable, Comparable {
+public class DataEntity implements ISerializable, Comparable<DataEntity> {
 
     public int eid;
     public long npoints;
@@ -53,7 +53,7 @@ public class DataEntity implements ISerializable, Comparable {
     }
 
     @Override
-    public int compareTo(Object o) {
-        return this.update.compareTo(((DataEntity) o).update);
+    public int compareTo(DataEntity o) {
+        return this.update.compareTo(o.update);
     }
 }

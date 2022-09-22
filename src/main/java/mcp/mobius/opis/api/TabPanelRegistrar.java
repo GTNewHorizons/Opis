@@ -50,7 +50,11 @@ public enum TabPanelRegistrar implements ChangeListener {
     }
 
     public void refreshAll() {
-        for (ITabPanel panel : this.lookup.values()) if (panel.refreshOnString()) panel.refresh();
+        for (ITabPanel panel : this.lookup.values()) {
+            if (panel.refreshOnString()) {
+                panel.refresh();
+            }
+        }
     }
 
     @Override
