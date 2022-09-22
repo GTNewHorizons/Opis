@@ -9,12 +9,11 @@ public class BlockDebug extends BlockContainer {
 
     public BlockDebug(Material par2Material) {
         super(par2Material);
-        //this.setUnlocalizedName("Debug Companion Cube");
-    }	
+        // this.setUnlocalizedName("Debug Companion Cube");
+    }
 
-	@Override
-	public TileEntity createNewTileEntity(World var1, int var2) {
-		return new TileDebug();
-	}
-
+    @Override
+    public TileEntity createNewTileEntity(World var1, int var2) {
+        return new TileDebug();
+    }
 }

@@ -14,53 +14,50 @@ import net.minecraft.util.ChatComponentText;
 
 public class CommandReset extends CommandBase implements IOpisCommand {
 
-	@Override
-	public String getCommandName() {
-		return "opis_reset";
-	}
-
-	@Override
-	public String getCommandNameOpis() {
-		return this.getCommandName();
-	}	
-	
-	@Override
-	public String getCommandUsage(ICommandSender icommandsender) {
-		return "";
-	}
-
-	@Override
-	public void processCommand(ICommandSender icommandsender, String[] astring) {
-		MetaManager.reset();
-		
-		icommandsender.addChatMessage(new ChatComponentText(String.format("\u00A7oInternal data reseted.")));
-		
-		//PacketDispatcher.sendPacketToAllPlayers(NetDataCommand.create(Message.CLIENT_CLEAR_SELECTION));
-		if (icommandsender instanceof EntityPlayerMP)
-			PacketManager.validateAndSend(new NetDataCommand(Message.CLIENT_CLEAR_SELECTION), (EntityPlayerMP)icommandsender);
-	}
-
-	@Override
-    public int getRequiredPermissionLevel()
-    {
-        return 3;
-    }	
-
-	@Override
-    public boolean canCommandSenderUseCommand(ICommandSender sender)
-    {
-		if (sender instanceof EntityPlayerMP)
-			return PlayerTracker.INSTANCE.isPrivileged((EntityPlayerMP)sender);			
-		
-		if (sender   instanceof DedicatedServer) return true;
-		if (!(sender instanceof DedicatedServer) && !(sender instanceof EntityPlayerMP)) return true;
-
-		return false;
+    @Override
+    public String getCommandName() {
+        return "opis_reset";
     }
 
-	@Override
-	public String getDescription() {
-		return "Cleans up all profiling data.";
-	}	
+    @Override
+    public String getCommandNameOpis() {
+        return this.getCommandName();
+    }
 
+    @Override
+    public String getCommandUsage(ICommandSender icommandsender) {
+        return "";
+    }
+
+    @Override
+    public void processCommand(ICommandSender icommandsender, String[] astring) {
+        MetaManager.reset();
+
+        icommandsender.addChatMessage(new ChatComponentText(String.format("\u00A7oInternal data reseted.")));
+
+        // PacketDispatcher.sendPacketToAllPlayers(NetDataCommand.create(Message.CLIENT_CLEAR_SELECTION));
+        if (icommandsender instanceof EntityPlayerMP)
+            PacketManager.validateAndSend(
+                    new NetDataCommand(Message.CLIENT_CLEAR_SELECTION), (EntityPlayerMP) icommandsender);
+    }
+
+    @Override
+    public int getRequiredPermissionLevel() {
+        return 3;
+    }
+
+    @Override
+    public boolean canCommandSenderUseCommand(ICommandSender sender) {
+        if (sender instanceof EntityPlayerMP) return PlayerTracker.INSTANCE.isPrivileged((EntityPlayerMP) sender);
+
+        if (sender instanceof DedicatedServer) return true;
+        if (!(sender instanceof DedicatedServer) && !(sender instanceof EntityPlayerMP)) return true;
+
+        return false;
+    }
+
+    @Override
+    public String getDescription() {
+        return "Cleans up all profiling data.";
+    }
 }

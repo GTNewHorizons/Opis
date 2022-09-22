@@ -1,5 +1,9 @@
 package mcp.mobius.opis.swing.panels.timingserver;
 
+import javax.swing.JButton;
+import javax.swing.JScrollPane;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableModel;
 import mcp.mobius.opis.api.ITabPanel;
 import mcp.mobius.opis.data.holders.newtypes.CachedString;
 import mcp.mobius.opis.data.holders.newtypes.DataEvent;
@@ -14,84 +18,91 @@ import mcp.mobius.opis.swing.widgets.JPanelMsgHandler;
 import mcp.mobius.opis.swing.widgets.JTableStats;
 import net.miginfocom.swing.MigLayout;
 
-import javax.swing.JButton;
-import javax.swing.JScrollPane;
-import javax.swing.SwingConstants;
-import javax.swing.table.DefaultTableModel;
-
 public class PanelTimingEvents extends JPanelMsgHandler implements ITabPanel {
-	private JButtonAccess btnRun;
+    private JButtonAccess btnRun;
 
-	public PanelTimingEvents() {
-		setLayout(new MigLayout("", "[grow][]", "[][grow]"));
-		
-		btnRun = new JButtonAccess("Run Opis", AccessLevel.PRIVILEGED);
-		add(btnRun, "cell 1 0");
-		btnRun.addActionListener(new ActionRunOpis());
-		
-		JScrollPane scrollPane = new JScrollPane();
-		add(scrollPane, "cell 0 1 2 1,grow");
-		
-		table = new JTableStats(
-				new String[] {"Event", "Mod", "Class", "Handler", "Calls", "Timing"},
-				new Class[]  {CachedString.class, CachedString.class, CachedString.class, CachedString.class, Long.class, DataTiming.class},
-				new int[]    {SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.CENTER}
-				);
-		scrollPane.setViewportView(table);			
-	}
+    public PanelTimingEvents() {
+        setLayout(new MigLayout("", "[grow][]", "[][grow]"));
 
-	@Override
-	public boolean handleMessage(Message msg, PacketBase rawdata) {
-		switch(msg){
-		
-		case LIST_TIMING_EVENTS:{
-			this.cacheData(msg, rawdata);
-			
-			this.getTable().setTableData(rawdata.array);
-			
-			DefaultTableModel model = table.getModel();
-			int               row   = this.getTable().clearTable(DataEvent.class);	
-			
-			for (Object o : rawdata.array){
-				DataEvent data = (DataEvent)o;
-				model.addRow(new Object[] {data.event, data.mod, data.package_, data.handler, data.nCalls, data.update});
-			}
+        btnRun = new JButtonAccess("Run Opis", AccessLevel.PRIVILEGED);
+        add(btnRun, "cell 1 0");
+        btnRun.addActionListener(new ActionRunOpis());
 
-			this.getTable().dataUpdated(row);			
-			
-			break;
-		}		
-		
-		case STATUS_START:{
-			this.getBtnRun().setText("Running...");
-			break;
-		}
-		case STATUS_STOP:{
-			this.getBtnRun().setText("Run Opis");
-			break;
-		}		
-		case STATUS_RUNNING:{
-			this.getBtnRun().setText("Running...");
-			break;
-		}		
-		default:
-			return false;
-			
-		}
-		return true;
-	}
+        JScrollPane scrollPane = new JScrollPane();
+        add(scrollPane, "cell 0 1 2 1,grow");
 
-	@Override
-	public SelectedTab getSelectedTab() {
-		return SelectedTab.TIMINGEVENTS;
-	}
+        table = new JTableStats(
+                new String[] {"Event", "Mod", "Class", "Handler", "Calls", "Timing"},
+                new Class[] {
+                    CachedString.class,
+                    CachedString.class,
+                    CachedString.class,
+                    CachedString.class,
+                    Long.class,
+                    DataTiming.class
+                },
+                new int[] {
+                    SwingConstants.LEFT,
+                    SwingConstants.LEFT,
+                    SwingConstants.LEFT,
+                    SwingConstants.LEFT,
+                    SwingConstants.CENTER,
+                    SwingConstants.CENTER
+                });
+        scrollPane.setViewportView(table);
+    }
 
-	public JButton getBtnRun() {
-		return btnRun;
-	}
-	
-	@Override
-	public boolean refreshOnString(){
-		return true;
-	}	
+    @Override
+    public boolean handleMessage(Message msg, PacketBase rawdata) {
+        switch (msg) {
+            case LIST_TIMING_EVENTS: {
+                this.cacheData(msg, rawdata);
+
+                this.getTable().setTableData(rawdata.array);
+
+                DefaultTableModel model = table.getModel();
+                int row = this.getTable().clearTable(DataEvent.class);
+
+                for (Object o : rawdata.array) {
+                    DataEvent data = (DataEvent) o;
+                    model.addRow(
+                            new Object[] {data.event, data.mod, data.package_, data.handler, data.nCalls, data.update});
+                }
+
+                this.getTable().dataUpdated(row);
+
+                break;
+            }
+
+            case STATUS_START: {
+                this.getBtnRun().setText("Running...");
+                break;
+            }
+            case STATUS_STOP: {
+                this.getBtnRun().setText("Run Opis");
+                break;
+            }
+            case STATUS_RUNNING: {
+                this.getBtnRun().setText("Running...");
+                break;
+            }
+            default:
+                return false;
+        }
+        return true;
+    }
+
+    @Override
+    public SelectedTab getSelectedTab() {
+        return SelectedTab.TIMINGEVENTS;
+    }
+
+    public JButton getBtnRun() {
+        return btnRun;
+    }
+
+    @Override
+    public boolean refreshOnString() {
+        return true;
+    }
 }

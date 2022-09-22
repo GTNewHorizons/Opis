@@ -7,7 +7,6 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-
 import mcp.mobius.opis.events.EventTimer;
 import mcp.mobius.opis.network.enums.Message;
 
@@ -15,38 +14,38 @@ public class EventTimerRing {
     Map<Message, EventTimer> ring = new HashMap<Message, EventTimer>();
     Properties prop;
 
-    public EventTimerRing(){
-    	ring.put(Message.NEXUS_UUID, new EventTimer(0));
+    public EventTimerRing() {
+        ring.put(Message.NEXUS_UUID, new EventTimer(0));
     }
-    
-    public EventTimerRing(String config){
+
+    public EventTimerRing(String config) {
         this.prop = readConfig(config);
 
         for (Object o : prop.keySet()) {
-            String msg = (String)o;
+            String msg = (String) o;
             ring.put(Message.valueOf(msg), new EventTimer(Long.valueOf(prop.getProperty(msg))));
         }
     }
 
-    public EventTimerRing(Properties prop){
+    public EventTimerRing(Properties prop) {
         this.prop = prop;
 
         for (Object o : prop.keySet()) {
-            String msg = (String)o;
+            String msg = (String) o;
             ring.put(Message.valueOf(msg), new EventTimer(Long.valueOf(prop.getProperty(msg))));
         }
     }
 
-    public boolean isDone(Message msg){
+    public boolean isDone(Message msg) {
         if (!ring.containsKey(msg)) return false;
         return ring.get(msg).isDone();
     }
 
-    public Properties getProp(){
+    public Properties getProp() {
         return this.prop;
     }
 
-    private Properties readConfig(String filename){
+    private Properties readConfig(String filename) {
         Properties prop = new Properties();
         InputStream input = null;
 

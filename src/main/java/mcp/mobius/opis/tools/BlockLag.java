@@ -9,12 +9,11 @@ public class BlockLag extends BlockContainer {
 
     public BlockLag(Material par2Material) {
         super(par2Material);
-        //this.setUnlocalizedName("Lag Generator");
-    }	
+        // this.setUnlocalizedName("Lag Generator");
+    }
 
-	@Override
-	public TileEntity createNewTileEntity(World var1, int var2) {
-		return new TileLag();
-	}
-
+    @Override
+    public TileEntity createNewTileEntity(World var1, int var2) {
+        return new TileLag();
+    }
 }
