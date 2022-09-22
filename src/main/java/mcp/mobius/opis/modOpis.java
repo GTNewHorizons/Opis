@@ -32,8 +32,11 @@ import net.minecraftforge.common.config.Configuration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-@Mod(modid="GRADLETOKEN_MODID", name="GRADLETOKEN_MODNAME", version="GRADLETOKEN_VERSION", acceptableRemoteVersions="*")
-
+@Mod(
+        modid = "GRADLETOKEN_MODID",
+        name = "GRADLETOKEN_MODNAME",
+        version = "GRADLETOKEN_VERSION",
+        acceptableRemoteVersions = "*")
 public class modOpis {
 
     @Instance("Opis")
@@ -41,25 +44,27 @@ public class modOpis {
 
     public static Logger log = LogManager.getLogger("Opis");
 
-    @SidedProxy(clientSide="mcp.mobius.opis.proxy.ProxyClient", serverSide="mcp.mobius.opis.proxy.ProxyServer")
+    @SidedProxy(clientSide = "mcp.mobius.opis.proxy.ProxyClient", serverSide = "mcp.mobius.opis.proxy.ProxyServer")
     public static ProxyServer proxy;
 
-    public static int profilerDelay          = 1;
-    public static boolean profilerRun        = false;
-    public static boolean profilerRunClient  = false;
-    public static int profilerMaxTicks       = 250;
-    public static int rconport               = 25566;
-    public static boolean rconactive         = false;
-    public static String  rconpass           = "";
-    public static boolean microseconds       = true;
-    private static int lagGenID              = -1;
+    public static int profilerDelay = 1;
+    public static boolean profilerRun = false;
+    public static boolean profilerRunClient = false;
+    public static int profilerMaxTicks = 250;
+    public static int rconport = 25566;
+    public static boolean rconactive = false;
+    public static String rconpass = "";
+    public static boolean microseconds = true;
+    private static int lagGenID = -1;
     public static CoordinatesBlock selectedBlock = null;
     public static boolean swingOpen = false;
 
-    public  Configuration config = null;
+    public Configuration config = null;
 
-    public static String commentTables     = "Minimum access level to be able to view tables in /opis command. Valid values : NONE, PRIVILEGED, ADMIN";
-    public static String commentOpis       = "Minimum access level to be open Opis interface. Valid values : NONE, PRIVILEGED, ADMIN";
+    public static String commentTables =
+            "Minimum access level to be able to view tables in /opis command. Valid values : NONE, PRIVILEGED, ADMIN";
+    public static String commentOpis =
+            "Minimum access level to be open Opis interface. Valid values : NONE, PRIVILEGED, ADMIN";
     public static String commentPrivileged = "List of players with PRIVILEGED access level.";
 
     @EventHandler
@@ -67,25 +72,37 @@ public class modOpis {
 
         config = new Configuration(event.getSuggestedConfigurationFile());
 
-        profilerDelay    = config.get(Configuration.CATEGORY_GENERAL, "profiler.delay", 1).getInt();
-        lagGenID         = config.get(Configuration.CATEGORY_GENERAL, "laggenerator_id", -1).getInt();
-        profilerMaxTicks = config.get(Configuration.CATEGORY_GENERAL, "profiler.maxpts", 250).getInt();
-        microseconds     = config.get(Configuration.CATEGORY_GENERAL, "display.microseconds", true).getBoolean(true);
-        rconport         = config.get("REMOTE_CONSOLE", "opisrcon.port",   25566).getInt();
-        rconactive       = config.get("REMOTE_CONSOLE", "opisrcon.active", false).getBoolean(false);
-        rconpass         = config.get("REMOTE_CONSOLE", "opisrcon.password",  "").getString();
+        profilerDelay =
+                config.get(Configuration.CATEGORY_GENERAL, "profiler.delay", 1).getInt();
+        lagGenID = config.get(Configuration.CATEGORY_GENERAL, "laggenerator_id", -1)
+                .getInt();
+        profilerMaxTicks = config.get(Configuration.CATEGORY_GENERAL, "profiler.maxpts", 250)
+                .getInt();
+        microseconds = config.get(Configuration.CATEGORY_GENERAL, "display.microseconds", true)
+                .getBoolean(true);
+        rconport = config.get("REMOTE_CONSOLE", "opisrcon.port", 25566).getInt();
+        rconactive = config.get("REMOTE_CONSOLE", "opisrcon.active", false).getBoolean(false);
+        rconpass = config.get("REMOTE_CONSOLE", "opisrcon.password", "").getString();
 
-        String[] users   = config.get("ACCESS_RIGHTS", "privileged", new String[]{}, commentPrivileged).getStringList();
-        AccessLevel minTables   = AccessLevel.PRIVILEGED;
-        AccessLevel openOpis    = AccessLevel.PRIVILEGED;
-        try{ openOpis    = AccessLevel.valueOf(config.get("ACCESS_RIGHTS", "opis",     "NONE", commentTables).getString()); }   catch (IllegalArgumentException e){}
-        try{ minTables   = AccessLevel.valueOf(config.get("ACCESS_RIGHTS", "tables",   "NONE", commentTables).getString()); }   catch (IllegalArgumentException e){}
+        String[] users = config.get("ACCESS_RIGHTS", "privileged", new String[] {}, commentPrivileged)
+                .getStringList();
+        AccessLevel minTables = AccessLevel.PRIVILEGED;
+        AccessLevel openOpis = AccessLevel.PRIVILEGED;
+        try {
+            openOpis = AccessLevel.valueOf(
+                    config.get("ACCESS_RIGHTS", "opis", "NONE", commentTables).getString());
+        } catch (IllegalArgumentException e) {
+        }
+        try {
+            minTables = AccessLevel.valueOf(
+                    config.get("ACCESS_RIGHTS", "tables", "NONE", commentTables).getString());
+        } catch (IllegalArgumentException e) {
+        }
 
         Message.setTablesMinimumLevel(minTables);
         Message.setOpisMinimumLevel(openOpis);
 
-        for (String s : users)
-            PlayerTracker.INSTANCE.addPrivilegedPlayer(s,false);
+        for (String s : users) PlayerTracker.INSTANCE.addPrivilegedPlayer(s, false);
 
         config.save();
 
@@ -101,7 +118,7 @@ public class modOpis {
     @EventHandler
     public void load(FMLInitializationEvent event) {
 
-        if (lagGenID != -1){
+        if (lagGenID != -1) {
             Block blockDemo = new BlockLag(Material.wood);
             GameRegistry.registerBlock(blockDemo, "opis.laggen");
             GameRegistry.registerTileEntity(TileLag.class, "opis.laggen");
@@ -111,10 +128,10 @@ public class modOpis {
             GameRegistry.registerTileEntity(TileDebug.class, "opis.debug");
         }
 
-        ProfilerSection.RENDER_TILEENTITY  .setProfiler(new ProfilerRenderTileEntity());
-        ProfilerSection.RENDER_ENTITY      .setProfiler(new ProfilerRenderEntity());
-        ProfilerSection.RENDER_BLOCK       .setProfiler(new ProfilerRenderBlock());
-        ProfilerSection.EVENT_INVOKE       .setProfiler(new ProfilerEvent());
+        ProfilerSection.RENDER_TILEENTITY.setProfiler(new ProfilerRenderTileEntity());
+        ProfilerSection.RENDER_ENTITY.setProfiler(new ProfilerRenderEntity());
+        ProfilerSection.RENDER_BLOCK.setProfiler(new ProfilerRenderBlock());
+        ProfilerSection.EVENT_INVOKE.setProfiler(new ProfilerEvent());
     }
 
     @EventHandler
@@ -124,15 +141,15 @@ public class modOpis {
     }
 
     @EventHandler
-    public void serverStarting(FMLServerStartingEvent event){
-        ProfilerSection.DIMENSION_TICK     .setProfiler(new ProfilerDimTick());
+    public void serverStarting(FMLServerStartingEvent event) {
+        ProfilerSection.DIMENSION_TICK.setProfiler(new ProfilerDimTick());
         ProfilerSection.DIMENSION_BLOCKTICK.setProfiler(new ProfilerDimBlockTick());
-        ProfilerSection.ENTITY_UPDATETIME  .setProfiler(new ProfilerEntityUpdate());
-        ProfilerSection.TICK               .setProfiler(new ProfilerTick());
-        ProfilerSection.TILEENT_UPDATETIME .setProfiler(new ProfilerTileEntityUpdate());
-        ProfilerSection.PACKET_INBOUND     .setProfiler(new ProfilerPacket());
-        ProfilerSection.PACKET_OUTBOUND    .setProfiler(new ProfilerPacket());
-        ProfilerSection.NETWORK_TICK       .setProfiler(new ProfilerNetworkTick());
+        ProfilerSection.ENTITY_UPDATETIME.setProfiler(new ProfilerEntityUpdate());
+        ProfilerSection.TICK.setProfiler(new ProfilerTick());
+        ProfilerSection.TILEENT_UPDATETIME.setProfiler(new ProfilerTileEntityUpdate());
+        ProfilerSection.PACKET_INBOUND.setProfiler(new ProfilerPacket());
+        ProfilerSection.PACKET_OUTBOUND.setProfiler(new ProfilerPacket());
+        ProfilerSection.NETWORK_TICK.setProfiler(new ProfilerNetworkTick());
 
         event.registerServerCommand(new CommandChunkList());
         event.registerServerCommand(new CommandFrequency());
@@ -150,16 +167,15 @@ public class modOpis {
         event.registerServerCommand(new CommandAddPrivileged());
         event.registerServerCommand(new CommandRmPrivileged());
 
-        //event.registerServerCommand(new CommandClientTest());
-        //event.registerServerCommand(new CommandClientStart());
-        //event.registerServerCommand(new CommandClientShowRenderTick());
+        // event.registerServerCommand(new CommandClientTest());
+        // event.registerServerCommand(new CommandClientStart());
+        // event.registerServerCommand(new CommandClientShowRenderTick());
 
         event.registerServerCommand(new CommandHelp());
 
+        // GameRegistry.registerPlayerTracker(PlayerTracker.instance());
 
-        //GameRegistry.registerPlayerTracker(PlayerTracker.instance());
-
-        //DeadManSwitch.startDeadManSwitch(MinecraftServer.getServer());
+        // DeadManSwitch.startDeadManSwitch(MinecraftServer.getServer());
         /*
         for (ProfilerSection sec : ProfilerSection.values()){
             System.out.printf("%s : %s\n", sec, sec.getProfiler().getClass().getSimpleName());
