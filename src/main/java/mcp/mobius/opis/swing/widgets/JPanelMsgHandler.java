@@ -15,15 +15,21 @@ public abstract class JPanelMsgHandler extends JPanel implements IMessageHandler
         return this.table;
     }
 
-    public boolean cacheData(Message msg, PacketBase rawdata) {
+    public synchronized boolean cacheData(Message msg, PacketBase rawdata) {
         this.cachedmsg = msg;
         this.cachedrawdata = rawdata;
         return true;
     }
 
     public boolean refresh() {
-        if (this.cachedmsg != null && this.cachedrawdata != null)
-            return this.handleMessage(this.cachedmsg, this.cachedrawdata);
+        // Atomically read both fields without holding the monitor lock for too long
+        Message cachedmsg;
+        PacketBase cachedrawdata;
+        synchronized (this) {
+            cachedmsg = this.cachedmsg;
+            cachedrawdata = this.cachedrawdata;
+        }
+        if (cachedmsg != null && cachedrawdata != null) return this.handleMessage(this.cachedmsg, this.cachedrawdata);
         else return false;
     }
 }

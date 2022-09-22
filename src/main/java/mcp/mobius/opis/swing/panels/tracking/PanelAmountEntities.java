@@ -1,9 +1,6 @@
 package mcp.mobius.opis.swing.panels.tracking;
 
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JLabel;
-import javax.swing.JScrollPane;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import mcp.mobius.opis.api.ITabPanel;
 import mcp.mobius.opis.data.holders.basetypes.AmountHolder;
@@ -72,21 +69,22 @@ public class PanelAmountEntities extends JPanelMsgHandler implements ITabPanel {
         switch (msg) {
             case LIST_AMOUNT_ENTITIES: {
                 this.cacheData(msg, rawdata);
+                SwingUtilities.invokeLater(() -> {
+                    this.getTable().setTableData(rawdata.array);
 
-                this.getTable().setTableData(rawdata.array);
+                    DefaultTableModel model = this.getTable().getModel();
+                    int row = this.getTable().clearTable(AmountHolder.class);
+                    int totalEntities = 0;
 
-                DefaultTableModel model = this.getTable().getModel();
-                int row = this.getTable().clearTable(AmountHolder.class);
-                int totalEntities = 0;
+                    for (Object o : rawdata.array) {
+                        AmountHolder entity = (AmountHolder) o;
+                        model.addRow(new Object[] {entity.key, entity.value});
+                        totalEntities += entity.value;
+                    }
 
-                for (Object o : rawdata.array) {
-                    AmountHolder entity = (AmountHolder) o;
-                    model.addRow(new Object[] {entity.key, entity.value});
-                    totalEntities += entity.value;
-                }
-
-                this.getLblSummary().setText("Total : " + String.valueOf(totalEntities));
-                this.getTable().dataUpdated(row);
+                    this.getLblSummary().setText("Total : " + String.valueOf(totalEntities));
+                    this.getTable().dataUpdated(row);
+                });
                 break;
             }
             default:

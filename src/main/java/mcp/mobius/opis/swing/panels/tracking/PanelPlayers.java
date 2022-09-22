@@ -1,7 +1,6 @@
 package mcp.mobius.opis.swing.panels.tracking;
 
-import javax.swing.JButton;
-import javax.swing.JScrollPane;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import mcp.mobius.opis.api.ITabPanel;
 import mcp.mobius.opis.data.holders.newtypes.DataEntity;
@@ -64,21 +63,21 @@ public class PanelPlayers extends JPanelMsgHandler implements ITabPanel {
         switch (msg) {
             case LIST_PLAYERS: {
                 this.cacheData(msg, rawdata);
+                SwingUtilities.invokeLater(() -> {
+                    this.getTable().setTableData(rawdata.array);
 
-                this.getTable().setTableData(rawdata.array);
+                    DefaultTableModel model = this.getTable().getModel();
+                    int row = this.getTable().clearTable(DataEntity.class);
 
-                DefaultTableModel model = this.getTable().getModel();
-                int row = this.getTable().clearTable(DataEntity.class);
+                    for (Object o : rawdata.array) {
+                        PlayerStatus player = (PlayerStatus) o;
+                        model.addRow(new Object[] {
+                            player.name, player.dim, String.format("[ %4d %4d %4d ]", player.x, player.y, player.z),
+                        });
+                    }
 
-                for (Object o : rawdata.array) {
-                    PlayerStatus player = (PlayerStatus) o;
-                    model.addRow(new Object[] {
-                        player.name, player.dim, String.format("[ %4d %4d %4d ]", player.x, player.y, player.z),
-                    });
-                }
-
-                this.getTable().dataUpdated(row);
-
+                    this.getTable().dataUpdated(row);
+                });
                 break;
             }
 

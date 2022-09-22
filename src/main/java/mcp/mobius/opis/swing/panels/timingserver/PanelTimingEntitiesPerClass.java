@@ -1,8 +1,6 @@
 package mcp.mobius.opis.swing.panels.timingserver;
 
-import javax.swing.JButton;
-import javax.swing.JScrollPane;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import mcp.mobius.opis.api.ITabPanel;
 import mcp.mobius.opis.data.holders.newtypes.CachedString;
@@ -43,34 +41,35 @@ public class PanelTimingEntitiesPerClass extends JPanelMsgHandler implements ITa
         switch (msg) {
             case LIST_TIMING_ENTITIES_PER_CLASS: {
                 this.cacheData(msg, rawdata);
+                SwingUtilities.invokeLater(() -> {
+                    this.getTable().setTableData(rawdata.array);
 
-                this.getTable().setTableData(rawdata.array);
+                    DefaultTableModel model = table.getModel();
+                    int row = this.getTable().clearTable(DataEntityPerClass.class);
 
-                DefaultTableModel model = table.getModel();
-                int row = this.getTable().clearTable(DataEntityPerClass.class);
+                    for (Object o : rawdata.array) {
+                        DataEntityPerClass data = (DataEntityPerClass) o;
+                        model.addRow(new Object[] {
+                            data.name, data.nents, data.update, new DataTiming(data.update.timing / data.nents)
+                        });
+                    }
 
-                for (Object o : rawdata.array) {
-                    DataEntityPerClass data = (DataEntityPerClass) o;
-                    model.addRow(new Object[] {
-                        data.name, data.nents, data.update, new DataTiming(data.update.timing / data.nents)
-                    });
-                }
-
-                this.getTable().dataUpdated(row);
-
+                    this.getTable().dataUpdated(row);
+                });
                 break;
             }
 
-            case STATUS_START: {
-                this.getBtnRun().setText("Running...");
+            case STATUS_START:
+            case STATUS_RUNNING: {
+                SwingUtilities.invokeLater(() -> {
+                    this.getBtnRun().setText("Running...");
+                });
                 break;
             }
             case STATUS_STOP: {
-                this.getBtnRun().setText("Run Opis");
-                break;
-            }
-            case STATUS_RUNNING: {
-                this.getBtnRun().setText("Running...");
+                SwingUtilities.invokeLater(() -> {
+                    this.getBtnRun().setText("Run Opis");
+                });
                 break;
             }
             default:

@@ -9,7 +9,6 @@ import mcp.mobius.opis.api.IMessageHandler;
 import mcp.mobius.opis.data.holders.ISerializable;
 import mcp.mobius.opis.data.holders.basetypes.CoordinatesBlock;
 import mcp.mobius.opis.data.holders.basetypes.CoordinatesChunk;
-import mcp.mobius.opis.data.holders.basetypes.TicketData;
 import mcp.mobius.opis.data.holders.newtypes.DataBlockTileEntity;
 import mcp.mobius.opis.data.holders.newtypes.DataEntity;
 import mcp.mobius.opis.data.holders.stats.StatsChunk;
@@ -23,36 +22,26 @@ import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.ChunkProviderServer;
 import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.common.ForgeChunkManager.Ticket;
 
 public enum ChunkManager implements IMessageHandler {
     INSTANCE;
 
     private ArrayList<CoordinatesChunk> chunksLoad = new ArrayList<CoordinatesChunk>();
     private HashMap<CoordinatesChunk, StatsChunk> chunkMeanTime = new HashMap<CoordinatesChunk, StatsChunk>();
-    public ArrayList<TicketData> tickets = new ArrayList<TicketData>();
 
-    public void addLoadedChunks(ArrayList<ISerializable> data) {
+    public synchronized void addLoadedChunks(ArrayList<ISerializable> data) {
         // chunksLoad.clear();
         for (ISerializable chunk : data) {
             chunksLoad.add((CoordinatesChunk) chunk);
         }
     }
 
-    public ArrayList<CoordinatesChunk> getLoadedChunks() {
-        return chunksLoad;
-    }
-
-    public void setChunkMeanTime(ArrayList<ISerializable> data) {
+    public synchronized void setChunkMeanTime(ArrayList<ISerializable> data) {
         chunkMeanTime.clear();
         for (ISerializable stat : data) chunkMeanTime.put(((StatsChunk) stat).getChunk(), (StatsChunk) stat);
     }
 
-    public HashMap<CoordinatesChunk, StatsChunk> getChunkMeanTime() {
-        return chunkMeanTime;
-    }
-
-    public ArrayList<CoordinatesChunk> getLoadedChunks(int dimension) {
+    public synchronized ArrayList<CoordinatesChunk> getLoadedChunks(int dimension) {
         HashSet<CoordinatesChunk> chunkStatus = new HashSet<CoordinatesChunk>();
         WorldServer world = DimensionManager.getWorld(dimension);
         if (world != null) {
@@ -67,19 +56,10 @@ public enum ChunkManager implements IMessageHandler {
             }
         }
 
-        return new ArrayList<CoordinatesChunk>(chunkStatus);
+        return new ArrayList<>(chunkStatus);
     }
 
-    public HashSet<TicketData> getTickets() {
-        HashSet<TicketData> tickets = new HashSet<TicketData>();
-        for (int dim : DimensionManager.getIDs())
-            for (Ticket ticket :
-                    DimensionManager.getWorld(dim).getPersistentChunks().values()) tickets.add(new TicketData(ticket));
-
-        return tickets;
-    }
-
-    public ArrayList<StatsChunk> getChunksUpdateTime() {
+    public synchronized ArrayList<StatsChunk> getChunksUpdateTime() {
         HashMap<CoordinatesChunk, StatsChunk> chunks = new HashMap<CoordinatesChunk, StatsChunk>();
 
         for (CoordinatesBlock coords :
@@ -103,13 +83,12 @@ public enum ChunkManager implements IMessageHandler {
             chunks.get(chunk).addMeasure(data.update.timing);
         }
 
-        ArrayList<StatsChunk> chunksUpdate = new ArrayList<StatsChunk>(chunks.values());
-        return chunksUpdate;
+        return new ArrayList<>(chunks.values());
     }
 
     public ArrayList<StatsChunk> getTopChunks(int quantity) {
         ArrayList<StatsChunk> chunks = this.getChunksUpdateTime();
-        ArrayList<StatsChunk> outList = new ArrayList<StatsChunk>();
+        ArrayList<StatsChunk> outList = new ArrayList<>(quantity);
         Collections.sort(chunks);
 
         for (int i = 0; i < Math.min(quantity, chunks.size()); i++) outList.add(chunks.get(i));
@@ -163,13 +142,14 @@ public enum ChunkManager implements IMessageHandler {
                 break;
             }
             case LIST_CHUNK_LOADED_CLEAR: {
-                chunksLoad.clear();
+                synchronized (this) {
+                    chunksLoad.clear();
+                }
                 break;
             }
             default:
                 return false;
         }
-
         return true;
     }
 }

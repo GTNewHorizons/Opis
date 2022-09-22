@@ -2,12 +2,14 @@ package mcp.mobius.opis.events;
 
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table.Cell;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import mcp.mobius.mobiuscore.profiler.ProfilerSection;
 import mcp.mobius.opis.api.TabPanelRegistrar;
 import mcp.mobius.opis.data.holders.basetypes.CoordinatesBlock;
@@ -44,9 +46,27 @@ public enum OpisClientTickHandler {
     public EventTimer timer5000 = new EventTimer(5000);
     public EventTimer timer10000 = new EventTimer(10000);
 
+    private final ConcurrentLinkedQueue<Runnable> scheduledCalls = new ConcurrentLinkedQueue<>();
+
+    /** Schedules the provided function to execute on the MC client thread on the next tick */
+    public void scheduleOnClientThread(Runnable func) {
+        // Don't do anything on dedicated servers
+        if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
+            scheduledCalls.add(func);
+        }
+    }
+
+    public void purgeScheduledCallQueue() {
+        scheduledCalls.clear();
+    }
+
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
     public void tickEnd(TickEvent.ClientTickEvent event) {
+
+        for (Runnable r = scheduledCalls.poll(); r != null; r = scheduledCalls.poll()) {
+            r.run();
+        }
 
         // One second timer
         if (timer1000.isDone()) {

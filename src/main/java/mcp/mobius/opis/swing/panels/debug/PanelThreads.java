@@ -1,7 +1,6 @@
 package mcp.mobius.opis.swing.panels.debug;
 
-import javax.swing.JScrollPane;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import mcp.mobius.opis.api.ITabPanel;
 import mcp.mobius.opis.data.holders.newtypes.CachedString;
@@ -33,19 +32,19 @@ public class PanelThreads extends JPanelMsgHandler implements ITabPanel {
         switch (msg) {
             case LIST_THREADS: {
                 this.cacheData(msg, rawdata);
+                SwingUtilities.invokeLater(() -> {
+                    this.getTable().setTableData(rawdata.array);
 
-                this.getTable().setTableData(rawdata.array);
+                    DefaultTableModel model = this.getTable().getModel();
+                    int row = this.getTable().clearTable(DataThread.class);
 
-                DefaultTableModel model = this.getTable().getModel();
-                int row = this.getTable().clearTable(DataThread.class);
+                    for (Object o : rawdata.array) {
+                        DataThread data = (DataThread) o;
+                        model.addRow(new Object[] {data.name, data.clzz});
+                    }
 
-                for (Object o : rawdata.array) {
-                    DataThread data = (DataThread) o;
-                    model.addRow(new Object[] {data.name, data.clzz});
-                }
-
-                this.getTable().dataUpdated(row);
-
+                    this.getTable().dataUpdated(row);
+                });
                 break;
             }
 
