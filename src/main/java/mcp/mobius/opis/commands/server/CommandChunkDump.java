@@ -28,6 +28,7 @@ public class CommandChunkDump extends CommandBase implements IOpisCommand {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void processCommand(ICommandSender icommandsender, String[] astring) {
         modOpis.log.log(Level.INFO, "== CHUNK DUMP ==");
 

@@ -39,7 +39,7 @@ public abstract class PacketBase {
         throw new RuntimeException("Packet is not going the right way ! Client side packet seen server side.");
     }
 
-    protected ISerializable dataRead(Class datatype, ByteArrayDataInput istream) {
+    protected ISerializable dataRead(Class<?> datatype, ByteArrayDataInput istream) {
         if (datatype == null) return new DataError();
 
         try {

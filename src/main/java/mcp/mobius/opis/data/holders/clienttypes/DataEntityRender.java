@@ -9,7 +9,7 @@ import mcp.mobius.opis.data.profilers.ProfilerRenderEntity;
 import net.minecraft.entity.Entity;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
-public class DataEntityRender implements Comparable {
+public class DataEntityRender implements Comparable<DataEntityRender> {
 
     public int eid;
     public long npoints;
@@ -32,7 +32,7 @@ public class DataEntityRender implements Comparable {
     }
 
     @Override
-    public int compareTo(Object o) {
-        return this.update.compareTo(((DataEntityRender) o).update);
+    public int compareTo(DataEntityRender o) {
+        return this.update.compareTo(o.update);
     }
 }

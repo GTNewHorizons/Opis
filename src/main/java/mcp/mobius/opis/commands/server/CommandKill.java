@@ -37,7 +37,7 @@ public class CommandKill extends CommandBase implements IOpisCommand {
         World world = DimensionManager.getWorld(dim);
         if (world == null) {
             icommandsender.addChatMessage(
-                    new ChatComponentText(String.format("\u00A7oCannot find dim %d in world %d", dim)));
+                    new ChatComponentText(String.format("\u00A7oCannot find dim %d in world", dim)));
             return;
         }
 

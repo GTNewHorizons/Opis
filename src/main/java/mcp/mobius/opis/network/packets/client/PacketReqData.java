@@ -58,12 +58,12 @@ public class PacketReqData extends PacketBase {
         this.dataReq = Message.values()[input.readInt()];
 
         if (input.readBoolean()) {
-            Class datatype = DataType.getForOrdinal(input.readInt());
+            Class<?> datatype = DataType.getForOrdinal(input.readInt());
             this.param1 = dataRead(datatype, input);
         }
 
         if (input.readBoolean()) {
-            Class datatype = DataType.getForOrdinal(input.readInt());
+            Class<?> datatype = DataType.getForOrdinal(input.readInt());
             this.param2 = dataRead(datatype, input);
         }
     }

@@ -12,7 +12,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
-public class DataBlockTileEntity implements ISerializable, Comparable {
+public class DataBlockTileEntity implements ISerializable, Comparable<DataBlockTileEntity> {
 
     public short id;
     public short meta;
@@ -52,7 +52,7 @@ public class DataBlockTileEntity implements ISerializable, Comparable {
     }
 
     @Override
-    public int compareTo(Object o) {
-        return this.update.compareTo(((DataBlockTileEntity) o).update);
+    public int compareTo(DataBlockTileEntity o) {
+        return this.update.compareTo(o.update);
     }
 }

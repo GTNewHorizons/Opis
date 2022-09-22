@@ -6,7 +6,7 @@ import mcp.mobius.opis.data.holders.basetypes.CoordinatesBlock;
 import mcp.mobius.opis.data.holders.basetypes.CoordinatesChunk;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
-public abstract class StatAbstract implements Comparable, ISerializable {
+public abstract class StatAbstract implements Comparable<StatAbstract>, ISerializable {
     protected DescriptiveStatistics dstat = new DescriptiveStatistics();
     public Long dataPoints = 0L;
     protected Double geomMean = null;
@@ -63,8 +63,8 @@ public abstract class StatAbstract implements Comparable, ISerializable {
     }
 
     @Override
-    public int compareTo(Object o) {
-        double value = ((StatAbstract) o).getGeometricMean() - this.getGeometricMean();
+    public int compareTo(StatAbstract o) {
+        double value = o.getGeometricMean() - this.getGeometricMean();
         if (value > 0) return 1;
         if (value < 0) return -1;
         return 0;
