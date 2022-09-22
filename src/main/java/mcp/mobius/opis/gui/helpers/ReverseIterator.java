@@ -11,7 +11,7 @@ public class ReverseIterator<T> implements Iterable<T> {
     private ListIterator<T> listIterator;
 
     public ReverseIterator(Collection<T> wrappedList) {
-        List list = Lists.newArrayList(wrappedList);
+        List<T> list = Lists.newArrayList(wrappedList);
         this.listIterator = list.listIterator(wrappedList.size());
     }
 

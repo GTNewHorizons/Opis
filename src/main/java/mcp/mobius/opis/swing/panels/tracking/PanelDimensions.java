@@ -1,7 +1,6 @@
 package mcp.mobius.opis.swing.panels.tracking;
 
-import javax.swing.JButton;
-import javax.swing.JScrollPane;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import mcp.mobius.opis.api.IMessageHandler;
 import mcp.mobius.opis.api.ITabPanel;
@@ -70,28 +69,29 @@ public class PanelDimensions extends JPanelMsgHandler implements IMessageHandler
         switch (msg) {
             case LIST_DIMENSION_DATA: {
                 this.cacheData(msg, rawdata);
+                SwingUtilities.invokeLater(() -> {
+                    this.getTable().setTableData(rawdata.array);
 
-                this.getTable().setTableData(rawdata.array);
+                    DefaultTableModel model = this.getTable().getModel();
+                    int row = this.getTable().clearTable(DataDimension.class);
 
-                DefaultTableModel model = this.getTable().getModel();
-                int row = this.getTable().clearTable(DataDimension.class);
-
-                for (Object o : rawdata.array) {
-                    DataDimension data = (DataDimension) o;
-                    model.addRow(new Object[] {
-                        data.dim,
-                        data.name,
-                        data.players,
-                        data.forced,
-                        data.loaded,
-                        data.mobs,
-                        data.neutral,
-                        data.itemstacks,
-                        data.update.asMillisecond(),
-                        "Purge"
-                    });
-                }
-                this.getTable().dataUpdated(row);
+                    for (Object o : rawdata.array) {
+                        DataDimension data = (DataDimension) o;
+                        model.addRow(new Object[] {
+                            data.dim,
+                            data.name,
+                            data.players,
+                            data.forced,
+                            data.loaded,
+                            data.mobs,
+                            data.neutral,
+                            data.itemstacks,
+                            data.update.asMillisecond(),
+                            "Purge"
+                        });
+                    }
+                    this.getTable().dataUpdated(row);
+                });
                 break;
             }
             default:

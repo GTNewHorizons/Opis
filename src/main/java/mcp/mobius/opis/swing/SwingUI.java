@@ -2,22 +2,17 @@ package mcp.mobius.opis.swing;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.EventQueue;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.HashSet;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
-import javax.swing.SwingConstants;
-import javax.swing.ToolTipManager;
-import javax.swing.WindowConstants;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import mcp.mobius.opis.api.IMessageHandler;
 import mcp.mobius.opis.api.ITabPanel;
 import mcp.mobius.opis.data.holders.basetypes.SerialInt;
+import mcp.mobius.opis.events.OpisClientTickHandler;
 import mcp.mobius.opis.modOpis;
 import mcp.mobius.opis.network.PacketBase;
 import mcp.mobius.opis.network.PacketManager;
@@ -42,7 +37,7 @@ public class SwingUI extends JFrame implements WindowListener, ChangeListener, I
     private JTabbedPane tabbedPane;
 
     public void showUI() {
-        EventQueue.invokeLater(new Runnable() {
+        SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -108,14 +103,16 @@ public class SwingUI extends JFrame implements WindowListener, ChangeListener, I
     public boolean handleMessage(Message msg, PacketBase rawdata) {
         switch (msg) {
             case STATUS_ACCESS_LEVEL: {
-                AccessLevel level = AccessLevel.values()[((SerialInt) rawdata.value).value];
-                for (JButtonAccess button : SwingUI.registeredButtons) {
-                    if (level.ordinal() < button.getAccessLevel().ordinal()) {
-                        button.setEnabled(false);
-                    } else {
-                        button.setEnabled(true);
+                SwingUtilities.invokeLater(() -> {
+                    AccessLevel level = AccessLevel.values()[((SerialInt) rawdata.value).value];
+                    for (JButtonAccess button : SwingUI.registeredButtons) {
+                        if (level.ordinal() < button.getAccessLevel().ordinal()) {
+                            button.setEnabled(false);
+                        } else {
+                            button.setEnabled(true);
+                        }
                     }
-                }
+                });
                 break;
             }
             case CLIENT_SHOW_SWING: {
@@ -127,7 +124,9 @@ public class SwingUI extends JFrame implements WindowListener, ChangeListener, I
 
                 modOpis.swingOpen = true;
                 this.showUI();
-                Minecraft.getMinecraft().displayGuiScreen(new GuiChat());
+                OpisClientTickHandler.INSTANCE.scheduleOnClientThread(() -> {
+                    Minecraft.getMinecraft().displayGuiScreen(new GuiChat());
+                });
                 PacketManager.sendToServer(
                         new PacketReqData(Message.SWING_TAB_CHANGED, new SerialInt(SelectedTab.SUMMARY.ordinal())));
                 break;

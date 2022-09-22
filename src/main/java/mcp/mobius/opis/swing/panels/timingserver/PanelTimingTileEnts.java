@@ -1,8 +1,6 @@
 package mcp.mobius.opis.swing.panels.timingserver;
 
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JScrollPane;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import mcp.mobius.opis.api.ITabPanel;
 import mcp.mobius.opis.data.holders.basetypes.CoordinatesBlock;
@@ -79,49 +77,54 @@ public class PanelTimingTileEnts extends JPanelMsgHandler implements ITabPanel {
         switch (msg) {
             case LIST_TIMING_TILEENTS: {
                 this.cacheData(msg, rawdata);
+                SwingUtilities.invokeLater(() -> {
+                    this.getTable().setTableData(rawdata.array);
 
-                this.getTable().setTableData(rawdata.array);
+                    DefaultTableModel model = table.getModel();
+                    int row = this.getTable().clearTable(DataBlockTileEntity.class);
 
-                DefaultTableModel model = table.getModel();
-                int row = this.getTable().clearTable(DataBlockTileEntity.class);
+                    for (Object o : rawdata.array) {
+                        DataBlockTileEntity data = (DataBlockTileEntity) o;
+                        String name = ModIdentification.getStackName(data.id, data.meta);
+                        String modID = ModIdentification.getModStackName(data.id, data.meta);
+                        model.addRow(new Object[] {
+                            name,
+                            modID,
+                            data.pos.dim,
+                            String.format("[ %4d %4d %4d ]", data.pos.x, data.pos.y, data.pos.z),
+                            data.update
+                        });
+                    }
 
-                for (Object o : rawdata.array) {
-                    DataBlockTileEntity data = (DataBlockTileEntity) o;
-                    String name = ModIdentification.getStackName(data.id, data.meta);
-                    String modID = ModIdentification.getModStackName(data.id, data.meta);
-                    model.addRow(new Object[] {
-                        name,
-                        modID,
-                        data.pos.dim,
-                        String.format("[ %4d %4d %4d ]", data.pos.x, data.pos.y, data.pos.z),
-                        data.update
-                    });
-                }
-
-                this.getTable().dataUpdated(row);
-
+                    this.getTable().dataUpdated(row);
+                });
                 break;
             }
             case VALUE_TIMING_TILEENTS: {
-                this.getLblSummary()
-                        .setText(String.format("Total update time : %s", ((DataTiming) rawdata.value).toString()));
+                SwingUtilities.invokeLater(() -> {
+                    this.getLblSummary()
+                            .setText(String.format("Total update time : %s", ((DataTiming) rawdata.value).toString()));
+                });
                 break;
             }
-            case STATUS_START: {
-                this.getBtnRun().setText("Running...");
+            case STATUS_START:
+            case STATUS_RUNNING: {
+                SwingUtilities.invokeLater(() -> {
+                    this.getBtnRun().setText("Running...");
+                });
                 break;
             }
             case STATUS_STOP: {
-                this.getBtnRun().setText("Run Opis");
-                break;
-            }
-            case STATUS_RUNNING: {
-                this.getBtnRun().setText("Running...");
+                SwingUtilities.invokeLater(() -> {
+                    this.getBtnRun().setText("Run Opis");
+                });
                 break;
             }
             case CLIENT_HIGHLIGHT_BLOCK: {
                 modOpis.selectedBlock = (CoordinatesBlock) rawdata.value;
-                this.getBtnReset().setEnabled(true);
+                SwingUtilities.invokeLater(() -> {
+                    this.getBtnReset().setEnabled(true);
+                });
                 break;
             }
             default:

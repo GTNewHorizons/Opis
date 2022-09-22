@@ -6,6 +6,7 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import mcp.mobius.mobiuscore.profiler.ProfilerSection;
 import mcp.mobius.opis.data.holders.basetypes.SerialInt;
 import mcp.mobius.opis.data.holders.basetypes.SerialLong;
@@ -36,10 +37,25 @@ public enum OpisServerTickHandler {
     public EventTimer timer5000 = new EventTimer(5000);
     public EventTimer timer10000 = new EventTimer(10000);
 
-    public HashMap<EntityPlayerMP, AccessLevel> cachedAccess = new HashMap<EntityPlayerMP, AccessLevel>();
+    public HashMap<EntityPlayerMP, AccessLevel> cachedAccess = new HashMap<>();
+
+    private final ConcurrentLinkedQueue<Runnable> scheduledCalls = new ConcurrentLinkedQueue<>();
+
+    /** Schedules the provided function to execute on the MC server thread on the next tick */
+    public void scheduleOnServerThread(Runnable func) {
+        scheduledCalls.add(func);
+    }
+
+    public void purgeScheduledCallQueue() {
+        scheduledCalls.clear();
+    }
 
     @SubscribeEvent
     public void tickEnd(TickEvent.ServerTickEvent event) {
+
+        for (Runnable r = scheduledCalls.poll(); r != null; r = scheduledCalls.poll()) {
+            r.run();
+        }
 
         StringCache.INSTANCE.syncNewCache();
 

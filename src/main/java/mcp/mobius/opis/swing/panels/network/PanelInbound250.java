@@ -1,7 +1,6 @@
 package mcp.mobius.opis.swing.panels.network;
 
-import javax.swing.JScrollPane;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import mcp.mobius.opis.api.ITabPanel;
 import mcp.mobius.opis.data.holders.newtypes.CachedString;
@@ -36,19 +35,19 @@ public class PanelInbound250 extends JPanelMsgHandler implements ITabPanel {
         switch (msg) {
             case LIST_PACKETS_INBOUND_250: {
                 this.cacheData(msg, rawdata);
+                SwingUtilities.invokeLater(() -> {
+                    this.getTable().setTableData(rawdata.array);
 
-                this.getTable().setTableData(rawdata.array);
+                    DefaultTableModel model = this.getTable().getModel();
+                    int row = this.getTable().clearTable(DataPacket250.class);
 
-                DefaultTableModel model = this.getTable().getModel();
-                int row = this.getTable().clearTable(DataPacket250.class);
+                    for (Object o : rawdata.array) {
+                        DataPacket250 packet = (DataPacket250) o;
+                        model.addRow(new Object[] {packet.channel, packet.amount, packet.rate, packet.size});
+                    }
 
-                for (Object o : rawdata.array) {
-                    DataPacket250 packet = (DataPacket250) o;
-                    model.addRow(new Object[] {packet.channel, packet.amount, packet.rate, packet.size});
-                }
-
-                this.getTable().dataUpdated(row);
-
+                    this.getTable().dataUpdated(row);
+                });
                 break;
             }
 

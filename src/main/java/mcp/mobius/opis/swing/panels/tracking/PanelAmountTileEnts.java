@@ -1,8 +1,6 @@
 package mcp.mobius.opis.swing.panels.tracking;
 
-import javax.swing.JButton;
-import javax.swing.JScrollPane;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import mcp.mobius.opis.api.ITabPanel;
 import mcp.mobius.opis.data.holders.basetypes.AmountHolder;
@@ -48,18 +46,19 @@ public class PanelAmountTileEnts extends JPanelMsgHandler implements ITabPanel {
         switch (msg) {
             case LIST_AMOUNT_TILEENTS: {
                 this.cacheData(msg, rawdata);
+                SwingUtilities.invokeLater(() -> {
+                    this.getTable().setTableData(rawdata.array);
 
-                this.getTable().setTableData(rawdata.array);
+                    DefaultTableModel model = this.getTable().getModel();
+                    int row = this.getTable().clearTable(AmountHolder.class);
 
-                DefaultTableModel model = this.getTable().getModel();
-                int row = this.getTable().clearTable(AmountHolder.class);
+                    for (Object o : rawdata.array) {
+                        AmountHolder entity = (AmountHolder) o;
+                        model.addRow(new Object[] {entity.key, entity.data, entity.value});
+                    }
 
-                for (Object o : rawdata.array) {
-                    AmountHolder entity = (AmountHolder) o;
-                    model.addRow(new Object[] {entity.key, entity.data, entity.value});
-                }
-
-                this.getTable().dataUpdated(row);
+                    this.getTable().dataUpdated(row);
+                });
                 break;
             }
             default:

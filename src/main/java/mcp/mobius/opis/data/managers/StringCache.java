@@ -22,7 +22,7 @@ public enum StringCache implements IMessageHandler {
     private int currentIndex = -1;
     // private HashBiMap<Integer, String>  cache  = HashBiMap.create();
     // private ArrayList<DataStringUpdate> toSend = new ArrayList<DataStringUpdate>();
-    private BiMap<Integer, String> cache = Maps.synchronizedBiMap(HashBiMap.<Integer, String>create());
+    private final BiMap<Integer, String> cache = Maps.synchronizedBiMap(HashBiMap.<Integer, String>create());
     private ConcurrentLinkedQueue<DataStringUpdate> fullsync = new ConcurrentLinkedQueue<DataStringUpdate>();
     private ConcurrentLinkedQueue<DataStringUpdate> unsynced =
             new ConcurrentLinkedQueue<DataStringUpdate>(); // This is the current list of unsynced
@@ -62,7 +62,7 @@ public enum StringCache implements IMessageHandler {
 
         int i = 0;
 
-        ArrayList<DataStringUpdate> toSendCopy = new ArrayList(fullsync);
+        ArrayList<DataStringUpdate> toSendCopy = new ArrayList<>(fullsync);
 
         while (i < toSendCopy.size()) {
             PacketManager.sendToPlayer(
@@ -89,12 +89,14 @@ public enum StringCache implements IMessageHandler {
 
                 DataStringUpdate data = (DataStringUpdate) rawdata.value;
                 // modOpis.log.info(String.format("++++ Received String Cache update : [%d] %s", data.index, data.str));
-                try {
-                    this.cache.put(data.index, data.str);
-                } catch (IllegalArgumentException e) {
-                    this.cache.remove(data.index);
-                    this.cache.inverse().remove(data.str);
-                    this.cache.put(data.index, data.str);
+                synchronized (cache) {
+                    try {
+                        this.cache.put(data.index, data.str);
+                    } catch (IllegalArgumentException e) {
+                        this.cache.remove(data.index);
+                        this.cache.inverse().remove(data.str);
+                        this.cache.put(data.index, data.str);
+                    }
                 }
 
                 TabPanelRegistrar.INSTANCE.refreshAll();
@@ -109,12 +111,14 @@ public enum StringCache implements IMessageHandler {
                     DataStringUpdate data = (DataStringUpdate) idata;
                     // modOpis.log.info(String.format("++++ Received String Cache update : [%d] %s", data.index,
                     // data.str));
-                    try {
-                        this.cache.put(data.index, data.str);
-                    } catch (IllegalArgumentException e) {
-                        this.cache.remove(data.index);
-                        this.cache.inverse().remove(data.str);
-                        this.cache.put(data.index, data.str);
+                    synchronized (cache) {
+                        try {
+                            this.cache.put(data.index, data.str);
+                        } catch (IllegalArgumentException e) {
+                            this.cache.remove(data.index);
+                            this.cache.inverse().remove(data.str);
+                            this.cache.put(data.index, data.str);
+                        }
                     }
                 }
 

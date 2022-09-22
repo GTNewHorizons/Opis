@@ -1,9 +1,7 @@
 package mcp.mobius.opis.swing.panels.timingserver;
 
 import java.util.HashMap;
-import javax.swing.JButton;
-import javax.swing.JScrollPane;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import mcp.mobius.opis.api.ITabPanel;
 import mcp.mobius.opis.data.holders.newtypes.DataBlockTileEntityPerClass;
@@ -50,52 +48,53 @@ public class PanelTimingTileEntsPerClass extends JPanelMsgHandler implements ITa
         switch (msg) {
             case LIST_TIMING_TILEENTS_PER_CLASS: {
                 this.cacheData(msg, rawdata);
+                SwingUtilities.invokeLater(() -> {
+                    this.getTable().setTableData(rawdata.array);
 
-                this.getTable().setTableData(rawdata.array);
+                    DefaultTableModel model = table.getModel();
+                    int row = this.getTable().clearTable(DataBlockTileEntityPerClass.class);
 
-                DefaultTableModel model = table.getModel();
-                int row = this.getTable().clearTable(DataBlockTileEntityPerClass.class);
+                    HashMap<String, DataBlockTileEntityPerClass> cumData =
+                            new HashMap<String, DataBlockTileEntityPerClass>();
 
-                HashMap<String, DataBlockTileEntityPerClass> cumData =
-                        new HashMap<String, DataBlockTileEntityPerClass>();
+                    for (Object o : rawdata.array) {
+                        DataBlockTileEntityPerClass data = (DataBlockTileEntityPerClass) o;
+                        String name = ModIdentification.getStackName(data.id, data.meta);
 
-                for (Object o : rawdata.array) {
-                    DataBlockTileEntityPerClass data = (DataBlockTileEntityPerClass) o;
-                    String name = ModIdentification.getStackName(data.id, data.meta);
+                        if (!cumData.containsKey(name))
+                            cumData.put(name, new DataBlockTileEntityPerClass(data.id, data.meta));
 
-                    if (!cumData.containsKey(name))
-                        cumData.put(name, new DataBlockTileEntityPerClass(data.id, data.meta));
+                        cumData.get(name).add(data.amount, data.update.timing);
+                    }
 
-                    cumData.get(name).add(data.amount, data.update.timing);
-                }
+                    for (String s : cumData.keySet()) {
+                        String name = s;
+                        String modID = ModIdentification.getModStackName(cumData.get(s).id, cumData.get(s).meta);
+                        model.addRow(new Object[] {
+                            name,
+                            modID,
+                            cumData.get(s).amount,
+                            cumData.get(s).update,
+                            new DataTiming(cumData.get(s).update.timing / cumData.get(s).amount)
+                        });
+                    }
 
-                for (String s : cumData.keySet()) {
-                    String name = s;
-                    String modID = ModIdentification.getModStackName(cumData.get(s).id, cumData.get(s).meta);
-                    model.addRow(new Object[] {
-                        name,
-                        modID,
-                        cumData.get(s).amount,
-                        cumData.get(s).update,
-                        new DataTiming(cumData.get(s).update.timing / cumData.get(s).amount)
-                    });
-                }
-
-                this.getTable().dataUpdated(row);
-
+                    this.getTable().dataUpdated(row);
+                });
                 break;
             }
 
-            case STATUS_START: {
-                this.getBtnRun().setText("Running...");
+            case STATUS_START:
+            case STATUS_RUNNING: {
+                SwingUtilities.invokeLater(() -> {
+                    this.getBtnRun().setText("Running...");
+                });
                 break;
             }
             case STATUS_STOP: {
-                this.getBtnRun().setText("Run Opis");
-                break;
-            }
-            case STATUS_RUNNING: {
-                this.getBtnRun().setText("Running...");
+                SwingUtilities.invokeLater(() -> {
+                    this.getBtnRun().setText("Run Opis");
+                });
                 break;
             }
             default:

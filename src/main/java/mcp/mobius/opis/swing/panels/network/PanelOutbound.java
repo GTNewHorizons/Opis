@@ -1,7 +1,6 @@
 package mcp.mobius.opis.swing.panels.network;
 
-import javax.swing.JScrollPane;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import mcp.mobius.opis.api.ITabPanel;
 import mcp.mobius.opis.data.holders.newtypes.DataAmountRate;
@@ -35,19 +34,20 @@ public class PanelOutbound extends JPanelMsgHandler implements ITabPanel {
         switch (msg) {
             case LIST_PACKETS_OUTBOUND: {
                 this.cacheData(msg, rawdata);
+                SwingUtilities.invokeLater(() -> {
+                    this.getTable().setTableData(rawdata.array);
 
-                this.getTable().setTableData(rawdata.array);
+                    DefaultTableModel model = this.getTable().getModel();
+                    int row = this.getTable().clearTable(DataPacket.class);
 
-                DefaultTableModel model = this.getTable().getModel();
-                int row = this.getTable().clearTable(DataPacket.class);
+                    for (Object o : rawdata.array) {
+                        DataPacket packet = (DataPacket) o;
+                        if (packet.type.toString().equals("<UNUSED>")) continue;
+                        model.addRow(new Object[] {packet.type, packet.amount, packet.rate, packet.size});
+                    }
 
-                for (Object o : rawdata.array) {
-                    DataPacket packet = (DataPacket) o;
-                    if (packet.type.equals("<UNUSED>")) continue;
-                    model.addRow(new Object[] {packet.type, packet.amount, packet.rate, packet.size});
-                }
-
-                this.getTable().dataUpdated(row);
+                    this.getTable().dataUpdated(row);
+                });
 
                 break;
             }

@@ -9,6 +9,7 @@ import mcp.mobius.opis.data.client.DataCache;
 import mcp.mobius.opis.data.managers.ChunkManager;
 import mcp.mobius.opis.data.managers.MetaManager;
 import mcp.mobius.opis.data.managers.StringCache;
+import mcp.mobius.opis.events.OpisClientTickHandler;
 import mcp.mobius.opis.gui.font.Fonts;
 import mcp.mobius.opis.gui.font.TrueTypeFont;
 import mcp.mobius.opis.modOpis;
@@ -190,10 +191,12 @@ public class ProxyClient extends ProxyServer implements IMessageHandler {
                 break;
             }
             case CLIENT_START_PROFILING: {
-                modOpis.log.log(Level.INFO, "Started profiling");
-                MetaManager.reset();
-                modOpis.profilerRun = true;
-                ProfilerSection.activateAll(Side.CLIENT);
+                OpisClientTickHandler.INSTANCE.scheduleOnClientThread(() -> {
+                    modOpis.log.log(Level.INFO, "Started profiling");
+                    MetaManager.reset();
+                    modOpis.profilerRun = true;
+                    ProfilerSection.activateAll(Side.CLIENT);
+                });
                 break;
             }
             case CLIENT_SHOW_RENDER_TICK: {

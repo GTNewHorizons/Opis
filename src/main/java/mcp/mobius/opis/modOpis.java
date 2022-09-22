@@ -9,6 +9,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.event.FMLServerStoppedEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import mcp.mobius.mobiuscore.profiler.ProfilerSection;
 import mcp.mobius.opis.commands.client.CommandOpis;
@@ -56,7 +57,7 @@ public class modOpis {
     public static String rconpass = "";
     public static boolean microseconds = true;
     private static int lagGenID = -1;
-    public static CoordinatesBlock selectedBlock = null;
+    public static volatile CoordinatesBlock selectedBlock = null;
     public static boolean swingOpen = false;
 
     public Configuration config = null;
@@ -181,5 +182,10 @@ public class modOpis {
             System.out.printf("%s : %s\n", sec, sec.getProfiler().getClass().getSimpleName());
         }
         */
+    }
+
+    @EventHandler
+    public void serverStopped(FMLServerStoppedEvent event) {
+        OpisServerTickHandler.INSTANCE.purgeScheduledCallQueue();
     }
 }

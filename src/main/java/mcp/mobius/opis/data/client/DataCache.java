@@ -16,8 +16,8 @@ public class DataCache implements IMessageHandler {
     }
     ;
 
-    private long clockScrew = 0;
-    private AccessLevel clientAccess = AccessLevel.NONE;
+    private volatile long clockScrew = 0;
+    private volatile AccessLevel clientAccess = AccessLevel.NONE;
 
     public AccessLevel getAccessLevel() {
         return this.clientAccess;

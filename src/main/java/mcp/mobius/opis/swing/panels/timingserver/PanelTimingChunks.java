@@ -1,7 +1,6 @@
 package mcp.mobius.opis.swing.panels.timingserver;
 
-import javax.swing.JButton;
-import javax.swing.JScrollPane;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import mcp.mobius.opis.api.ITabPanel;
 import mcp.mobius.opis.data.holders.stats.StatAbstract;
@@ -56,38 +55,40 @@ public class PanelTimingChunks extends JPanelMsgHandler implements ITabPanel {
     public boolean handleMessage(Message msg, PacketBase rawdata) {
         switch (msg) {
             case LIST_TIMING_CHUNK: {
-                this.cacheData(msg, rawdata);
+                SwingUtilities.invokeLater(() -> {
+                    this.cacheData(msg, rawdata);
 
-                this.getTable().setTableData(rawdata.array);
+                    this.getTable().setTableData(rawdata.array);
 
-                DefaultTableModel model = table.getModel();
-                int row = this.getTable().clearTable(StatsChunk.class);
+                    DefaultTableModel model = table.getModel();
+                    int row = this.getTable().clearTable(StatsChunk.class);
 
-                for (Object o : rawdata.array) {
-                    StatsChunk stat = (StatsChunk) o;
-                    model.addRow(new Object[] {
-                        stat.getChunk().dim,
-                        String.format("[ %4d %4d ]", stat.getChunk().chunkX, stat.getChunk().chunkZ),
-                        stat.tileEntities,
-                        stat.entities,
-                        stat
-                    });
-                }
+                    for (Object o : rawdata.array) {
+                        StatsChunk stat = (StatsChunk) o;
+                        model.addRow(new Object[] {
+                            stat.getChunk().dim,
+                            String.format("[ %4d %4d ]", stat.getChunk().chunkX, stat.getChunk().chunkZ),
+                            stat.tileEntities,
+                            stat.entities,
+                            stat
+                        });
+                    }
 
-                this.getTable().dataUpdated(row);
-
+                    this.getTable().dataUpdated(row);
+                });
                 break;
             }
-            case STATUS_START: {
-                this.getBtnRun().setText("Running...");
+            case STATUS_START:
+            case STATUS_RUNNING: {
+                SwingUtilities.invokeLater(() -> {
+                    this.getBtnRun().setText("Running...");
+                });
                 break;
             }
             case STATUS_STOP: {
-                this.getBtnRun().setText("Run Opis");
-                break;
-            }
-            case STATUS_RUNNING: {
-                this.getBtnRun().setText("Running...");
+                SwingUtilities.invokeLater(() -> {
+                    this.getBtnRun().setText("Run Opis");
+                });
                 break;
             }
             default:
