@@ -201,8 +201,11 @@ MEMCONN_PAIREDCONN        ("cn",  "d", "Lcn;",    "net/minecraft/network/MemoryC
 
     public static ServerType getServerType() {
         if (serverType != null) return serverType;
-
-        if (FMLCommonHandler.instance().getModName().contains("thermos")) {
+        if (isClassExists(
+                "io.github.crucible.util.HashedArrayList")) {
+            serverType = ServerType.Crucible;
+            CoreDescription.log.info("Switching injection mode to Crucible");
+        } else if (FMLCommonHandler.instance().getModName().contains("thermos")) {
             serverType = ServerType.Thermos;
             CoreDescription.log.info("Switching injection mode to Thermos");
         } else if (FMLCommonHandler.instance().getModName().contains("kcauldron")) {
@@ -219,11 +222,21 @@ MEMCONN_PAIREDCONN        ("cn",  "d", "Lcn;",    "net/minecraft/network/MemoryC
         return serverType;
     }
 
+    private static boolean isClassExists(String classname) {
+        try {
+            Class.forName(classname);
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
+        return true;
+    }
+
     public enum ServerType {
         Forge,
         Cauldron,
         KCauldron,
-        Thermos
+        Thermos,
+        Crucible
     }
 
     /*
