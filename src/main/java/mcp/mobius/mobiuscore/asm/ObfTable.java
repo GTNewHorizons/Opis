@@ -201,8 +201,7 @@ MEMCONN_PAIREDCONN        ("cn",  "d", "Lcn;",    "net/minecraft/network/MemoryC
 
     public static ServerType getServerType() {
         if (serverType != null) return serverType;
-        if (isClassExists(
-                "io.github.crucible.util.HashedArrayList")) {
+        if (isClassExists("io.github.crucible.util.HashedArrayList")) {
             serverType = ServerType.Crucible;
             CoreDescription.log.info("Switching injection mode to Crucible");
         } else if (FMLCommonHandler.instance().getModName().contains("thermos")) {
