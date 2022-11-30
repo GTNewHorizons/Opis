@@ -3,6 +3,7 @@ package mcp.mobius.mobiuscore.asm;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import mcp.mobius.mobiuscore.asm.transformers.common.*;
+import mcp.mobius.mobiuscore.asm.transformers.crucible.TransformerWorldCrucible;
 import mcp.mobius.mobiuscore.asm.transformers.forge.TransformerWorld;
 import mcp.mobius.mobiuscore.asm.transformers.kcauldron.TransformerWorldKCauldron;
 import mcp.mobius.mobiuscore.asm.transformers.mcpc.TransformerWorldCauldron;
@@ -35,6 +36,8 @@ public class CoreTransformer implements IClassTransformer {
                     bytes = new TransformerWorldKCauldron().transform(name, srgname, bytes);
                 } else if (serverType == ObfTable.ServerType.Thermos) {
                     bytes = new TransformerWorldThermos().transform(name, srgname, bytes);
+                } else if (serverType == ObfTable.ServerType.Crucible) {
+                    bytes = new TransformerWorldCrucible().transform(name, srgname, bytes);
                 }
             }
 
