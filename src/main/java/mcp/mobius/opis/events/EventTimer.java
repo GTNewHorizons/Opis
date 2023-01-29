@@ -1,6 +1,7 @@
 package mcp.mobius.opis.events;
 
 public class EventTimer {
+
     private long interval;
     private long lastTick = System.nanoTime();
 

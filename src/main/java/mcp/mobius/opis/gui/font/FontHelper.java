@@ -1,16 +1,18 @@
 package mcp.mobius.opis.gui.font;
 
 import java.nio.FloatBuffer;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
+
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Matrix4f;
 
 public class FontHelper {
 
-    public static void drawString(
-            String s, int x, int y, TrueTypeFont font, float scaleX, float scaleY, float... rgba) {
+    public static void drawString(String s, int x, int y, TrueTypeFont font, float scaleX, float scaleY,
+            float... rgba) {
         Minecraft mc = Minecraft.getMinecraft();
         ScaledResolution sr = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
         if (mc.gameSettings.hideGUI) {
@@ -31,7 +33,12 @@ public class FontHelper {
         GL11.glEnable(GL11.GL_BLEND);
 
         font.drawString(
-                x * sr.getScaleFactor(), y - matrix.m31 * sr.getScaleFactor(), s, scaleX / amt, scaleY / amt, rgba);
+                x * sr.getScaleFactor(),
+                y - matrix.m31 * sr.getScaleFactor(),
+                s,
+                scaleX / amt,
+                scaleY / amt,
+                rgba);
         GL11.glDisable(GL11.GL_BLEND);
         FontHelper.set3DMode();
     }

@@ -5,7 +5,9 @@ import mcp.mobius.opis.gui.helpers.UIHelper;
 import mcp.mobius.opis.gui.interfaces.IWidget;
 import mcp.mobius.opis.gui.interfaces.Signal;
 import mcp.mobius.opis.gui.widgets.WidgetBase;
+
 import net.minecraft.util.ResourceLocation;
+
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.Point;
 
@@ -55,8 +57,7 @@ public class PictureMovableRC extends WidgetBase {
 
         GL11.glPushMatrix();
         this.texManager.bindTexture(texture);
-        UIHelper.drawTexture(
-                pos.getX(), pos.getY(), this.getSize().getX(), this.getSize().getY());
+        UIHelper.drawTexture(pos.getX(), pos.getY(), this.getSize().getX(), this.getSize().getY());
         GL11.glPopMatrix();
 
         this.loadGLState();

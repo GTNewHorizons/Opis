@@ -2,6 +2,7 @@ package mcp.mobius.opis.swing.panels.timingserver;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+
 import mcp.mobius.opis.api.ITabPanel;
 import mcp.mobius.opis.data.holders.newtypes.CachedString;
 import mcp.mobius.opis.data.holders.newtypes.DataEntityPerClass;
@@ -14,9 +15,11 @@ import mcp.mobius.opis.swing.actions.ActionRunOpis;
 import mcp.mobius.opis.swing.widgets.JButtonAccess;
 import mcp.mobius.opis.swing.widgets.JPanelMsgHandler;
 import mcp.mobius.opis.swing.widgets.JTableStats;
+
 import net.miginfocom.swing.MigLayout;
 
 public class PanelTimingEntitiesPerClass extends JPanelMsgHandler implements ITabPanel {
+
     private JButtonAccess btnRun;
 
     public PanelTimingEntitiesPerClass() {
@@ -30,9 +33,9 @@ public class PanelTimingEntitiesPerClass extends JPanelMsgHandler implements ITa
         add(scrollPane, "cell 0 1 2 1,grow");
 
         table = new JTableStats(
-                new String[] {"Name", "Amount", "Timing", "Mean value"},
-                new Class[] {CachedString.class, Integer.class, DataTiming.class, DataTiming.class},
-                new int[] {SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER});
+                new String[] { "Name", "Amount", "Timing", "Mean value" },
+                new Class[] { CachedString.class, Integer.class, DataTiming.class, DataTiming.class },
+                new int[] { SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER });
         scrollPane.setViewportView(table);
     }
 
@@ -49,9 +52,9 @@ public class PanelTimingEntitiesPerClass extends JPanelMsgHandler implements ITa
 
                     for (Object o : rawdata.array) {
                         DataEntityPerClass data = (DataEntityPerClass) o;
-                        model.addRow(new Object[] {
-                            data.name, data.nents, data.update, new DataTiming(data.update.timing / data.nents)
-                        });
+                        model.addRow(
+                                new Object[] { data.name, data.nents, data.update,
+                                        new DataTiming(data.update.timing / data.nents) });
                     }
 
                     this.getTable().dataUpdated(row);
@@ -61,15 +64,11 @@ public class PanelTimingEntitiesPerClass extends JPanelMsgHandler implements ITa
 
             case STATUS_START:
             case STATUS_RUNNING: {
-                SwingUtilities.invokeLater(() -> {
-                    this.getBtnRun().setText("Running...");
-                });
+                SwingUtilities.invokeLater(() -> { this.getBtnRun().setText("Running..."); });
                 break;
             }
             case STATUS_STOP: {
-                SwingUtilities.invokeLater(() -> {
-                    this.getBtnRun().setText("Run Opis");
-                });
+                SwingUtilities.invokeLater(() -> { this.getBtnRun().setText("Run Opis"); });
                 break;
             }
             default:

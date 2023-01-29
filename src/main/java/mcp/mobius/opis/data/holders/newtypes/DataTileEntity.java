@@ -1,10 +1,12 @@
 package mcp.mobius.opis.data.holders.newtypes;
 
-import com.google.common.io.ByteArrayDataInput;
-import com.google.common.io.ByteArrayDataOutput;
 import mcp.mobius.opis.data.holders.ISerializable;
 import mcp.mobius.opis.data.holders.basetypes.CoordinatesBlock;
+
 import net.minecraft.tileentity.TileEntity;
+
+import com.google.common.io.ByteArrayDataInput;
+import com.google.common.io.ByteArrayDataOutput;
 
 public class DataTileEntity implements ISerializable {
 
@@ -16,7 +18,10 @@ public class DataTileEntity implements ISerializable {
 
     public DataTileEntity fill(TileEntity tileEntity, String cause) {
         this.pos = new CoordinatesBlock(
-                tileEntity.getWorldObj().provider.dimensionId, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
+                tileEntity.getWorldObj().provider.dimensionId,
+                tileEntity.xCoord,
+                tileEntity.yCoord,
+                tileEntity.zCoord);
         this.clazz = new CachedString(tileEntity.getClass().getCanonicalName());
         this.hashCode = System.identityHashCode(tileEntity);
         this.isValid = !tileEntity.isInvalid();
@@ -25,14 +30,9 @@ public class DataTileEntity implements ISerializable {
     }
 
     /*
-    public DataTileEntity fill(CoordinatesBlock coord, String clazz, int hashCode, boolean isInvalid){
-    	this.pos       = coord;
-    	this.clazz     = new CachedString(clazz);
-    	this.hashCode  = hashCode;
-    	this.isValid = !isInvalid;
-    	return this;
-    }
-    */
+     * public DataTileEntity fill(CoordinatesBlock coord, String clazz, int hashCode, boolean isInvalid){ this.pos =
+     * coord; this.clazz = new CachedString(clazz); this.hashCode = hashCode; this.isValid = !isInvalid; return this; }
+     */
 
     @Override
     public void writeToStream(ByteArrayDataOutput stream) {

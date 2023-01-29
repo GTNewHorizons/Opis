@@ -6,8 +6,10 @@ import mcp.mobius.opis.gui.interfaces.IWidget;
 import mcp.mobius.opis.gui.interfaces.Signal;
 import mcp.mobius.opis.gui.widgets.LabelFixedFont;
 import mcp.mobius.opis.gui.widgets.WidgetBase;
+
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.util.ResourceLocation;
+
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.Point;
 
@@ -25,9 +27,8 @@ public abstract class ButtonBase extends WidgetBase {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
         for (IWidget widget : this.widgets.values())
-            if (widget instanceof LabelFixedFont)
-                if (this.mouseOver) ((LabelFixedFont) widget).setColor(0xffffa0);
-                else ((LabelFixedFont) widget).setColor(0xffffff);
+            if (widget instanceof LabelFixedFont) if (this.mouseOver) ((LabelFixedFont) widget).setColor(0xffffa0);
+            else((LabelFixedFont) widget).setColor(0xffffff);
 
         super.draw();
     }
@@ -70,10 +71,8 @@ public abstract class ButtonBase extends WidgetBase {
 
     @Override
     public void onMouseClick(MouseEvent event) {
-        if (event.button == 0)
-            this.mc
-                    .getSoundHandler()
-                    .playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0F));
+        if (event.button == 0) this.mc.getSoundHandler()
+                .playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0F));
 
         this.emit(Signal.CLICKED, event.button);
     }

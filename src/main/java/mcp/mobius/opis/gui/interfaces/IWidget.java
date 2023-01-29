@@ -2,6 +2,7 @@ package mcp.mobius.opis.gui.interfaces;
 
 import mcp.mobius.opis.gui.events.MouseEvent;
 import mcp.mobius.opis.gui.widgets.WidgetGeometry;
+
 import org.lwjgl.util.Point;
 
 public interface IWidget {
@@ -88,8 +89,8 @@ public interface IWidget {
 
     void onWidgetEvent(IWidget srcwidget, Signal signal, Object... params);
 
-    // boolean  onMouseEnter();
-    // boolean  onMouseMoved();
-    // boolean  onMouseLeave();
+    // boolean onMouseEnter();
+    // boolean onMouseMoved();
+    // boolean onMouseLeave();
 
 }

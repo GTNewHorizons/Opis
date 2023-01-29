@@ -1,15 +1,18 @@
 package mcp.mobius.opis.gui.widgets;
 
 import java.util.LinkedHashMap;
+
 import mcp.mobius.opis.gui.events.MouseEvent;
 import mcp.mobius.opis.gui.helpers.ReverseIterator;
 import mcp.mobius.opis.gui.interfaces.CType;
 import mcp.mobius.opis.gui.interfaces.IWidget;
 import mcp.mobius.opis.gui.interfaces.RenderPriority;
 import mcp.mobius.opis.gui.interfaces.Signal;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.texture.TextureManager;
+
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.Point;
 
@@ -107,8 +110,7 @@ public abstract class WidgetBase implements IWidget {
 
     private IWidget _getWidgetAtLayer(double posX, double posY, int layer, int depth) {
         for (IWidget widget : this.widgets.values()) {
-            if ((posX >= widget.getPos().getX())
-                    && (posX <= widget.getPos().getX() + widget.getSize().getX())
+            if ((posX >= widget.getPos().getX()) && (posX <= widget.getPos().getX() + widget.getSize().getX())
                     && (posY >= widget.getPos().getY())
                     && (posY <= widget.getPos().getY() + widget.getSize().getY())) {
                 if (depth == layer) return widget;
@@ -121,16 +123,15 @@ public abstract class WidgetBase implements IWidget {
     @Override
     public IWidget getWidgetAtCoordinates(double posX, double posY) {
         for (IWidget widget : new ReverseIterator<IWidget>(this.widgets.values()))
-            if ((posX >= widget.getPos().getX())
-                    && (posX <= widget.getPos().getX() + widget.getSize().getX())
+            if ((posX >= widget.getPos().getX()) && (posX <= widget.getPos().getX() + widget.getSize().getX())
                     && (posY >= widget.getPos().getY())
                     && (posY <= widget.getPos().getY() + widget.getSize().getY()))
                 return widget.getWidgetAtCoordinates(posX, posY);
 
-        if ((posX >= this.getPos().getX())
-                && (posX <= this.getPos().getX() + this.getSize().getX())
+        if ((posX >= this.getPos().getX()) && (posX <= this.getPos().getX() + this.getSize().getX())
                 && (posY >= this.getPos().getY())
-                && (posY <= this.getPos().getY() + this.getSize().getY())) return this;
+                && (posY <= this.getPos().getY() + this.getSize().getY()))
+            return this;
 
         return null;
     }
@@ -168,10 +169,8 @@ public abstract class WidgetBase implements IWidget {
         this.draw(this.getPos());
 
         /*
-        for (IWidget widget: this.widgets.values())
-        	if (widget.shouldRender())
-        		widget.draw();
-        */
+         * for (IWidget widget: this.widgets.values()) if (widget.shouldRender()) widget.draw();
+         */
 
         for (IWidget widget : this.renderQueue_LOW.values()) if (widget.shouldRender()) widget.draw();
 
@@ -243,8 +242,7 @@ public abstract class WidgetBase implements IWidget {
         this.geom.setPos(x, y, fracX, fracY);
         this.emit(Signal.GEOM_CHANGED, this.geom);
         return this;
-    }
-    ;
+    };
 
     @Override
     public IWidget setSize(double sx, double sy) {
@@ -256,8 +254,7 @@ public abstract class WidgetBase implements IWidget {
         this.geom.setSize(sx, sy, fracX, fracY);
         this.emit(Signal.GEOM_CHANGED, this.geom);
         return this;
-    }
-    ;
+    };
 
     @Override
     public IWidget adjustSize() {
@@ -306,32 +303,27 @@ public abstract class WidgetBase implements IWidget {
     @Override
     public void setAlpha(float alpha) {
         this.alpha = alpha;
-    }
-    ;
+    };
 
     @Override
     public float getAlpha() {
         return this.alpha;
-    }
-    ;
+    };
 
     @Override
     public void show() {
         this.isRendering = true;
-    }
-    ;
+    };
 
     @Override
     public void hide() {
         this.isRendering = false;
-    }
-    ;
+    };
 
     @Override
     public boolean shouldRender() {
         return this.isRendering;
-    }
-    ;
+    };
 
     ////////////////////
     // INPUT HANDLING //
@@ -347,7 +339,7 @@ public abstract class WidgetBase implements IWidget {
 
         // IWidget widget = this.getWidgetAtCoordinates(event.x, event.y);
         // if (widget != null && widget != this)
-        //	widget.onMouseClick(event);
+        // widget.onMouseClick(event);
     }
 
     @Override
@@ -357,7 +349,7 @@ public abstract class WidgetBase implements IWidget {
 
         // IWidget widget = this.getWidgetAtCoordinates(event.x, event.y);
         // if (widget != null && widget != this)
-        //	widget.onMouseDrag(event);
+        // widget.onMouseDrag(event);
     }
 
     @Override
@@ -367,7 +359,7 @@ public abstract class WidgetBase implements IWidget {
 
         // IWidget widget = this.getWidgetAtCoordinates(event.x, event.y);
         // if (widget != null && widget != this)
-        //	widget.onMouseMove(event);
+        // widget.onMouseMove(event);
     }
 
     @Override
@@ -377,7 +369,7 @@ public abstract class WidgetBase implements IWidget {
 
         // IWidget widget = this.getWidgetAtCoordinates(event.x, event.y);
         // if (widget != null && widget != this)
-        //	widget.onMouseRelease(event);
+        // widget.onMouseRelease(event);
     }
 
     @Override

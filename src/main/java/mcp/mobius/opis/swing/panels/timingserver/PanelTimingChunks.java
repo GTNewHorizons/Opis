@@ -2,6 +2,7 @@ package mcp.mobius.opis.swing.panels.timingserver;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+
 import mcp.mobius.opis.api.ITabPanel;
 import mcp.mobius.opis.data.holders.stats.StatAbstract;
 import mcp.mobius.opis.data.holders.stats.StatsChunk;
@@ -14,9 +15,11 @@ import mcp.mobius.opis.swing.actions.ActionTimingChunks;
 import mcp.mobius.opis.swing.widgets.JButtonAccess;
 import mcp.mobius.opis.swing.widgets.JPanelMsgHandler;
 import mcp.mobius.opis.swing.widgets.JTableStats;
+
 import net.miginfocom.swing.MigLayout;
 
 public class PanelTimingChunks extends JPanelMsgHandler implements ITabPanel {
+
     private JButtonAccess btnRun;
     private JButtonAccess btnTeleport;
 
@@ -38,8 +41,8 @@ public class PanelTimingChunks extends JPanelMsgHandler implements ITabPanel {
         add(scrollPane, "cell 0 1 4 1,grow");
 
         table = new JTableStats(
-                new String[] {"Dimension", "Position", "TileEntities", "Entities", "Update Time"},
-                new Class[] {Integer.class, String.class, Integer.class, Integer.class, StatAbstract.class});
+                new String[] { "Dimension", "Position", "TileEntities", "Entities", "Update Time" },
+                new Class[] { Integer.class, String.class, Integer.class, Integer.class, StatAbstract.class });
         scrollPane.setViewportView(table);
     }
 
@@ -65,13 +68,10 @@ public class PanelTimingChunks extends JPanelMsgHandler implements ITabPanel {
 
                     for (Object o : rawdata.array) {
                         StatsChunk stat = (StatsChunk) o;
-                        model.addRow(new Object[] {
-                            stat.getChunk().dim,
-                            String.format("[ %4d %4d ]", stat.getChunk().chunkX, stat.getChunk().chunkZ),
-                            stat.tileEntities,
-                            stat.entities,
-                            stat
-                        });
+                        model.addRow(
+                                new Object[] { stat.getChunk().dim,
+                                        String.format("[ %4d %4d ]", stat.getChunk().chunkX, stat.getChunk().chunkZ),
+                                        stat.tileEntities, stat.entities, stat });
                     }
 
                     this.getTable().dataUpdated(row);
@@ -80,15 +80,11 @@ public class PanelTimingChunks extends JPanelMsgHandler implements ITabPanel {
             }
             case STATUS_START:
             case STATUS_RUNNING: {
-                SwingUtilities.invokeLater(() -> {
-                    this.getBtnRun().setText("Running...");
-                });
+                SwingUtilities.invokeLater(() -> { this.getBtnRun().setText("Running..."); });
                 break;
             }
             case STATUS_STOP: {
-                SwingUtilities.invokeLater(() -> {
-                    this.getBtnRun().setText("Run Opis");
-                });
+                SwingUtilities.invokeLater(() -> { this.getBtnRun().setText("Run Opis"); });
                 break;
             }
             default:

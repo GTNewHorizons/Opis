@@ -1,9 +1,10 @@
 package mcp.mobius.opis.network.rcon.nexus;
 
+import java.util.List;
+
 import io.nettyopis.buffer.ByteBuf;
 import io.nettyopis.channel.ChannelHandlerContext;
 import io.nettyopis.handler.codec.ByteToMessageDecoder;
-import java.util.List;
 
 public class NexusHandshakeDecoder extends ByteToMessageDecoder {
 

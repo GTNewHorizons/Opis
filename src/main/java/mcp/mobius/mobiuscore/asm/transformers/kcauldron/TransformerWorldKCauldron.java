@@ -5,6 +5,7 @@ import mcp.mobius.mobiuscore.asm.ObfTable;
 import mcp.mobius.mobiuscore.asm.Opcode;
 import mcp.mobius.mobiuscore.asm.transformers.TransformerBase;
 import mcp.mobius.mobiuscore.profiler.ProfilerSection;
+
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.tree.*;
@@ -51,92 +52,65 @@ public class TransformerWorldKCauldron extends TransformerBase {
         WORLD_UPDATEENTITIES = ObfTable.WORLD_UPDATEENTITIES.getFullDescriptor(); // updateEntities.getFullDescriptor();
         WORLD_INIT = ObfTable.WORLD_INIT.getFullDescriptor();
 
-        WORLD_UPDATE_PATTERN_TEUPDATE = new AbstractInsnNode[] {
-            new LineNumberNode(-1, new LabelNode()),
-            Opcode.ALOAD(-1),
-            Opcode.INVOKEVIRTUAL(
-                    ObfTable.TILEENTITY_UPDATEENTITY.getClazz(),
-                    ObfTable.TILEENTITY_UPDATEENTITY.getName(),
-                    ObfTable.TILEENTITY_UPDATEENTITY.getDescriptor())
-        };
+        WORLD_UPDATE_PATTERN_TEUPDATE = new AbstractInsnNode[] { new LineNumberNode(-1, new LabelNode()),
+                Opcode.ALOAD(-1),
+                Opcode.INVOKEVIRTUAL(
+                        ObfTable.TILEENTITY_UPDATEENTITY.getClazz(),
+                        ObfTable.TILEENTITY_UPDATEENTITY.getName(),
+                        ObfTable.TILEENTITY_UPDATEENTITY.getDescriptor()) };
 
         WORLD_UPDATE_PAYLOAD_START_TEUPDATE = new AbstractInsnNode[] {
-            Opcode.GETSTATIC(profilerClass, ProfilerSection.TILEENT_UPDATETIME.name(), profilerType),
-            Opcode.ALOAD(9),
-            Opcode.INVOKEVIRTUAL(profilerClass, "start", "(Ljava/lang/Object;)V")
-        };
+                Opcode.GETSTATIC(profilerClass, ProfilerSection.TILEENT_UPDATETIME.name(), profilerType),
+                Opcode.ALOAD(9), Opcode.INVOKEVIRTUAL(profilerClass, "start", "(Ljava/lang/Object;)V") };
 
         WORLD_UPDATE_PAYLOAD_STOP_TEUPDATE = new AbstractInsnNode[] {
-            Opcode.GETSTATIC(profilerClass, ProfilerSection.TILEENT_UPDATETIME.name(), profilerType),
-            Opcode.ALOAD(9),
-            Opcode.INVOKEVIRTUAL(profilerClass, "stop", "(Ljava/lang/Object;)V")
-        };
+                Opcode.GETSTATIC(profilerClass, ProfilerSection.TILEENT_UPDATETIME.name(), profilerType),
+                Opcode.ALOAD(9), Opcode.INVOKEVIRTUAL(profilerClass, "stop", "(Ljava/lang/Object;)V") };
 
-        WORLD_UPDATE_PATTERN_ENTUPDATE = new AbstractInsnNode[] {
-            new LineNumberNode(-1, new LabelNode()),
-            Opcode.ALOAD(-1),
-            Opcode.ALOAD(-1),
-            Opcode.INVOKEVIRTUAL(
-                    ObfTable.WORLD_UPDATEENTITY.getClazz(),
-                    ObfTable.WORLD_UPDATEENTITY.getName(),
-                    ObfTable.WORLD_UPDATEENTITY.getDescriptor())
-        };
+        WORLD_UPDATE_PATTERN_ENTUPDATE = new AbstractInsnNode[] { new LineNumberNode(-1, new LabelNode()),
+                Opcode.ALOAD(-1), Opcode.ALOAD(-1),
+                Opcode.INVOKEVIRTUAL(
+                        ObfTable.WORLD_UPDATEENTITY.getClazz(),
+                        ObfTable.WORLD_UPDATEENTITY.getName(),
+                        ObfTable.WORLD_UPDATEENTITY.getDescriptor()) };
 
         WORLD_UPDATE_PAYLOAD_START_ENTUPDATE = new AbstractInsnNode[] {
-            Opcode.GETSTATIC(profilerClass, ProfilerSection.ENTITY_UPDATETIME.name(), profilerType),
-            Opcode.ALOAD(2),
-            Opcode.INVOKEVIRTUAL(profilerClass, "start", "(Ljava/lang/Object;)V")
-        };
+                Opcode.GETSTATIC(profilerClass, ProfilerSection.ENTITY_UPDATETIME.name(), profilerType),
+                Opcode.ALOAD(2), Opcode.INVOKEVIRTUAL(profilerClass, "start", "(Ljava/lang/Object;)V") };
 
         WORLD_UPDATE_PAYLOAD_STOP_ENTUPDATE = new AbstractInsnNode[] {
-            Opcode.GETSTATIC(profilerClass, ProfilerSection.ENTITY_UPDATETIME.name(), profilerType),
-            Opcode.ALOAD(2),
-            Opcode.INVOKEVIRTUAL(profilerClass, "stop", "(Ljava/lang/Object;)V")
-        };
+                Opcode.GETSTATIC(profilerClass, ProfilerSection.ENTITY_UPDATETIME.name(), profilerType),
+                Opcode.ALOAD(2), Opcode.INVOKEVIRTUAL(profilerClass, "stop", "(Ljava/lang/Object;)V") };
 
-        WORLD_PATTERN_LOADEDENTS = new AbstractInsnNode[] {
-            Opcode.ALOAD(0),
-            Opcode.NEW("java/util/ArrayList"),
-            Opcode.DUP(),
-            Opcode.INVOKESPECIAL("java/util/ArrayList", "<init>", "()V"),
-            Opcode.PUTFIELD(
-                    ObfTable.WORLD_LOADEDENTS.getClazz(),
-                    ObfTable.WORLD_LOADEDENTS.getName(),
-                    ObfTable.WORLD_LOADEDENTS.getDescriptor())
-        };
+        WORLD_PATTERN_LOADEDENTS = new AbstractInsnNode[] { Opcode.ALOAD(0), Opcode.NEW("java/util/ArrayList"),
+                Opcode.DUP(), Opcode.INVOKESPECIAL("java/util/ArrayList", "<init>", "()V"),
+                Opcode.PUTFIELD(
+                        ObfTable.WORLD_LOADEDENTS.getClazz(),
+                        ObfTable.WORLD_LOADEDENTS.getName(),
+                        ObfTable.WORLD_LOADEDENTS.getDescriptor()) };
 
-        WORLD_PATTERN_LOADEDTILES = new AbstractInsnNode[] {
-            Opcode.ALOAD(0),
-            Opcode.NEW("java/util/ArrayList"),
-            Opcode.DUP(),
-            Opcode.INVOKESPECIAL("java/util/ArrayList", "<init>", "()V"),
-            Opcode.PUTFIELD(
-                    ObfTable.WORLD_LOADEDTILES.getClazz(),
-                    ObfTable.WORLD_LOADEDTILES.getName(),
-                    ObfTable.WORLD_LOADEDTILES.getDescriptor())
-        };
+        WORLD_PATTERN_LOADEDTILES = new AbstractInsnNode[] { Opcode.ALOAD(0), Opcode.NEW("java/util/ArrayList"),
+                Opcode.DUP(), Opcode.INVOKESPECIAL("java/util/ArrayList", "<init>", "()V"),
+                Opcode.PUTFIELD(
+                        ObfTable.WORLD_LOADEDTILES.getClazz(),
+                        ObfTable.WORLD_LOADEDTILES.getName(),
+                        ObfTable.WORLD_LOADEDTILES.getDescriptor()) };
 
-        WORLD_PAYLOAD_LOADEDENTS = new AbstractInsnNode[] {
-            Opcode.ALOAD(0),
-            Opcode.NEW("mcp/mobius/mobiuscore/monitors/MonitoredEntityList"),
-            Opcode.DUP(),
-            Opcode.INVOKESPECIAL("mcp/mobius/mobiuscore/monitors/MonitoredEntityList", "<init>", "()V"),
-            Opcode.PUTFIELD(
-                    ObfTable.WORLD_LOADEDENTS.getClazz(),
-                    ObfTable.WORLD_LOADEDENTS.getName(),
-                    ObfTable.WORLD_LOADEDENTS.getDescriptor())
-        };
+        WORLD_PAYLOAD_LOADEDENTS = new AbstractInsnNode[] { Opcode.ALOAD(0),
+                Opcode.NEW("mcp/mobius/mobiuscore/monitors/MonitoredEntityList"), Opcode.DUP(),
+                Opcode.INVOKESPECIAL("mcp/mobius/mobiuscore/monitors/MonitoredEntityList", "<init>", "()V"),
+                Opcode.PUTFIELD(
+                        ObfTable.WORLD_LOADEDENTS.getClazz(),
+                        ObfTable.WORLD_LOADEDENTS.getName(),
+                        ObfTable.WORLD_LOADEDENTS.getDescriptor()) };
 
-        WORLD_PAYLOAD_LOADEDTILES = new AbstractInsnNode[] {
-            Opcode.ALOAD(0),
-            Opcode.NEW("mcp/mobius/mobiuscore/monitors/MonitoredTileList"),
-            Opcode.DUP(),
-            Opcode.INVOKESPECIAL("mcp/mobius/mobiuscore/monitors/MonitoredTileList", "<init>", "()V"),
-            Opcode.PUTFIELD(
-                    ObfTable.WORLD_LOADEDTILES.getClazz(),
-                    ObfTable.WORLD_LOADEDTILES.getName(),
-                    ObfTable.WORLD_LOADEDTILES.getDescriptor())
-        };
+        WORLD_PAYLOAD_LOADEDTILES = new AbstractInsnNode[] { Opcode.ALOAD(0),
+                Opcode.NEW("mcp/mobius/mobiuscore/monitors/MonitoredTileList"), Opcode.DUP(),
+                Opcode.INVOKESPECIAL("mcp/mobius/mobiuscore/monitors/MonitoredTileList", "<init>", "()V"),
+                Opcode.PUTFIELD(
+                        ObfTable.WORLD_LOADEDTILES.getClazz(),
+                        ObfTable.WORLD_LOADEDTILES.getName(),
+                        ObfTable.WORLD_LOADEDTILES.getDescriptor()) };
     }
 
     @Override
@@ -155,7 +129,9 @@ public class TransformerWorldKCauldron extends TransformerBase {
         this.applyPayloadAfter(updateEntitiesNode, WORLD_UPDATE_PATTERN_TEUPDATE, WORLD_UPDATE_PAYLOAD_STOP_TEUPDATE);
 
         this.applyPayloadBefore(
-                updateEntitiesNode, WORLD_UPDATE_PATTERN_ENTUPDATE, WORLD_UPDATE_PAYLOAD_START_ENTUPDATE);
+                updateEntitiesNode,
+                WORLD_UPDATE_PATTERN_ENTUPDATE,
+                WORLD_UPDATE_PAYLOAD_START_ENTUPDATE);
         this.applyPayloadAfter(updateEntitiesNode, WORLD_UPDATE_PATTERN_ENTUPDATE, WORLD_UPDATE_PAYLOAD_STOP_ENTUPDATE);
 
         MethodNode initNode = this.getMethod(classNode, WORLD_INIT);

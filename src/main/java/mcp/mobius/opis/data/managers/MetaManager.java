@@ -1,9 +1,9 @@
 package mcp.mobius.opis.data.managers;
 
-import cpw.mods.fml.relauncher.Side;
 import mcp.mobius.mobiuscore.profiler.ProfilerSection;
 import mcp.mobius.opis.events.OpisServerTickHandler;
 import mcp.mobius.opis.modOpis;
+import cpw.mods.fml.relauncher.Side;
 
 public class MetaManager {
 

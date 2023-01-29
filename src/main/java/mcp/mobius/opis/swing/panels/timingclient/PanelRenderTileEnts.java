@@ -1,12 +1,14 @@
 package mcp.mobius.opis.swing.panels.timingclient;
 
 import java.util.ArrayList;
+
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+
 import mcp.mobius.opis.api.IMessageHandler;
 import mcp.mobius.opis.api.ITabPanel;
 import mcp.mobius.opis.data.holders.newtypes.DataTileEntityRender;
@@ -16,11 +18,13 @@ import mcp.mobius.opis.network.enums.Message;
 import mcp.mobius.opis.swing.SelectedTab;
 import mcp.mobius.opis.swing.actions.ActionRunOpisClient;
 import mcp.mobius.opis.swing.widgets.JTableStats;
+
 import net.miginfocom.swing.MigLayout;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 
 public class PanelRenderTileEnts extends JPanel implements ITabPanel, IMessageHandler {
+
     private JTableStats table;
     private JButton btnRunRender;
     private JLabel lblTotal;
@@ -39,8 +43,8 @@ public class PanelRenderTileEnts extends JPanel implements ITabPanel, IMessageHa
         add(scrollPane, "cell 0 1 3 1,grow");
 
         table = new JTableStats(
-                new String[] {"Name", "Coordinates", "Timing"},
-                new Class[] {String.class, Object.class, DataTiming.class});
+                new String[] { "Name", "Coordinates", "Timing" },
+                new Class[] { String.class, Object.class, DataTiming.class });
         scrollPane.setViewportView(table);
 
         lblTotal = new JLabel("Total : 0 µs");
@@ -60,10 +64,9 @@ public class PanelRenderTileEnts extends JPanel implements ITabPanel, IMessageHa
             try {
                 is = new ItemStack(Block.getBlockById(o.id), 1, o.meta);
                 name = is.getDisplayName();
-            } catch (Exception e) {
-            }
+            } catch (Exception e) {}
 
-            model.addRow(new Object[] {name, String.format("[ %4d %4d %4d ]", o.pos.x, o.pos.y, o.pos.z), o.update});
+            model.addRow(new Object[] { name, String.format("[ %4d %4d %4d ]", o.pos.x, o.pos.y, o.pos.z), o.update });
         }
 
         this.dataUpdated(table, model, row);

@@ -7,9 +7,11 @@ import mcp.mobius.opis.gui.interfaces.WAlign;
 import mcp.mobius.opis.gui.widgets.LayoutBase;
 import mcp.mobius.opis.gui.widgets.WidgetBase;
 import mcp.mobius.opis.gui.widgets.WidgetGeometry;
+
 import org.lwjgl.util.Point;
 
 public class TableRow extends WidgetBase {
+
     int ncolumns = -1;
     double[] widths;
     String[] texts;
@@ -25,9 +27,8 @@ public class TableRow extends WidgetBase {
 
         this.fontSize = fontSize;
 
-        this.addWidget("Background", new LayoutBase(null))
-                .setGeometry(new WidgetGeometry(
-                        50.0, 50.0, 100.0, 100.0, CType.RELXY, CType.RELXY, WAlign.CENTER, WAlign.CENTER));
+        this.addWidget("Background", new LayoutBase(null)).setGeometry(
+                new WidgetGeometry(50.0, 50.0, 100.0, 100.0, CType.RELXY, CType.RELXY, WAlign.CENTER, WAlign.CENTER));
         ((LayoutBase) this.getWidget("Background")).setBackgroundColors(this.bgcolor1, this.bgcolor2);
     }
 
@@ -96,15 +97,16 @@ public class TableRow extends WidgetBase {
                     TableCell cell = (TableCell) (this.addWidget(
                             String.format("Cell_%02d", i),
                             new TableCell(null, this.texts[i], this.aligns[i], this.fontSize)));
-                    cell.setGeometry(new WidgetGeometry(
-                            currentOffset,
-                            50.0,
-                            this.widths[i],
-                            100.0,
-                            CType.RELXY,
-                            CType.RELXY,
-                            WAlign.LEFT,
-                            WAlign.CENTER));
+                    cell.setGeometry(
+                            new WidgetGeometry(
+                                    currentOffset,
+                                    50.0,
+                                    this.widths[i],
+                                    100.0,
+                                    CType.RELXY,
+                                    CType.RELXY,
+                                    WAlign.LEFT,
+                                    WAlign.CENTER));
                     currentOffset += this.widths[i];
                 }
             }

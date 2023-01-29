@@ -8,6 +8,7 @@ import mcp.mobius.opis.gui.widgets.LayoutBase;
 import mcp.mobius.opis.gui.widgets.ViewportScrollable;
 import mcp.mobius.opis.gui.widgets.WidgetBase;
 import mcp.mobius.opis.gui.widgets.WidgetGeometry;
+
 import org.lwjgl.util.Point;
 
 public class ViewTable extends WidgetBase {
@@ -24,17 +25,13 @@ public class ViewTable extends WidgetBase {
 
     public ViewTable(IWidget parent) {
         super(parent);
-        this.addWidget("Titles", new TableRow(null, this.fontSize))
-                .setGeometry(
-                        new WidgetGeometry(0.0, 0.0, 100.0, 16.0, CType.REL_X, CType.REL_X, WAlign.LEFT, WAlign.TOP));
+        this.addWidget("Titles", new TableRow(null, this.fontSize)).setGeometry(
+                new WidgetGeometry(0.0, 0.0, 100.0, 16.0, CType.REL_X, CType.REL_X, WAlign.LEFT, WAlign.TOP));
         ((TableRow) this.getWidget("Titles")).setColors(0x00000000, 0x00000000);
-        this.addWidget("Viewport", new ViewportScrollable(null))
-                .setGeometry(
-                        new WidgetGeometry(0.0, 16.0, 100.0, 90.0, CType.REL_X, CType.RELXY, WAlign.LEFT, WAlign.TOP));
-        ((ViewportScrollable) (this.getWidget("Viewport")))
-                .attachWidget(new LayoutBase(null))
-                .setGeometry(
-                        new WidgetGeometry(0.0, 0.0, 100.0, 0.0, CType.RELXY, CType.REL_X, WAlign.LEFT, WAlign.TOP));
+        this.addWidget("Viewport", new ViewportScrollable(null)).setGeometry(
+                new WidgetGeometry(0.0, 16.0, 100.0, 90.0, CType.REL_X, CType.RELXY, WAlign.LEFT, WAlign.TOP));
+        ((ViewportScrollable) (this.getWidget("Viewport"))).attachWidget(new LayoutBase(null)).setGeometry(
+                new WidgetGeometry(0.0, 0.0, 100.0, 0.0, CType.RELXY, CType.REL_X, WAlign.LEFT, WAlign.TOP));
     }
 
     @Override

@@ -6,6 +6,7 @@ import mcp.mobius.opis.gui.interfaces.WAlign;
 import mcp.mobius.opis.gui.widgets.LayoutBase;
 import mcp.mobius.opis.gui.widgets.WidgetBase;
 import mcp.mobius.opis.gui.widgets.WidgetGeometry;
+
 import org.lwjgl.util.Point;
 
 public class ButtonContainer extends WidgetBase {
@@ -35,8 +36,8 @@ public class ButtonContainer extends WidgetBase {
         int row = this.nButtons / this.columns;
         double sizeColumn = 100.0 / this.columns;
 
-        this.getWidget(layoutName)
-                .setGeometry(new WidgetGeometry(
+        this.getWidget(layoutName).setGeometry(
+                new WidgetGeometry(
                         sizeColumn * column,
                         spacing * row,
                         sizeColumn,
@@ -46,10 +47,16 @@ public class ButtonContainer extends WidgetBase {
                         WAlign.LEFT,
                         WAlign.TOP));
         this.getWidget(layoutName).addWidget(buttonName, button);
-        this.getWidget(layoutName)
-                .getWidget(buttonName)
-                .setGeometry(new WidgetGeometry(
-                        50.0, 50.0, buttonSize, 20.0, CType.RELXY, CType.ABSXY, WAlign.CENTER, WAlign.CENTER));
+        this.getWidget(layoutName).getWidget(buttonName).setGeometry(
+                new WidgetGeometry(
+                        50.0,
+                        50.0,
+                        buttonSize,
+                        20.0,
+                        CType.RELXY,
+                        CType.ABSXY,
+                        WAlign.CENTER,
+                        WAlign.CENTER));
 
         this.nButtons += 1;
     }

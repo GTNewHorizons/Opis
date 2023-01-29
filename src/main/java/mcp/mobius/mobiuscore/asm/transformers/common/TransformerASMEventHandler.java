@@ -5,6 +5,7 @@ import static org.objectweb.asm.Opcodes.*;
 import mcp.mobius.mobiuscore.asm.Opcode;
 import mcp.mobius.mobiuscore.asm.transformers.TransformerBase;
 import mcp.mobius.mobiuscore.profiler.ProfilerSection;
+
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.tree.AbstractInsnNode;
@@ -32,44 +33,34 @@ public class TransformerASMEventHandler extends TransformerBase {
         ASMEH_INVOKE = "invoke (Lcpw/mods/fml/common/eventhandler/Event;)V";
         ASMEH_INIT = "<init> (Ljava/lang/Object;Ljava/lang/reflect/Method;Lcpw/mods/fml/common/ModContainer;)V";
 
-        ASMEH_INVOKE_PATTERN = new AbstractInsnNode[] {
-            Opcode.ALOAD(-1),
-            Opcode.GETFIELD(
-                    "cpw/mods/fml/common/eventhandler/ASMEventHandler.handler Lcpw/mods/fml/common/eventhandler/IEventListener;"),
-            Opcode.ALOAD(-1),
-            Opcode.INVOKEINTERFACE(
-                    "cpw/mods/fml/common/eventhandler/IEventListener.invoke (Lcpw/mods/fml/common/eventhandler/Event;)V")
-        };
+        ASMEH_INVOKE_PATTERN = new AbstractInsnNode[] { Opcode.ALOAD(-1), Opcode.GETFIELD(
+                "cpw/mods/fml/common/eventhandler/ASMEventHandler.handler Lcpw/mods/fml/common/eventhandler/IEventListener;"),
+                Opcode.ALOAD(-1), Opcode.INVOKEINTERFACE(
+                        "cpw/mods/fml/common/eventhandler/IEventListener.invoke (Lcpw/mods/fml/common/eventhandler/Event;)V") };
 
-        ASMEH_INIT_PAYLOAD_PRE = new AbstractInsnNode[] {
-            Opcode.ALOAD(0),
-            Opcode.ALOAD(2),
-            Opcode.INVOKEVIRTUAL("java/lang/reflect/Method.getDeclaringClass ()Ljava/lang/Class;"),
-            Opcode.INVOKEVIRTUAL("java/lang/Class.getCanonicalName ()Ljava/lang/String;"),
-            Opcode.PUTFIELD("cpw/mods/fml/common/eventhandler/ASMEventHandler.package_ Ljava/lang/String;"),
-        };
+        ASMEH_INIT_PAYLOAD_PRE = new AbstractInsnNode[] { Opcode.ALOAD(0), Opcode.ALOAD(2),
+                Opcode.INVOKEVIRTUAL("java/lang/reflect/Method.getDeclaringClass ()Ljava/lang/Class;"),
+                Opcode.INVOKEVIRTUAL("java/lang/Class.getCanonicalName ()Ljava/lang/String;"),
+                Opcode.PUTFIELD("cpw/mods/fml/common/eventhandler/ASMEventHandler.package_ Ljava/lang/String;"), };
 
         ASMEH_INVOKE_PAYLOAD_PRE = new AbstractInsnNode[] {
-            Opcode.GETSTATIC(profilerClass, ProfilerSection.EVENT_INVOKE.name(), profilerType),
-            Opcode.INVOKEVIRTUAL(profilerClass, "start", "()V")
-        };
+                Opcode.GETSTATIC(profilerClass, ProfilerSection.EVENT_INVOKE.name(), profilerType),
+                Opcode.INVOKEVIRTUAL(profilerClass, "start", "()V") };
 
         ASMEH_INVOKE_PAYLOAD_POST = new AbstractInsnNode[] {
-            Opcode.GETSTATIC(profilerClass, ProfilerSection.EVENT_INVOKE.name(), profilerType),
-            Opcode.ALOAD(1),
-            Opcode.ALOAD(0),
-            Opcode.GETFIELD("cpw/mods/fml/common/eventhandler/ASMEventHandler.package_ Ljava/lang/String;"),
-            Opcode.ALOAD(0),
-            Opcode.GETFIELD(
-                    "cpw/mods/fml/common/eventhandler/ASMEventHandler.handler Lcpw/mods/fml/common/eventhandler/IEventListener;"),
-            Opcode.ALOAD(0),
-            Opcode.GETFIELD(
-                    "cpw/mods/fml/common/eventhandler/ASMEventHandler.owner Lcpw/mods/fml/common/ModContainer;"),
-            Opcode.INVOKEVIRTUAL(
-                    profilerClass,
-                    "stop",
-                    "(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)V")
-        };
+                Opcode.GETSTATIC(profilerClass, ProfilerSection.EVENT_INVOKE.name(), profilerType), Opcode.ALOAD(1),
+                Opcode.ALOAD(0),
+                Opcode.GETFIELD("cpw/mods/fml/common/eventhandler/ASMEventHandler.package_ Ljava/lang/String;"),
+                Opcode.ALOAD(0),
+                Opcode.GETFIELD(
+                        "cpw/mods/fml/common/eventhandler/ASMEventHandler.handler Lcpw/mods/fml/common/eventhandler/IEventListener;"),
+                Opcode.ALOAD(0),
+                Opcode.GETFIELD(
+                        "cpw/mods/fml/common/eventhandler/ASMEventHandler.owner Lcpw/mods/fml/common/ModContainer;"),
+                Opcode.INVOKEVIRTUAL(
+                        profilerClass,
+                        "stop",
+                        "(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)V") };
     }
 
     @Override

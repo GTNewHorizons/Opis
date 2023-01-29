@@ -2,6 +2,7 @@ package mcp.mobius.opis.commands.server;
 
 import mcp.mobius.opis.commands.IOpisCommand;
 import mcp.mobius.opis.events.PlayerTracker;
+
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
@@ -36,8 +37,8 @@ public class CommandKill extends CommandBase implements IOpisCommand {
 
         World world = DimensionManager.getWorld(dim);
         if (world == null) {
-            icommandsender.addChatMessage(
-                    new ChatComponentText(String.format("\u00A7oCannot find dim %d in world", dim)));
+            icommandsender
+                    .addChatMessage(new ChatComponentText(String.format("\u00A7oCannot find dim %d in world", dim)));
             return;
         }
 
@@ -49,8 +50,8 @@ public class CommandKill extends CommandBase implements IOpisCommand {
         }
 
         entity.setDead();
-        icommandsender.addChatMessage(
-                new ChatComponentText(String.format("\u00A7oKilled entity %d in dim %d", eid, dim)));
+        icommandsender
+                .addChatMessage(new ChatComponentText(String.format("\u00A7oKilled entity %d in dim %d", eid, dim)));
         return;
     }
 

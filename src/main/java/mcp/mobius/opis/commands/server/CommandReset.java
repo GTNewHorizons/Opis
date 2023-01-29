@@ -6,6 +6,7 @@ import mcp.mobius.opis.events.PlayerTracker;
 import mcp.mobius.opis.network.PacketManager;
 import mcp.mobius.opis.network.enums.Message;
 import mcp.mobius.opis.network.packets.server.NetDataCommand;
+
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -36,9 +37,8 @@ public class CommandReset extends CommandBase implements IOpisCommand {
         icommandsender.addChatMessage(new ChatComponentText(String.format("\u00A7oInternal data reseted.")));
 
         // PacketDispatcher.sendPacketToAllPlayers(NetDataCommand.create(Message.CLIENT_CLEAR_SELECTION));
-        if (icommandsender instanceof EntityPlayerMP)
-            PacketManager.validateAndSend(
-                    new NetDataCommand(Message.CLIENT_CLEAR_SELECTION), (EntityPlayerMP) icommandsender);
+        if (icommandsender instanceof EntityPlayerMP) PacketManager
+                .validateAndSend(new NetDataCommand(Message.CLIENT_CLEAR_SELECTION), (EntityPlayerMP) icommandsender);
     }
 
     @Override

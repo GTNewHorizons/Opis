@@ -1,9 +1,11 @@
 package mcp.mobius.opis.data.profilers;
 
+import mcp.mobius.opis.data.profilers.Clock.IClock;
+
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+
 import com.google.common.collect.HashBasedTable;
 import cpw.mods.fml.common.ModContainer;
-import mcp.mobius.opis.data.profilers.Clock.IClock;
-import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
 public class ProfilerEvent extends ProfilerAbstract {
 
@@ -52,8 +54,7 @@ public class ProfilerEvent extends ProfilerAbstract {
                     data.put(event.getClass(), name, new DescriptiveStatistics(250));
                     dataMod.put(event.getClass(), name, ((ModContainer) mod).getName());
                     data.get(event.getClass(), name).addValue(clock.getDelta());
-                } catch (Exception f) {
-                }
+                } catch (Exception f) {}
             }
         }
     }

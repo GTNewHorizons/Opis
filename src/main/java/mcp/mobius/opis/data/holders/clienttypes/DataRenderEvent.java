@@ -1,10 +1,13 @@
 package mcp.mobius.opis.data.holders.clienttypes;
 
-import com.google.common.collect.Table.Cell;
 import mcp.mobius.opis.data.holders.newtypes.DataTiming;
+
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
+import com.google.common.collect.Table.Cell;
+
 public class DataRenderEvent implements Comparable {
+
     public String event;
     public String handler;
     public String package_;
@@ -14,20 +17,16 @@ public class DataRenderEvent implements Comparable {
 
     public DataRenderEvent fill(Cell<Class, String, DescriptiveStatistics> cellData, String modName) {
         /*
-        String handlerName = cell.getColumnKey().getSimpleName();
-        try {
-        	String[] splitHandler = handlerName.split("_");
-        	handlerName  = splitHandler[2] + "." + splitHandler[3];
-        } catch (Exception e){}
-        */
+         * String handlerName = cell.getColumnKey().getSimpleName(); try { String[] splitHandler =
+         * handlerName.split("_"); handlerName = splitHandler[2] + "." + splitHandler[3]; } catch (Exception e){}
+         */
         String[] nameRaw = cellData.getColumnKey().split("\\|");
 
         String handlerName = nameRaw[1];
         try {
             String[] splitHandler = handlerName.split("_");
             handlerName = splitHandler[2] + "." + splitHandler[3];
-        } catch (Exception e) {
-        }
+        } catch (Exception e) {}
 
         this.package_ = nameRaw[0];
         this.handler = handlerName;

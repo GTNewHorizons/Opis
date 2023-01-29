@@ -3,6 +3,7 @@ package mcp.mobius.opis.commands.server;
 import mcp.mobius.opis.commands.IOpisCommand;
 import mcp.mobius.opis.events.PlayerTracker;
 import mcp.mobius.opis.modOpis;
+
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -34,8 +35,7 @@ public class CommandFrequency extends CommandBase implements IOpisCommand {
             icommandsender.addChatMessage(
                     new ChatComponentText(String.format("\u00A7oOpis delay set to %s ticks.", astring[0])));
 
-        } catch (Exception e) {
-        }
+        } catch (Exception e) {}
     }
 
     @Override

@@ -1,9 +1,11 @@
 package mcp.mobius.opis.commands.server;
 
 import java.util.ArrayList;
+
 import mcp.mobius.opis.commands.IOpisCommand;
 import mcp.mobius.opis.data.holders.stats.StatsChunk;
 import mcp.mobius.opis.data.managers.ChunkManager;
+
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -36,12 +38,11 @@ public class CommandChunkList extends CommandBase implements IOpisCommand {
         ArrayList<StatsChunk> chunks = new ArrayList<StatsChunk>();
 
         if (astring.length == 0) chunks = ChunkManager.INSTANCE.getTopChunks(20);
-        else
-            try {
-                chunks = ChunkManager.INSTANCE.getTopChunks(Integer.valueOf(astring.length));
-            } catch (Exception e) {
-                return;
-            }
+        else try {
+            chunks = ChunkManager.INSTANCE.getTopChunks(Integer.valueOf(astring.length));
+        } catch (Exception e) {
+            return;
+        }
 
         icommandsender.addChatMessage(new ChatComponentText("[DIM X Z] Time NTEs"));
         for (StatsChunk stat : chunks) {

@@ -2,6 +2,7 @@ package mcp.mobius.opis.swing.actions;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import mcp.mobius.opis.api.TabPanelRegistrar;
 import mcp.mobius.opis.data.holders.stats.StatsChunk;
 import mcp.mobius.opis.network.PacketManager;

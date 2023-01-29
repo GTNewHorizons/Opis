@@ -1,6 +1,7 @@
 package mcp.mobius.opis.data.profilers;
 
 import mcp.mobius.opis.data.profilers.Clock.IClock;
+
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
 public class ProfilerNetworkTick extends ProfilerAbstract {

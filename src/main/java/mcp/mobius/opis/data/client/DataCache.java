@@ -13,8 +13,7 @@ public class DataCache implements IMessageHandler {
 
     public static DataCache instance() {
         return _instance;
-    }
-    ;
+    };
 
     private volatile long clockScrew = 0;
     private volatile AccessLevel clientAccess = AccessLevel.NONE;

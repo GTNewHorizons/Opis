@@ -1,12 +1,12 @@
 package mcp.mobius.opis.network.rcon.server;
 
+import mcp.mobius.opis.modOpis;
 import io.nettyopis.buffer.ByteBuf;
 import io.nettyopis.channel.ChannelHandlerContext;
 import io.nettyopis.channel.ChannelInboundHandlerAdapter;
 import io.nettyopis.handler.codec.compression.JdkZlibDecoder;
 import io.nettyopis.handler.codec.compression.JdkZlibEncoder;
 import io.nettyopis.util.ReferenceCountUtil;
-import mcp.mobius.opis.modOpis;
 
 public class RConHandshakeHandler extends ChannelInboundHandlerAdapter {
 
@@ -16,9 +16,8 @@ public class RConHandshakeHandler extends ChannelInboundHandlerAdapter {
         // if the password is valid. We should close the socket immediately otherwise.
 
         try {
-            modOpis.log.info(String.format(
-                    "Connection to rcon from %s detected",
-                    ctx.channel().remoteAddress().toString()));
+            modOpis.log.info(
+                    String.format("Connection to rcon from %s detected", ctx.channel().remoteAddress().toString()));
 
             if (((String) msg).equals(modOpis.rconpass)) {
                 ByteBuf buf = ctx.alloc().buffer();

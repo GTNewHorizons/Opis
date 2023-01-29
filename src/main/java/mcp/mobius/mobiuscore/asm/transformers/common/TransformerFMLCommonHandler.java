@@ -4,6 +4,7 @@ import mcp.mobius.mobiuscore.asm.ObfTable;
 import mcp.mobius.mobiuscore.asm.Opcode;
 import mcp.mobius.mobiuscore.asm.transformers.TransformerBase;
 import mcp.mobius.mobiuscore.profiler.ProfilerSection;
+
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.tree.AbstractInsnNode;
@@ -37,26 +38,20 @@ public class TransformerFMLCommonHandler extends TransformerBase {
         FMLCH_ONPOSTWORLDTICK = ObfTable.FMLCH_POSTWORLDTICK.getFullDescriptor();
 
         FMLCH_PAYLOAD_PRESERVERTICK = new AbstractInsnNode[] {
-            Opcode.GETSTATIC(profilerClass, ProfilerSection.TICK.name(), profilerType),
-            Opcode.INVOKEVIRTUAL(profilerClass, "start", "()V"),
-        };
+                Opcode.GETSTATIC(profilerClass, ProfilerSection.TICK.name(), profilerType),
+                Opcode.INVOKEVIRTUAL(profilerClass, "start", "()V"), };
 
         FMLCH_PAYLOAD_POSTSERVERTICK = new AbstractInsnNode[] {
-            Opcode.GETSTATIC(profilerClass, ProfilerSection.TICK.name(), profilerType),
-            Opcode.INVOKEVIRTUAL(profilerClass, "stop", "()V"),
-        };
+                Opcode.GETSTATIC(profilerClass, ProfilerSection.TICK.name(), profilerType),
+                Opcode.INVOKEVIRTUAL(profilerClass, "stop", "()V"), };
 
         FMLCH_PAYLOAD_PREWORLDTICK = new AbstractInsnNode[] {
-            Opcode.GETSTATIC(profilerClass, ProfilerSection.DIMENSION_TICK.name(), profilerType),
-            Opcode.ALOAD(1),
-            Opcode.INVOKEVIRTUAL(profilerClass, "start", "(Ljava/lang/Object;)V")
-        };
+                Opcode.GETSTATIC(profilerClass, ProfilerSection.DIMENSION_TICK.name(), profilerType), Opcode.ALOAD(1),
+                Opcode.INVOKEVIRTUAL(profilerClass, "start", "(Ljava/lang/Object;)V") };
 
         FMLCH_PAYLOAD_POSTWORLDTICK = new AbstractInsnNode[] {
-            Opcode.GETSTATIC(profilerClass, ProfilerSection.DIMENSION_TICK.name(), profilerType),
-            Opcode.ALOAD(1),
-            Opcode.INVOKEVIRTUAL(profilerClass, "stop", "(Ljava/lang/Object;)V")
-        };
+                Opcode.GETSTATIC(profilerClass, ProfilerSection.DIMENSION_TICK.name(), profilerType), Opcode.ALOAD(1),
+                Opcode.INVOKEVIRTUAL(profilerClass, "stop", "(Ljava/lang/Object;)V") };
     }
 
     @Override

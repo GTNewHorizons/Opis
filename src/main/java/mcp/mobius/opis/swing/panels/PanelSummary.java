@@ -4,7 +4,9 @@ import java.awt.Color;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+
 import javax.swing.*;
+
 import mcp.mobius.opis.api.ITabPanel;
 import mcp.mobius.opis.data.client.DataCache;
 import mcp.mobius.opis.data.holders.ISerializable;
@@ -21,8 +23,10 @@ import mcp.mobius.opis.swing.SelectedTab;
 import mcp.mobius.opis.swing.actions.ActionRunOpis;
 import mcp.mobius.opis.swing.widgets.JButtonAccess;
 import mcp.mobius.opis.swing.widgets.JPanelMsgHandler;
+
 import net.miginfocom.swing.MigLayout;
 import net.minecraft.util.MathHelper;
+
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -35,6 +39,7 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
 public class PanelSummary extends JPanelMsgHandler implements ITabPanel {
+
     private JLabel lblTimingWorldTick;
     private JLabel lblTimingTileEnts;
     private JLabel lblTimingEntities;
@@ -60,10 +65,11 @@ public class PanelSummary extends JPanelMsgHandler implements ITabPanel {
      * Create the panel.
      */
     public PanelSummary() {
-        setLayout(new MigLayout(
-                "",
-                "[20px:20px:20px,grow][][20px:20px:20px][60px:60px:60px][][20px:20px:20px][50px:50px:50px][20px:20px:20px][][20px:20px:20px][50px:50px:50px][][20px:20px:20px][grow][]",
-                "[20px:20px:20px][][][][][][][][][20px:20px:20px][][grow]"));
+        setLayout(
+                new MigLayout(
+                        "",
+                        "[20px:20px:20px,grow][][20px:20px:20px][60px:60px:60px][][20px:20px:20px][50px:50px:50px][20px:20px:20px][][20px:20px:20px][50px:50px:50px][][20px:20px:20px][grow][]",
+                        "[20px:20px:20px][][][][][][][][][20px:20px:20px][][grow]"));
 
         JLabel lblNewLabel_5 = new JLabel("Update time");
         add(lblNewLabel_5, "cell 3 1 2 1,alignx right");
@@ -197,7 +203,8 @@ public class PanelSummary extends JPanelMsgHandler implements ITabPanel {
     public JLabel getLblTimingEntities() {
         return lblTimingEntities;
     }
-    // public JLabel getLblTimingHandlers()  {return lblTimingHandlers;}
+
+    // public JLabel getLblTimingHandlers() {return lblTimingHandlers;}
     public JLabel getLblTimingTotal() {
         return lblTimingTotal;
     }
@@ -213,7 +220,8 @@ public class PanelSummary extends JPanelMsgHandler implements ITabPanel {
     public JLabel getLblAmountEntities() {
         return lblAmountEntities;
     }
-    // public JLabel getLblAmountHandlers()  {return lblAmountHandlers;}
+
+    // public JLabel getLblAmountHandlers() {return lblAmountHandlers;}
     public JLabel getLblAmountUpload() {
         return lblAmountUpload;
     }
@@ -271,7 +279,14 @@ public class PanelSummary extends JPanelMsgHandler implements ITabPanel {
 
     private JPanel createTickGraph() {
         JFreeChart chart = ChartFactory.createXYAreaChart(
-                "", "Seconds", "Update Time [ms]", datasetTick, PlotOrientation.VERTICAL, false, false, false);
+                "",
+                "Seconds",
+                "Update Time [ms]",
+                datasetTick,
+                PlotOrientation.VERTICAL,
+                false,
+                false,
+                false);
         chart.setBackgroundPaint(new Color(255, 255, 255, 0));
         xyPlotTick = chart.getXYPlot();
         xyPlotTick.getRendererForDataset(datasetTick).setSeriesPaint(0, Color.BLUE);
@@ -291,7 +306,14 @@ public class PanelSummary extends JPanelMsgHandler implements ITabPanel {
 
     private JPanel createPingGraph() {
         JFreeChart chart = ChartFactory.createXYAreaChart(
-                "", "Seconds", "Ping Time [ms]", datasetPing, PlotOrientation.VERTICAL, false, false, false);
+                "",
+                "Seconds",
+                "Ping Time [ms]",
+                datasetPing,
+                PlotOrientation.VERTICAL,
+                false,
+                false,
+                false);
         chart.setBackgroundPaint(new Color(255, 255, 255, 0));
         xyPlotPing = chart.getXYPlot();
         xyPlotPing.getRendererForDataset(datasetPing).setSeriesPaint(0, Color.BLUE);
@@ -350,10 +372,10 @@ public class PanelSummary extends JPanelMsgHandler implements ITabPanel {
     private DataTimingMillisecond getProfiledTickTotalTime() {
         // return new DataTimingMillisecond(timingWorldTickTotal.timing + timingTileEntsTotal.timing +
         // timingEntitiesTotal.timing + timingHandlersTotal.timing + timingNetworkTotal.timing);
-        return new DataTimingMillisecond(timingWorldTickTotal.timing
-                + timingTileEntsTotal.timing
-                + timingEntitiesTotal.timing
-                + timingHandlersTotal.timing);
+        return new DataTimingMillisecond(
+                timingWorldTickTotal.timing + timingTileEntsTotal.timing
+                        + timingEntitiesTotal.timing
+                        + timingHandlersTotal.timing);
     }
 
     @Override
@@ -384,9 +406,7 @@ public class PanelSummary extends JPanelMsgHandler implements ITabPanel {
                 SwingUtilities.invokeLater(() -> {
                     this.timingTileEntsTotal = ((DataTiming) rawdata.value).asMillisecond();
                     this.getLblTimingTileEnts().setText(this.timingTileEntsTotal.toString());
-                    this.getLblTimingTotal()
-                            .setText(String.format(
-                                    "%s", this.getProfiledTickTotalTime().toString()));
+                    this.getLblTimingTotal().setText(String.format("%s", this.getProfiledTickTotalTime().toString()));
                 });
                 break;
             }
@@ -394,25 +414,21 @@ public class PanelSummary extends JPanelMsgHandler implements ITabPanel {
                 SwingUtilities.invokeLater(() -> {
                     this.timingEntitiesTotal = ((DataTiming) rawdata.value).asMillisecond();
                     this.getLblTimingEntities().setText(this.timingEntitiesTotal.toString());
-                    this.getLblTimingTotal()
-                            .setText(String.format(
-                                    "%s", this.getProfiledTickTotalTime().toString()));
+                    this.getLblTimingTotal().setText(String.format("%s", this.getProfiledTickTotalTime().toString()));
                 });
                 break;
             }
-                // case VALUE_TIMING_HANDLERS:{
-                //	this.timingHandlersTotal = ((DataTiming)rawdata.value).asMillisecond();
-                //	this.getLblTimingHandlers().setText(this.timingHandlersTotal.toString());
-                //	this.getLblTimingTotal().setText(String.format("%s", this.getProfiledTickTotalTime().toString() ));
-                //	break;
-                // }
+            // case VALUE_TIMING_HANDLERS:{
+            // this.timingHandlersTotal = ((DataTiming)rawdata.value).asMillisecond();
+            // this.getLblTimingHandlers().setText(this.timingHandlersTotal.toString());
+            // this.getLblTimingTotal().setText(String.format("%s", this.getProfiledTickTotalTime().toString() ));
+            // break;
+            // }
             case VALUE_TIMING_WORLDTICK: {
                 SwingUtilities.invokeLater(() -> {
                     this.timingWorldTickTotal = ((DataBlockTick) rawdata.value).total.asMillisecond();
                     this.getLblTimingWorldTick().setText(this.timingWorldTickTotal.toString());
-                    this.getLblTimingTotal()
-                            .setText(String.format(
-                                    "%s", this.getProfiledTickTotalTime().toString()));
+                    this.getLblTimingTotal().setText(String.format("%s", this.getProfiledTickTotalTime().toString()));
 
                     String tooltip = "<html><font face=\"monospace\"><pre>";
 
@@ -422,11 +438,7 @@ public class PanelSummary extends JPanelMsgHandler implements ITabPanel {
                         tooltip += String.format(
                                 "[ %4d ] %s<br>",
                                 indim,
-                                ((DataBlockTick) rawdata.value)
-                                        .perdim
-                                        .get(indim)
-                                        .asMillisecond()
-                                        .toString());
+                                ((DataBlockTick) rawdata.value).perdim.get(indim).asMillisecond().toString());
                     }
 
                     tooltip += "</pre></html>";
@@ -450,9 +462,7 @@ public class PanelSummary extends JPanelMsgHandler implements ITabPanel {
                 break;
             }
             case STATUS_RUN_UPDATE: {
-                SwingUtilities.invokeLater(() -> {
-                    this.setProgressBar(-1, -1, ((SerialInt) rawdata.value).value);
-                });
+                SwingUtilities.invokeLater(() -> { this.setProgressBar(-1, -1, ((SerialInt) rawdata.value).value); });
                 break;
             }
             case STATUS_RUNNING: {
@@ -468,8 +478,7 @@ public class PanelSummary extends JPanelMsgHandler implements ITabPanel {
                     if (serverLastRun == 0) {
                         this.getLblTimeStamp().setText("Last run : <Never>");
                     } else {
-                        long clientLastRun =
-                                serverLastRun + DataCache.instance().getClockScrew();
+                        long clientLastRun = serverLastRun + DataCache.instance().getClockScrew();
                         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                         Date resultdate = new Date(clientLastRun);
 

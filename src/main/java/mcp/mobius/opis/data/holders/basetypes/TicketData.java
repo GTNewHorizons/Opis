@@ -1,13 +1,16 @@
 package mcp.mobius.opis.data.holders.basetypes;
 
-import com.google.common.collect.ImmutableSet;
-import com.google.common.io.ByteArrayDataInput;
-import com.google.common.io.ByteArrayDataOutput;
 import mcp.mobius.opis.data.holders.ISerializable;
+
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
 
+import com.google.common.collect.ImmutableSet;
+import com.google.common.io.ByteArrayDataInput;
+import com.google.common.io.ByteArrayDataOutput;
+
 public final class TicketData implements ISerializable {
+
     public final CoordinatesChunk coord;
     public final int nchunks;
     public final String modID;
@@ -26,7 +29,9 @@ public final class TicketData implements ISerializable {
         }
 
         this.coord = new CoordinatesChunk(
-                ticket.world.provider.dimensionId, (minChunkX + maxChunkX) / 2, (minChunkZ + maxChunkZ) / 2);
+                ticket.world.provider.dimensionId,
+                (minChunkX + maxChunkX) / 2,
+                (minChunkZ + maxChunkZ) / 2);
         this.nchunks = requestedChunks.size();
         this.modID = ticket.getModId();
         this.ticket = ticket;
@@ -55,12 +60,10 @@ public final class TicketData implements ISerializable {
 
         if (this.ticket != null && c.ticket != null) return this.ticket.equals(c.ticket);
 
-        return (this.coord.dim == c.coord.dim)
-                && (this.coord.chunkX == c.coord.chunkX)
+        return (this.coord.dim == c.coord.dim) && (this.coord.chunkX == c.coord.chunkX)
                 && (this.coord.chunkZ == c.coord.chunkZ)
                 && (this.nchunks == c.nchunks);
-    }
-    ;
+    };
 
     public int hashCode() {
         if (this.ticket != null) return this.ticket.hashCode();
@@ -71,6 +74,10 @@ public final class TicketData implements ISerializable {
     public String toString() {
         return String.format(
                 "Ticket %s [%d %d %d] %d",
-                this.modID, this.coord.dim, this.coord.chunkX, this.coord.chunkZ, this.nchunks);
+                this.modID,
+                this.coord.dim,
+                this.coord.chunkX,
+                this.coord.chunkZ,
+                this.nchunks);
     }
 }

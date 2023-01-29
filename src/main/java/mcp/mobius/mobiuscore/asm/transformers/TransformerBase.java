@@ -8,9 +8,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+
 import mcp.mobius.mobiuscore.asm.CoreDescription;
 import mcp.mobius.mobiuscore.asm.MethodDescriptor;
 import mcp.mobius.mobiuscore.asm.Opcode;
+
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
@@ -37,8 +39,8 @@ public abstract class TransformerBase {
         return findPattern(methodNode, false, pattern);
     }
 
-    protected ArrayList<ArrayList<AbstractInsnNode>> findPattern(
-            MethodNode methodNode, boolean dumpOpcodes, AbstractInsnNode... pattern) {
+    protected ArrayList<ArrayList<AbstractInsnNode>> findPattern(MethodNode methodNode, boolean dumpOpcodes,
+            AbstractInsnNode... pattern) {
         InsnList instructions = methodNode.instructions;
         ArrayList<ArrayList<AbstractInsnNode>> returnList = new ArrayList<ArrayList<AbstractInsnNode>>();
 
@@ -49,8 +51,7 @@ public abstract class TransformerBase {
             if (dumpOpcodes) printInsnNode(currNode);
 
             // We found the first element of the pattern. We are starting matching all the elements
-            if (this.areInsnEqual(currNode, pattern[0]))
-                ;
+            if (this.areInsnEqual(currNode, pattern[0]));
             {
                 boolean match = true;
 
@@ -58,9 +59,9 @@ public abstract class TransformerBase {
                 // false if at least one inst doesn't match
                 for (int indexPatternInst = 0; indexPatternInst < pattern.length; indexPatternInst++) {
                     try {
-                        match = match
-                                && this.areInsnEqual(
-                                        instructions.get(indexFirstInst + indexPatternInst), pattern[indexPatternInst]);
+                        match = match && this.areInsnEqual(
+                                instructions.get(indexFirstInst + indexPatternInst),
+                                pattern[indexPatternInst]);
                     } catch (ArrayIndexOutOfBoundsException e) {
                         return returnList; // This can only happen if there is less than the number of pattern elements
                         // in the remaining instructions. We can return the current results directly.
@@ -100,13 +101,15 @@ public abstract class TransformerBase {
         if (insn1 instanceof MethodInsnNode) {
             if ((((MethodInsnNode) insn1).owner.equals(((MethodInsnNode) insn2).owner))
                     && (((MethodInsnNode) insn1).name.equals(((MethodInsnNode) insn2).name))
-                    && (((MethodInsnNode) insn1).desc.equals(((MethodInsnNode) insn2).desc))) return true;
+                    && (((MethodInsnNode) insn1).desc.equals(((MethodInsnNode) insn2).desc)))
+                return true;
         }
 
         if (insn1 instanceof FieldInsnNode) {
             if ((((FieldInsnNode) insn1).owner.equals(((FieldInsnNode) insn2).owner))
                     && (((FieldInsnNode) insn1).name.equals(((FieldInsnNode) insn2).name))
-                    && (((FieldInsnNode) insn1).desc.equals(((FieldInsnNode) insn2).desc))) return true;
+                    && (((FieldInsnNode) insn1).desc.equals(((FieldInsnNode) insn2).desc)))
+                return true;
         }
 
         if (insn1 instanceof InsnNode) {
@@ -131,43 +134,52 @@ public abstract class TransformerBase {
                 break;
 
             case AbstractInsnNode.VAR_INSN:
-                CoreDescription.log.info(String.format(
-                        "VAR_INSN    : %s %s",
-                        Opcode.Instructions.inverse().get(insnNode.getOpcode()), ((VarInsnNode) insnNode).var));
+                CoreDescription.log.info(
+                        String.format(
+                                "VAR_INSN    : %s %s",
+                                Opcode.Instructions.inverse().get(insnNode.getOpcode()),
+                                ((VarInsnNode) insnNode).var));
                 break;
 
             case AbstractInsnNode.METHOD_INSN:
-                CoreDescription.log.info(String.format(
-                        "METHOD_INSN : %s %s %s %s",
-                        Opcode.Instructions.inverse().get(insnNode.getOpcode()),
-                        ((MethodInsnNode) insnNode).owner,
-                        ((MethodInsnNode) insnNode).name,
-                        ((MethodInsnNode) insnNode).desc));
+                CoreDescription.log.info(
+                        String.format(
+                                "METHOD_INSN : %s %s %s %s",
+                                Opcode.Instructions.inverse().get(insnNode.getOpcode()),
+                                ((MethodInsnNode) insnNode).owner,
+                                ((MethodInsnNode) insnNode).name,
+                                ((MethodInsnNode) insnNode).desc));
                 break;
 
             case AbstractInsnNode.INSN:
-                CoreDescription.log.info(String.format(
-                        "INSN        : %s", Opcode.Instructions.inverse().get(insnNode.getOpcode())));
+                CoreDescription.log.info(
+                        String.format("INSN        : %s", Opcode.Instructions.inverse().get(insnNode.getOpcode())));
                 break;
 
             case AbstractInsnNode.TYPE_INSN:
-                CoreDescription.log.info(String.format(
-                        "TYPE_INSN   : %s %s",
-                        Opcode.Instructions.inverse().get(insnNode.getOpcode()), ((TypeInsnNode) insnNode).desc));
+                CoreDescription.log.info(
+                        String.format(
+                                "TYPE_INSN   : %s %s",
+                                Opcode.Instructions.inverse().get(insnNode.getOpcode()),
+                                ((TypeInsnNode) insnNode).desc));
                 break;
 
             case AbstractInsnNode.FIELD_INSN:
-                CoreDescription.log.info(String.format(
-                        "FIELD_INSN  : %s %s %s %s",
-                        Opcode.Instructions.inverse().get(insnNode.getOpcode()),
-                        ((FieldInsnNode) insnNode).owner,
-                        ((FieldInsnNode) insnNode).name,
-                        ((FieldInsnNode) insnNode).desc));
+                CoreDescription.log.info(
+                        String.format(
+                                "FIELD_INSN  : %s %s %s %s",
+                                Opcode.Instructions.inverse().get(insnNode.getOpcode()),
+                                ((FieldInsnNode) insnNode).owner,
+                                ((FieldInsnNode) insnNode).name,
+                                ((FieldInsnNode) insnNode).desc));
                 break;
 
             default:
-                CoreDescription.log.info(String.format(
-                        "              %s %s", Opcode.Instructions.inverse().get(insnNode.getOpcode()), insnNode));
+                CoreDescription.log.info(
+                        String.format(
+                                "              %s %s",
+                                Opcode.Instructions.inverse().get(insnNode.getOpcode()),
+                                insnNode));
                 break;
         }
     }
@@ -180,16 +192,16 @@ public abstract class TransformerBase {
         }
     }
 
-    private void applyPayloadAfter(
-            InsnList instructions, ArrayList<AbstractInsnNode> match, AbstractInsnNode[] payload_pattern) {
+    private void applyPayloadAfter(InsnList instructions, ArrayList<AbstractInsnNode> match,
+            AbstractInsnNode[] payload_pattern) {
         InsnList payload = new InsnList();
         for (int i = 0; i < payload_pattern.length; i++) payload.add(payload_pattern[i]);
 
         instructions.insert(match.get(match.size() - 1), payload);
     }
 
-    private void applyPayloadBefore(
-            InsnList instructions, ArrayList<AbstractInsnNode> match, AbstractInsnNode[] payload_pattern) {
+    private void applyPayloadBefore(InsnList instructions, ArrayList<AbstractInsnNode> match,
+            AbstractInsnNode[] payload_pattern) {
         InsnList payload = new InsnList();
         for (int i = 0; i < payload_pattern.length; i++) payload.add(payload_pattern[i]);
 
@@ -272,7 +284,8 @@ public abstract class TransformerBase {
             zip.close();
         } catch (Exception e) {
             throw new RuntimeException(
-                    "Error overriding " + transformedName + " from " + CoreDescription.location.getName(), e);
+                    "Error overriding " + transformedName + " from " + CoreDescription.location.getName(),
+                    e);
         }
 
         return bytes;
@@ -296,12 +309,14 @@ public abstract class TransformerBase {
         MethodNode vanillaMethodNode = null;
         for (MethodNode node : vanillaNode.methods) {
             try {
-                if (node != null
-                        && node.desc.equals(methodDesc.getDescriptor())
+                if (node != null && node.desc.equals(methodDesc.getDescriptor())
                         && (node.name.equals(methodDesc.getMethodName()))) {
-                    CoreDescription.log.info(String.format(
-                            "Found method node %s.%s %s in Vanilla.",
-                            className, methodDesc.getMethodName(), methodDesc.getDescriptor()));
+                    CoreDescription.log.info(
+                            String.format(
+                                    "Found method node %s.%s %s in Vanilla.",
+                                    className,
+                                    methodDesc.getMethodName(),
+                                    methodDesc.getDescriptor()));
                     vanillaMethodNode = node;
                 }
             } catch (Exception e) {
@@ -312,12 +327,14 @@ public abstract class TransformerBase {
         MethodNode coremodMethodNode = null;
         for (MethodNode node : coremodNode.methods) {
             try {
-                if (node != null
-                        && node.desc.equals(methodDesc.getDescriptor())
+                if (node != null && node.desc.equals(methodDesc.getDescriptor())
                         && (node.name.equals(methodDesc.getMethodName()))) {
-                    CoreDescription.log.info(String.format(
-                            "Found method node %s.%s %s in Coremod.",
-                            className, methodDesc.getMethodName(), methodDesc.getDescriptor()));
+                    CoreDescription.log.info(
+                            String.format(
+                                    "Found method node %s.%s %s in Coremod.",
+                                    className,
+                                    methodDesc.getMethodName(),
+                                    methodDesc.getDescriptor()));
                     coremodMethodNode = node;
                 }
             } catch (Exception e) {
@@ -326,14 +343,20 @@ public abstract class TransformerBase {
         }
 
         if (vanillaMethodNode == null) {
-            CoreDescription.log.fatal(String.format(
-                    "Method node %s.%s %s not found in Vanilla ! This is going to crash !.",
-                    className, methodDesc.getMethodName(), methodDesc.getDescriptor()));
+            CoreDescription.log.fatal(
+                    String.format(
+                            "Method node %s.%s %s not found in Vanilla ! This is going to crash !.",
+                            className,
+                            methodDesc.getMethodName(),
+                            methodDesc.getDescriptor()));
         }
         if (coremodMethodNode == null) {
-            CoreDescription.log.fatal(String.format(
-                    "Method node %s.%s %s not found in Coremod ! This is going to crash !.",
-                    className, methodDesc.getMethodName(), methodDesc.getDescriptor()));
+            CoreDescription.log.fatal(
+                    String.format(
+                            "Method node %s.%s %s not found in Coremod ! This is going to crash !.",
+                            className,
+                            methodDesc.getMethodName(),
+                            methodDesc.getDescriptor()));
         }
 
         vanillaNode.methods.remove(vanillaMethodNode);
@@ -364,12 +387,14 @@ public abstract class TransformerBase {
             MethodNode coremodMethodNode = null;
             for (MethodNode node : coremodNode.methods) {
                 try {
-                    if (node != null
-                            && node.desc.equals(methodDesc.getDescriptor())
+                    if (node != null && node.desc.equals(methodDesc.getDescriptor())
                             && (node.name.equals(methodDesc.getMethodName()))) {
-                        CoreDescription.log.info(String.format(
-                                "Found method node %s.%s %s in Coremod. Injecting !",
-                                className, methodDesc.getMethodName(), methodDesc.getDescriptor()));
+                        CoreDescription.log.info(
+                                String.format(
+                                        "Found method node %s.%s %s in Coremod. Injecting !",
+                                        className,
+                                        methodDesc.getMethodName(),
+                                        methodDesc.getDescriptor()));
                         coremodMethodNode = node;
                     }
                 } catch (Exception e) {
@@ -378,9 +403,12 @@ public abstract class TransformerBase {
             }
 
             if (coremodMethodNode == null) {
-                CoreDescription.log.fatal(String.format(
-                        "Method node %s.%s %s not found in Coremod ! This is going to crash !.",
-                        className, methodDesc.getMethodName(), methodDesc.getDescriptor()));
+                CoreDescription.log.fatal(
+                        String.format(
+                                "Method node %s.%s %s not found in Coremod ! This is going to crash !.",
+                                className,
+                                methodDesc.getMethodName(),
+                                methodDesc.getDescriptor()));
             }
 
             coremodMethodNode.accept(vanillaNode);
@@ -413,13 +441,15 @@ public abstract class TransformerBase {
 
             if (obf.equals(searge))
                 CoreDescription.log.info(String.format("Found %s with checksum %s", searge, hashtext.toUpperCase()));
-            else
-                CoreDescription.log.info(String.format(
-                        "[MobiusCore] Found %s [ %s ] with checksum %s", searge, obf, hashtext.toUpperCase()));
+            else CoreDescription.log.info(
+                    String.format(
+                            "[MobiusCore] Found %s [ %s ] with checksum %s",
+                            searge,
+                            obf,
+                            hashtext.toUpperCase()));
 
             return hashtext.toUpperCase();
-        } catch (Exception e) {
-        }
+        } catch (Exception e) {}
 
         return "00000000000000000000000000000000";
     }

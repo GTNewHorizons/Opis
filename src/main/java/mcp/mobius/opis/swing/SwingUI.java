@@ -5,10 +5,12 @@ import java.awt.Component;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.HashSet;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
 import mcp.mobius.opis.api.IMessageHandler;
 import mcp.mobius.opis.api.ITabPanel;
 import mcp.mobius.opis.data.holders.basetypes.SerialInt;
@@ -20,6 +22,7 @@ import mcp.mobius.opis.network.enums.AccessLevel;
 import mcp.mobius.opis.network.enums.Message;
 import mcp.mobius.opis.network.packets.client.PacketReqData;
 import mcp.mobius.opis.swing.widgets.JButtonAccess;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
 
@@ -38,6 +41,7 @@ public class SwingUI extends JFrame implements WindowListener, ChangeListener, I
 
     public void showUI() {
         SwingUtilities.invokeLater(new Runnable() {
+
             @Override
             public void run() {
                 try {
@@ -117,16 +121,13 @@ public class SwingUI extends JFrame implements WindowListener, ChangeListener, I
             }
             case CLIENT_SHOW_SWING: {
                 /*
-                try {
-                	UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-                } catch (Exception e) {}
-                */
+                 * try { UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); } catch (Exception e) {}
+                 */
 
                 modOpis.swingOpen = true;
                 this.showUI();
-                OpisClientTickHandler.INSTANCE.scheduleOnClientThread(() -> {
-                    Minecraft.getMinecraft().displayGuiScreen(new GuiChat());
-                });
+                OpisClientTickHandler.INSTANCE
+                        .scheduleOnClientThread(() -> { Minecraft.getMinecraft().displayGuiScreen(new GuiChat()); });
                 PacketManager.sendToServer(
                         new PacketReqData(Message.SWING_TAB_CHANGED, new SerialInt(SelectedTab.SUMMARY.ordinal())));
                 break;
@@ -143,17 +144,15 @@ public class SwingUI extends JFrame implements WindowListener, ChangeListener, I
 
         if (source instanceof ITabPanel) {
             ITabPanel panel = (ITabPanel) source;
-            PacketManager.sendToServer(new PacketReqData(
-                    Message.SWING_TAB_CHANGED,
-                    new SerialInt(panel.getSelectedTab().ordinal())));
+            PacketManager.sendToServer(
+                    new PacketReqData(Message.SWING_TAB_CHANGED, new SerialInt(panel.getSelectedTab().ordinal())));
         }
 
         if (source instanceof JTabbedPane) {
             JTabbedPane pane = (JTabbedPane) source;
             ITabPanel panel = (ITabPanel) pane.getSelectedComponent();
-            PacketManager.sendToServer(new PacketReqData(
-                    Message.SWING_TAB_CHANGED,
-                    new SerialInt(panel.getSelectedTab().ordinal())));
+            PacketManager.sendToServer(
+                    new PacketReqData(Message.SWING_TAB_CHANGED, new SerialInt(panel.getSelectedTab().ordinal())));
         }
     }
 }

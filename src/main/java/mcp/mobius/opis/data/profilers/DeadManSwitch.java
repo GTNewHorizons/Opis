@@ -4,6 +4,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.LockSupport;
+
 import net.minecraft.server.MinecraftServer;
 
 public class DeadManSwitch implements Runnable {
@@ -47,20 +48,17 @@ public class DeadManSwitch implements Runnable {
                     if (this.getTimerDelta() / 1000. / 1000. > 300.) {
                         System.out.printf(
                                 "==== Main thread is staled ! %.3f ms [ %d ]====\n",
-                                this.getTimerDelta() / 1000. / 1000., this.nderps);
+                                this.getTimerDelta() / 1000. / 1000.,
+                                this.nderps);
 
                         this.nderps += 1;
 
                         if (this.nderps > 10) {
                             /*
-                            this.nderps = 0;
-                            this.serverThread.interrupt();
-                            System.out.printf("Restarting\n");
-                            Thread.sleep(1000);
-                            MinecraftServer.main(MinecraftServer.arguments);
-                            System.out.printf("Restarted\n");
-                            return;
-                            */
+                             * this.nderps = 0; this.serverThread.interrupt(); System.out.printf("Restarting\n");
+                             * Thread.sleep(1000); MinecraftServer.main(MinecraftServer.arguments);
+                             * System.out.printf("Restarted\n"); return;
+                             */
                             for (Thread thread : Thread.getAllStackTraces().keySet()) {
                                 if (thread != Thread.currentThread()) {
                                     try {

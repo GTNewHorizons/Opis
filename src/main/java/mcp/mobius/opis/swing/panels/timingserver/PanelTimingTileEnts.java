@@ -2,6 +2,7 @@ package mcp.mobius.opis.swing.panels.timingserver;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+
 import mcp.mobius.opis.api.ITabPanel;
 import mcp.mobius.opis.data.holders.basetypes.CoordinatesBlock;
 import mcp.mobius.opis.data.holders.newtypes.DataBlockTileEntity;
@@ -17,9 +18,11 @@ import mcp.mobius.opis.swing.actions.ActionTimingTileEnts;
 import mcp.mobius.opis.swing.widgets.JButtonAccess;
 import mcp.mobius.opis.swing.widgets.JPanelMsgHandler;
 import mcp.mobius.opis.swing.widgets.JTableStats;
+
 import net.miginfocom.swing.MigLayout;
 
 public class PanelTimingTileEnts extends JPanelMsgHandler implements ITabPanel {
+
     private JButtonAccess btnTeleport;
     private JButtonAccess btnReset;
     private JButtonAccess btnRun;
@@ -48,8 +51,8 @@ public class PanelTimingTileEnts extends JPanelMsgHandler implements ITabPanel {
         add(scrollPane, "cell 0 1 5 1,grow");
 
         table = new JTableStats(
-                new String[] {"Type", "Mod", "Dim", "Pos", "Update Time"},
-                new Class[] {String.class, String.class, Integer.class, Object.class, DataTiming.class});
+                new String[] { "Type", "Mod", "Dim", "Pos", "Update Time" },
+                new Class[] { String.class, String.class, Integer.class, Object.class, DataTiming.class });
         scrollPane.setViewportView(table);
 
         lblSummary = new JLabel("New label");
@@ -87,13 +90,10 @@ public class PanelTimingTileEnts extends JPanelMsgHandler implements ITabPanel {
                         DataBlockTileEntity data = (DataBlockTileEntity) o;
                         String name = ModIdentification.getStackName(data.id, data.meta);
                         String modID = ModIdentification.getModStackName(data.id, data.meta);
-                        model.addRow(new Object[] {
-                            name,
-                            modID,
-                            data.pos.dim,
-                            String.format("[ %4d %4d %4d ]", data.pos.x, data.pos.y, data.pos.z),
-                            data.update
-                        });
+                        model.addRow(
+                                new Object[] { name, modID, data.pos.dim,
+                                        String.format("[ %4d %4d %4d ]", data.pos.x, data.pos.y, data.pos.z),
+                                        data.update });
                     }
 
                     this.getTable().dataUpdated(row);
@@ -101,30 +101,25 @@ public class PanelTimingTileEnts extends JPanelMsgHandler implements ITabPanel {
                 break;
             }
             case VALUE_TIMING_TILEENTS: {
-                SwingUtilities.invokeLater(() -> {
-                    this.getLblSummary()
-                            .setText(String.format("Total update time : %s", ((DataTiming) rawdata.value).toString()));
-                });
+                SwingUtilities.invokeLater(
+                        () -> {
+                            this.getLblSummary().setText(
+                                    String.format("Total update time : %s", ((DataTiming) rawdata.value).toString()));
+                        });
                 break;
             }
             case STATUS_START:
             case STATUS_RUNNING: {
-                SwingUtilities.invokeLater(() -> {
-                    this.getBtnRun().setText("Running...");
-                });
+                SwingUtilities.invokeLater(() -> { this.getBtnRun().setText("Running..."); });
                 break;
             }
             case STATUS_STOP: {
-                SwingUtilities.invokeLater(() -> {
-                    this.getBtnRun().setText("Run Opis");
-                });
+                SwingUtilities.invokeLater(() -> { this.getBtnRun().setText("Run Opis"); });
                 break;
             }
             case CLIENT_HIGHLIGHT_BLOCK: {
                 modOpis.selectedBlock = (CoordinatesBlock) rawdata.value;
-                SwingUtilities.invokeLater(() -> {
-                    this.getBtnReset().setEnabled(true);
-                });
+                SwingUtilities.invokeLater(() -> { this.getBtnReset().setEnabled(true); });
                 break;
             }
             default:

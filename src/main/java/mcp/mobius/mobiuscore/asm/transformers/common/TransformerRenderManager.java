@@ -3,6 +3,7 @@ package mcp.mobius.mobiuscore.asm.transformers.common;
 import mcp.mobius.mobiuscore.asm.ObfTable;
 import mcp.mobius.mobiuscore.asm.transformers.TransformerBase;
 import mcp.mobius.mobiuscore.profiler.ProfilerSection;
+
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
@@ -26,22 +27,20 @@ public class TransformerRenderManager extends TransformerBase {
         String profilerClass = ProfilerSection.getClassName();
         String profilerType = ProfilerSection.getTypeName();
 
-        // RM_RENDERENT    = ObfTable.RENDERMANAGER_RENDERENTITY.getFullDescriptor();
+        // RM_RENDERENT = ObfTable.RENDERMANAGER_RENDERENTITY.getFullDescriptor();
         // RM_RENDERPOSYAW = ObfTable.RENDERMANAGER_RENDERPOSYAW.getFullDescriptor();
 
         RM_RENDER = ObfTable.RENDERMANAGER_RENDER.getFullDescriptor();
 
         RM_RENDER_PAYLOAD_TOP = new AbstractInsnNode[] {
-            new FieldInsnNode(Opcodes.GETSTATIC, profilerClass, ProfilerSection.RENDER_ENTITY.name(), profilerType),
-            new VarInsnNode(Opcodes.ALOAD, 1),
-            new MethodInsnNode(Opcodes.INVOKEVIRTUAL, profilerClass, "start", "(Ljava/lang/Object;)V", false)
-        };
+                new FieldInsnNode(Opcodes.GETSTATIC, profilerClass, ProfilerSection.RENDER_ENTITY.name(), profilerType),
+                new VarInsnNode(Opcodes.ALOAD, 1),
+                new MethodInsnNode(Opcodes.INVOKEVIRTUAL, profilerClass, "start", "(Ljava/lang/Object;)V", false) };
 
         RM_RENDER_PAYLOAD_BOTTOM = new AbstractInsnNode[] {
-            new FieldInsnNode(Opcodes.GETSTATIC, profilerClass, ProfilerSection.RENDER_ENTITY.name(), profilerType),
-            new VarInsnNode(Opcodes.ALOAD, 1),
-            new MethodInsnNode(Opcodes.INVOKEVIRTUAL, profilerClass, "stop", "(Ljava/lang/Object;)V", false)
-        };
+                new FieldInsnNode(Opcodes.GETSTATIC, profilerClass, ProfilerSection.RENDER_ENTITY.name(), profilerType),
+                new VarInsnNode(Opcodes.ALOAD, 1),
+                new MethodInsnNode(Opcodes.INVOKEVIRTUAL, profilerClass, "stop", "(Ljava/lang/Object;)V", false) };
     }
 
     @Override
@@ -59,10 +58,10 @@ public class TransformerRenderManager extends TransformerBase {
         this.applyPayloadLast(renderEntNode, RM_RENDER_PAYLOAD_BOTTOM);
 
         /*
-        MethodNode renderPosYawNode  = this.getMethod(classNode, RM_RENDERPOSYAW);
-        this.applyPayloadFirst(renderPosYawNode, RM_RENDER_PAYLOAD_TOP);
-        this.applyPayloadLast (renderPosYawNode, RM_RENDER_PAYLOAD_BOTTOM);
-        */
+         * MethodNode renderPosYawNode = this.getMethod(classNode, RM_RENDERPOSYAW);
+         * this.applyPayloadFirst(renderPosYawNode, RM_RENDER_PAYLOAD_TOP); this.applyPayloadLast (renderPosYawNode,
+         * RM_RENDER_PAYLOAD_BOTTOM);
+         */
 
         ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
         classNode.accept(writer);

@@ -1,10 +1,11 @@
 package mcp.mobius.opis.gui.helpers;
 
-import com.google.common.collect.Lists;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+
+import com.google.common.collect.Lists;
 
 public class ReverseIterator<T> implements Iterable<T> {
 

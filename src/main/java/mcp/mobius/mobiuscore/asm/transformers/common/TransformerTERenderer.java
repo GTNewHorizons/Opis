@@ -3,6 +3,7 @@ package mcp.mobius.mobiuscore.asm.transformers.common;
 import mcp.mobius.mobiuscore.asm.ObfTable;
 import mcp.mobius.mobiuscore.asm.transformers.TransformerBase;
 import mcp.mobius.mobiuscore.profiler.ProfilerSection;
+
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
@@ -28,16 +29,22 @@ public class TransformerTERenderer extends TransformerBase {
         TER_RENDER = ObfTable.TERENDER_RENDERAT.getFullDescriptor();
 
         TER_RENDER_PAYLOAD_TOP = new AbstractInsnNode[] {
-            new FieldInsnNode(Opcodes.GETSTATIC, profilerClass, ProfilerSection.RENDER_TILEENTITY.name(), profilerType),
-            new VarInsnNode(Opcodes.ALOAD, 1),
-            new MethodInsnNode(Opcodes.INVOKEVIRTUAL, profilerClass, "start", "(Ljava/lang/Object;)V", false)
-        };
+                new FieldInsnNode(
+                        Opcodes.GETSTATIC,
+                        profilerClass,
+                        ProfilerSection.RENDER_TILEENTITY.name(),
+                        profilerType),
+                new VarInsnNode(Opcodes.ALOAD, 1),
+                new MethodInsnNode(Opcodes.INVOKEVIRTUAL, profilerClass, "start", "(Ljava/lang/Object;)V", false) };
 
         TER_RENDER_PAYLOAD_BOTTOM = new AbstractInsnNode[] {
-            new FieldInsnNode(Opcodes.GETSTATIC, profilerClass, ProfilerSection.RENDER_TILEENTITY.name(), profilerType),
-            new VarInsnNode(Opcodes.ALOAD, 1),
-            new MethodInsnNode(Opcodes.INVOKEVIRTUAL, profilerClass, "stop", "(Ljava/lang/Object;)V", false)
-        };
+                new FieldInsnNode(
+                        Opcodes.GETSTATIC,
+                        profilerClass,
+                        ProfilerSection.RENDER_TILEENTITY.name(),
+                        profilerType),
+                new VarInsnNode(Opcodes.ALOAD, 1),
+                new MethodInsnNode(Opcodes.INVOKEVIRTUAL, profilerClass, "stop", "(Ljava/lang/Object;)V", false) };
     }
 
     @Override

@@ -1,6 +1,5 @@
 package mcp.mobius.opis.data.holders;
 
-import com.google.common.collect.HashBiMap;
 import mcp.mobius.opis.data.holders.basetypes.AmountHolder;
 import mcp.mobius.opis.data.holders.basetypes.CoordinatesBlock;
 import mcp.mobius.opis.data.holders.basetypes.CoordinatesChunk;
@@ -44,7 +43,10 @@ import mcp.mobius.opis.data.holders.stats.StatAbstract;
 import mcp.mobius.opis.data.holders.stats.StatsChunk;
 import mcp.mobius.opis.modOpis;
 
+import com.google.common.collect.HashBiMap;
+
 public enum DataType {
+
     AMOUNTHOLDER(AmountHolder.class),
     COORDINATESBLOCK(CoordinatesBlock.class),
     COORDINATESCHUNK(CoordinatesChunk.class),

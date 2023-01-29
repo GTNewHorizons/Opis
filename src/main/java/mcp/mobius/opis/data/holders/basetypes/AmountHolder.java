@@ -1,9 +1,10 @@
 package mcp.mobius.opis.data.holders.basetypes;
 
-import com.google.common.io.ByteArrayDataInput;
-import com.google.common.io.ByteArrayDataOutput;
 import mcp.mobius.opis.data.holders.ISerializable;
 import mcp.mobius.opis.data.holders.newtypes.CachedString;
+
+import com.google.common.io.ByteArrayDataInput;
+import com.google.common.io.ByteArrayDataOutput;
 
 public class AmountHolder implements ISerializable {
 
@@ -32,6 +33,8 @@ public class AmountHolder implements ISerializable {
 
     public static AmountHolder readFromStream(ByteArrayDataInput istream) {
         return new AmountHolder(
-                CachedString.readFromStream(istream), istream.readInt(), CachedString.readFromStream(istream));
+                CachedString.readFromStream(istream),
+                istream.readInt(),
+                CachedString.readFromStream(istream));
     }
 }

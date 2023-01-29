@@ -1,11 +1,8 @@
 package mcp.mobius.opis.network.rcon.nexus;
 
-import com.mojang.authlib.GameProfile;
-import io.nettyopis.channel.ChannelHandlerContext;
-import io.nettyopis.channel.ChannelInboundHandlerAdapter;
-import io.nettyopis.util.ReferenceCountUtil;
 import java.lang.ref.WeakReference;
 import java.util.UUID;
+
 import mcp.mobius.opis.data.holders.basetypes.SerialInt;
 import mcp.mobius.opis.data.holders.basetypes.SerialLong;
 import mcp.mobius.opis.data.holders.newtypes.ConnectionProperties;
@@ -19,9 +16,16 @@ import mcp.mobius.opis.network.packets.client.PacketReqData;
 import mcp.mobius.opis.network.packets.server.NetDataValue;
 import mcp.mobius.opis.network.rcon.RConHandler;
 import mcp.mobius.opis.swing.SelectedTab;
+
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.FakePlayerFactory;
+
+import com.mojang.authlib.GameProfile;
+
+import io.nettyopis.channel.ChannelHandlerContext;
+import io.nettyopis.channel.ChannelInboundHandlerAdapter;
+import io.nettyopis.util.ReferenceCountUtil;
 
 public class NexusInboundHandler extends ChannelInboundHandlerAdapter {
 
@@ -34,7 +38,9 @@ public class NexusInboundHandler extends ChannelInboundHandlerAdapter {
                 new NetDataValue(
                         Message.NEXUS_UUID,
                         new NexusAuth(
-                                NexusClient.instance.uuid, NexusClient.instance.pass, NexusClient.instance.reconnect)),
+                                NexusClient.instance.uuid,
+                                NexusClient.instance.pass,
+                                NexusClient.instance.reconnect)),
                 ctx);
     }
 
@@ -70,27 +76,25 @@ public class NexusInboundHandler extends ChannelInboundHandlerAdapter {
     private void registerFakePlayer(ChannelHandlerContext ctx) {
         UUID fakeUUID = UUID.randomUUID();
 
-        FakePlayer fakePlayer =
-                FakePlayerFactory.get(DimensionManager.getWorld(0), new GameProfile(fakeUUID, ctx.name()));
+        FakePlayer fakePlayer = FakePlayerFactory
+                .get(DimensionManager.getWorld(0), new GameProfile(fakeUUID, ctx.name()));
         RConHandler.fakePlayersNexus.put(fakePlayer, ctx);
 
         PlayerTracker.INSTANCE.playersSwing.add(fakePlayer);
         PlayerTracker.INSTANCE.playerTab.put(fakePlayer, SelectedTab.ALL);
         RConHandler.sendToContext(
-                new NetDataValue(Message.STATUS_CURRENT_TIME, new SerialLong(System.currentTimeMillis())), ctx);
+                new NetDataValue(Message.STATUS_CURRENT_TIME, new SerialLong(System.currentTimeMillis())),
+                ctx);
         StringCache.INSTANCE.syncCache(fakePlayer);
 
         modOpis.log.info(String.format("FakePlayer %s with uuid %s registered.", ctx.name(), fakeUUID));
     }
 
     /*
-      private void unregisterFakePlayer(ChannelHandlerContext ctx){
-      	FakePlayer fakePlayer = RConHandler.fakePlayersNexus.inverse().get(ctx);
-      	RConHandler.fakePlayersNexus.remove(fakePlayer);
-    PlayerTracker.INSTANCE.playersSwing.remove(fakePlayer);
-    PlayerTracker.INSTANCE.playerTab.remove(fakePlayer);
-    modOpis.log.info(String.format("FakePlayer %s unregistered.", fakePlayer));
-      }
-      */
+     * private void unregisterFakePlayer(ChannelHandlerContext ctx){ FakePlayer fakePlayer =
+     * RConHandler.fakePlayersNexus.inverse().get(ctx); RConHandler.fakePlayersNexus.remove(fakePlayer);
+     * PlayerTracker.INSTANCE.playersSwing.remove(fakePlayer); PlayerTracker.INSTANCE.playerTab.remove(fakePlayer);
+     * modOpis.log.info(String.format("FakePlayer %s unregistered.", fakePlayer)); }
+     */
 
 }

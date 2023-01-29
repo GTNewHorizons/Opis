@@ -1,10 +1,12 @@
 package mcp.mobius.opis.data.holders.stats;
 
-import com.google.common.io.ByteArrayDataInput;
-import com.google.common.io.ByteArrayDataOutput;
 import mcp.mobius.opis.data.holders.basetypes.CoordinatesChunk;
 
+import com.google.common.io.ByteArrayDataInput;
+import com.google.common.io.ByteArrayDataOutput;
+
 public class StatsChunk extends StatAbstract {
+
     public int tileEntities = 0;
     public int entities = 0;
 

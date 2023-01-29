@@ -1,15 +1,18 @@
 package mcp.mobius.opis.network.packets.client;
 
-import com.google.common.io.ByteArrayDataInput;
-import com.google.common.io.ByteArrayDataOutput;
 import java.util.ArrayList;
+
 import mcp.mobius.opis.data.holders.basetypes.CoordinatesChunk;
 import mcp.mobius.opis.events.PlayerTracker;
 import mcp.mobius.opis.network.PacketBase;
 import mcp.mobius.opis.network.enums.AccessLevel;
+
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
+
+import com.google.common.io.ByteArrayDataInput;
+import com.google.common.io.ByteArrayDataOutput;
 
 public class PacketReqChunks extends PacketBase {
 
@@ -47,13 +50,12 @@ public class PacketReqChunks extends PacketBase {
                     list.add(world.getChunkFromChunkCoords(chunk.chunkX, chunk.chunkZ));
 
                 // if (!list.isEmpty()){
-                //	Packet_Chunks.send(castedPacket.dim, !world.provider.hasNoSky, list, player);
+                // Packet_Chunks.send(castedPacket.dim, !world.provider.hasNoSky, list, player);
 
                 /*
-                Packet250CustomPayload chunkPacket = Packet_Chunks.create(castedPacket.dim, !world.provider.hasNoSky, list);
-                if (chunkPacket != null)
-                	PacketDispatcher.sendPacketToPlayer( chunkPacket, player);
-                */
+                 * Packet250CustomPayload chunkPacket = Packet_Chunks.create(castedPacket.dim, !world.provider.hasNoSky,
+                 * list); if (chunkPacket != null) PacketDispatcher.sendPacketToPlayer( chunkPacket, player);
+                 */
                 // }
             }
         }

@@ -1,14 +1,17 @@
 package mcp.mobius.opis.events;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import mcp.mobius.opis.modOpis;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
+
 import org.lwjgl.opengl.GL11;
+
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class OpisClientEventHandler {
 
@@ -17,9 +20,9 @@ public class OpisClientEventHandler {
     public void onRenderWorldLast(RenderWorldLastEvent event) {
         if (modOpis.selectedBlock == null) return;
         if (Minecraft.getMinecraft().theWorld.provider.dimensionId != modOpis.selectedBlock.dim) return;
-        if (Minecraft.getMinecraft()
-                .theWorld
-                .isAirBlock(modOpis.selectedBlock.x, modOpis.selectedBlock.y, modOpis.selectedBlock.z)) return;
+        if (Minecraft.getMinecraft().theWorld
+                .isAirBlock(modOpis.selectedBlock.x, modOpis.selectedBlock.y, modOpis.selectedBlock.z))
+            return;
 
         double partialTicks = event.partialTicks;
 

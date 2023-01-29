@@ -1,16 +1,9 @@
 package mcp.mobius.opis.network.rcon;
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
-import io.nettyopis.buffer.ByteBuf;
-import io.nettyopis.channel.ChannelFuture;
-import io.nettyopis.channel.ChannelFutureListener;
-import io.nettyopis.channel.ChannelHandlerContext;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.net.ConnectException;
+
 import mcp.mobius.opis.events.PlayerTracker;
 import mcp.mobius.opis.modOpis;
 import mcp.mobius.opis.network.PacketBase;
@@ -21,9 +14,21 @@ import mcp.mobius.opis.network.packets.server.NetDataList;
 import mcp.mobius.opis.network.packets.server.NetDataValue;
 import mcp.mobius.opis.network.rcon.nexus.NexusClient;
 import mcp.mobius.opis.network.rcon.nexus.NexusInboundHandler;
+
 import net.minecraftforge.common.util.FakePlayer;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
+
+import io.nettyopis.buffer.ByteBuf;
+import io.nettyopis.channel.ChannelFuture;
+import io.nettyopis.channel.ChannelFutureListener;
+import io.nettyopis.channel.ChannelHandlerContext;
+
 public class RConHandler {
+
     public static BiMap<Byte, Class> packetTypes = HashBiMap.create();
     public static BiMap<FakePlayer, ChannelHandlerContext> fakePlayersRcon = HashBiMap.create();
     public static BiMap<FakePlayer, ChannelHandlerContext> fakePlayersNexus = HashBiMap.create();
@@ -72,6 +77,7 @@ public class RConHandler {
         buf.writeBytes(data);
         ChannelFuture f = ctx.writeAndFlush(buf);
         f.addListener(new ChannelFutureListener() {
+
             @Override
             public void operationComplete(ChannelFuture arg0) throws Exception {
                 if (arg0.cause() != null) {

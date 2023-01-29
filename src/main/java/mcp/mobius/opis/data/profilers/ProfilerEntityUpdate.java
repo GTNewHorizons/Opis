@@ -1,10 +1,13 @@
 package mcp.mobius.opis.data.profilers;
 
 import java.util.WeakHashMap;
+
 import mcp.mobius.mobiuscore.profiler.IProfilerBase;
 import mcp.mobius.opis.data.profilers.Clock.IClock;
 import mcp.mobius.opis.modOpis;
+
 import net.minecraft.entity.Entity;
+
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
 public class ProfilerEntityUpdate extends ProfilerAbstract implements IProfilerBase {

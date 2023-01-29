@@ -1,10 +1,12 @@
 package mcp.mobius.opis.swing.widgets;
 
 import javax.swing.JButton;
+
 import mcp.mobius.opis.network.enums.AccessLevel;
 import mcp.mobius.opis.swing.SwingUI;
 
 public class JButtonAccess extends JButton {
+
     private AccessLevel al = AccessLevel.NONE;
 
     public JButtonAccess(AccessLevel level) {

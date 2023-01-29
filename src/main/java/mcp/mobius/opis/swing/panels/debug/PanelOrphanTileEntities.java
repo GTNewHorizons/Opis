@@ -2,6 +2,7 @@ package mcp.mobius.opis.swing.panels.debug;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+
 import mcp.mobius.opis.api.ITabPanel;
 import mcp.mobius.opis.data.holders.newtypes.CachedString;
 import mcp.mobius.opis.data.holders.newtypes.DataTileEntity;
@@ -13,6 +14,7 @@ import mcp.mobius.opis.swing.actions.ActionOrphanTileEntities;
 import mcp.mobius.opis.swing.widgets.JButtonAccess;
 import mcp.mobius.opis.swing.widgets.JPanelMsgHandler;
 import mcp.mobius.opis.swing.widgets.JTableStats;
+
 import net.miginfocom.swing.MigLayout;
 
 public class PanelOrphanTileEntities extends JPanelMsgHandler implements ITabPanel {
@@ -30,15 +32,10 @@ public class PanelOrphanTileEntities extends JPanelMsgHandler implements ITabPan
         add(scrollPane, "cell 0 1 2 1,grow");
 
         table = new JTableStats(
-                new String[] {"Class", "Hash", "Type", "Dimension", "Coordinates"},
-                new Class[] {CachedString.class, String.class, CachedString.class, Integer.class, String.class},
-                new int[] {
-                    SwingConstants.LEFT,
-                    SwingConstants.LEFT,
-                    SwingConstants.CENTER,
-                    SwingConstants.CENTER,
-                    SwingConstants.CENTER
-                });
+                new String[] { "Class", "Hash", "Type", "Dimension", "Coordinates" },
+                new Class[] { CachedString.class, String.class, CachedString.class, Integer.class, String.class },
+                new int[] { SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.CENTER,
+                        SwingConstants.CENTER });
         scrollPane.setViewportView(table);
     }
 
@@ -53,17 +50,14 @@ public class PanelOrphanTileEntities extends JPanelMsgHandler implements ITabPan
                 SwingUtilities.invokeLater(() -> {
                     this.getTable().addTableData(rawdata.array);
                     DefaultTableModel model = this.getTable().getModel();
-                    // int               row   = this.updateData(table, model, DataTileEntity.class);
+                    // int row = this.updateData(table, model, DataTileEntity.class);
 
                     for (Object o : rawdata.array) {
                         DataTileEntity data = (DataTileEntity) o;
-                        model.addRow(new Object[] {
-                            data.clazz,
-                            String.format("0x%x", data.hashCode),
-                            data.cause,
-                            data.pos.dim,
-                            String.format("[ %4d %4d %4d ]", data.pos.x, data.pos.y, data.pos.z),
-                        });
+                        model.addRow(
+                                new Object[] { data.clazz, String.format("0x%x", data.hashCode), data.cause,
+                                        data.pos.dim,
+                                        String.format("[ %4d %4d %4d ]", data.pos.x, data.pos.y, data.pos.z), });
                     }
 
                     this.getTable().dataUpdated(row);

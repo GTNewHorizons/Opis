@@ -15,16 +15,19 @@ import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 import java.util.HashMap;
 import java.util.Map;
+
 import net.minecraft.client.renderer.Tessellator;
+
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
 
 /**
- * A TrueType font implementation originally for Slick, modified to use
- * Minecraft's Tessellator and add native floating point colour support
+ * A TrueType font implementation originally for Slick, modified to use Minecraft's Tessellator and add native floating
+ * point colour support
  */
 public class TrueTypeFont {
+
     public static final int ALIGN_LEFT = 0, ALIGN_RIGHT = 1, ALIGN_CENTER = 2;
     /** Array that holds necessary information about the font characters */
     private IntObject[] charArray = new IntObject[256];
@@ -59,6 +62,7 @@ public class TrueTypeFont {
     private int correctL = 9, correctR = 8;
 
     private class IntObject {
+
         /** Character's width */
         public int width;
 
@@ -210,8 +214,8 @@ public class TrueTypeFont {
         }
     }
 
-    private void drawQuad(
-            float drawX, float drawY, float drawX2, float drawY2, float srcX, float srcY, float srcX2, float srcY2) {
+    private void drawQuad(float drawX, float drawY, float drawX2, float drawY2, float srcX, float srcY, float srcX2,
+            float srcY2) {
         float DrawWidth = drawX2 - drawX;
         float DrawHeight = drawY2 - drawY;
         float TextureSrcX = srcX / textureWidth;
@@ -233,7 +237,11 @@ public class TrueTypeFont {
         // GL11.glVertex2f(drawX, drawY + DrawHeight);
 
         t.addVertexWithUV(
-                drawX + DrawWidth, drawY + DrawHeight, 0, TextureSrcX + RenderWidth, TextureSrcY + RenderHeight);
+                drawX + DrawWidth,
+                drawY + DrawHeight,
+                0,
+                TextureSrcX + RenderWidth,
+                TextureSrcY + RenderHeight);
         // GL11.glTexCoord2f(TextureSrcX + RenderWidth, TextureSrcY + RenderHeight);
         // GL11.glVertex2f(drawX + DrawWidth, drawY + DrawHeight);
 
@@ -286,16 +294,8 @@ public class TrueTypeFont {
         drawString(x, y, whatchars, 0, whatchars.length() - 1, scaleX, scaleY, format, rgba);
     }
 
-    public void drawString(
-            float x,
-            float y,
-            String whatchars,
-            int startIndex,
-            int endIndex,
-            float scaleX,
-            float scaleY,
-            int format,
-            float... rgba) {
+    public void drawString(float x, float y, String whatchars, int startIndex, int endIndex, float scaleX, float scaleY,
+            int format, float... rgba) {
 
         // GameSettings gameSettings = new GameSettings();
 
@@ -345,7 +345,7 @@ public class TrueTypeFont {
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, fontTextureID);
         Tessellator t = Tessellator.instance;
         t.startDrawingQuads();
-        //	GL11.glBegin(GL11.GL_QUADS);
+        // GL11.glBegin(GL11.GL_QUADS);
         if (rgba.length == 4) t.setColorRGBA_F(rgba[0], rgba[1], rgba[2], rgba[3]);
         while (i >= startIndex && i <= endIndex) {
 
@@ -391,7 +391,7 @@ public class TrueTypeFont {
             }
         }
         t.draw();
-        //	GL11.glEnd();
+        // GL11.glEnd();
 
         GL11.glPopMatrix();
     }
@@ -417,19 +417,16 @@ public class TrueTypeFont {
                     newI[newIndex + 3] = b[0];
                 }
 
-                byteBuffer = ByteBuffer.allocateDirect(width * height * (bpp / 8))
-                        .order(ByteOrder.nativeOrder())
+                byteBuffer = ByteBuffer.allocateDirect(width * height * (bpp / 8)).order(ByteOrder.nativeOrder())
                         .put(newI);
             } else {
-                byteBuffer = ByteBuffer.allocateDirect(width * height * (bpp / 8))
-                        .order(ByteOrder.nativeOrder())
+                byteBuffer = ByteBuffer.allocateDirect(width * height * (bpp / 8)).order(ByteOrder.nativeOrder())
                         .put(((DataBufferByte) (bufferedImage.getData().getDataBuffer())).getData());
             }
             byteBuffer.flip();
 
             int internalFormat = GL11.GL_RGBA8, format = GL11.GL_RGBA;
-            IntBuffer textureId = BufferUtils.createIntBuffer(1);
-            ;
+            IntBuffer textureId = BufferUtils.createIntBuffer(1);;
             GL11.glGenTextures(textureId);
             GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureId.get(0));
 
@@ -448,7 +445,13 @@ public class TrueTypeFont {
             GL11.glTexEnvf(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_MODULATE);
 
             GLU.gluBuild2DMipmaps(
-                    GL11.GL_TEXTURE_2D, internalFormat, width, height, format, GL11.GL_UNSIGNED_BYTE, byteBuffer);
+                    GL11.GL_TEXTURE_2D,
+                    internalFormat,
+                    width,
+                    height,
+                    format,
+                    GL11.GL_UNSIGNED_BYTE,
+                    byteBuffer);
             return textureId.get(0);
 
         } catch (Exception e) {
@@ -472,7 +475,7 @@ public class TrueTypeFont {
     }
 
     public static byte[] intToByteArray(int value) {
-        return new byte[] {(byte) (value >>> 24), (byte) (value >>> 16), (byte) (value >>> 8), (byte) value};
+        return new byte[] { (byte) (value >>> 24), (byte) (value >>> 16), (byte) (value >>> 8), (byte) value };
     }
 
     public void destroy() {

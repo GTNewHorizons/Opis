@@ -3,6 +3,7 @@ package mcp.mobius.opis.helpers;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTSizeTracker;
@@ -31,37 +32,15 @@ public class NBTUtil {
     }
 
     /*
-    public static NBTTagCompound setTag(String key, NBTTagCompound targetTag, NBTBase addedTag){
-    	String[] path = key.split("\\.");
-
-    	NBTTagCompound deepTag = targetTag;
-    	for (int i = 0; i < path.length - 1; i++){
-    		if (!deepTag.hasKey(path[i]))
-    			deepTag.setCompoundTag(path[i], new NBTTagCompound());
-
-    		deepTag = deepTag.getCompoundTag(path[i]);
-    	}
-
-    	deepTag.setTag(path[path.length - 1], addedTag);
-
-    	return targetTag;
-    }
-
-    public static NBTTagCompound createTag(NBTTagCompound inTag, HashSet<String> keys){
-    	if (keys.contains("*")) return inTag;
-
-    	NBTTagCompound outTag = new NBTTagCompound();
-
-    	for (String key : keys){
-    		NBTBase tagToAdd = getTag(key, inTag);
-    		//System.out.printf("%s\n", tagToAdd);
-    		if (tagToAdd != null)
-    			outTag = setTag(key, outTag, tagToAdd);
-    	}
-
-    	return outTag;
-    }
-    */
+     * public static NBTTagCompound setTag(String key, NBTTagCompound targetTag, NBTBase addedTag){ String[] path =
+     * key.split("\\."); NBTTagCompound deepTag = targetTag; for (int i = 0; i < path.length - 1; i++){ if
+     * (!deepTag.hasKey(path[i])) deepTag.setCompoundTag(path[i], new NBTTagCompound()); deepTag =
+     * deepTag.getCompoundTag(path[i]); } deepTag.setTag(path[path.length - 1], addedTag); return targetTag; } public
+     * static NBTTagCompound createTag(NBTTagCompound inTag, HashSet<String> keys){ if (keys.contains("*")) return
+     * inTag; NBTTagCompound outTag = new NBTTagCompound(); for (String key : keys){ NBTBase tagToAdd = getTag(key,
+     * inTag); //System.out.printf("%s\n", tagToAdd); if (tagToAdd != null) outTag = setTag(key, outTag, tagToAdd); }
+     * return outTag; }
+     */
 
     public static void writeNBTTagCompound(NBTTagCompound par0NBTTagCompound, DataOutputStream ostream)
             throws IOException {

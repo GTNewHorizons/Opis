@@ -6,11 +6,13 @@ import mcp.mobius.opis.gui.interfaces.CType;
 import mcp.mobius.opis.gui.interfaces.IWidget;
 import mcp.mobius.opis.gui.interfaces.Signal;
 import mcp.mobius.opis.gui.interfaces.WAlign;
+
 import org.lwjgl.util.Point;
 
 public class ViewportScrollable extends WidgetBase {
 
     public class Escalator extends WidgetBase {
+
         int yOffset = 0;
         int sizeCursor = 8;
         int maxValue = 0;
@@ -37,9 +39,16 @@ public class ViewportScrollable extends WidgetBase {
         @Override
         public void draw(Point pos) {
             UIHelper.drawGradientRect(
-                    this.getLeft(), this.getTop(), this.getRight(), this.getBottom(), 1, 0xff999999, 0xff999999);
-            int offsetScaled = (int)
-                    (((double) this.getSize().getY() - (double) sizeCursor + 1) / (double) this.maxValue * (yOffset));
+                    this.getLeft(),
+                    this.getTop(),
+                    this.getRight(),
+                    this.getBottom(),
+                    1,
+                    0xff999999,
+                    0xff999999);
+            int offsetScaled = (int) (((double) this.getSize().getY() - (double) sizeCursor + 1)
+                    / (double) this.maxValue
+                    * (yOffset));
             UIHelper.drawGradientRect(
                     this.getLeft(),
                     this.getTop() + offsetScaled,
@@ -54,8 +63,7 @@ public class ViewportScrollable extends WidgetBase {
         public void onMouseClick(MouseEvent event) {
             if (event.button == 0) {
                 int offsetScaled = this.getTop()
-                        + (int) (((double) this.getSize().getY() - (double) sizeCursor + 1)
-                                / (double) this.maxValue
+                        + (int) (((double) this.getSize().getY() - (double) sizeCursor + 1) / (double) this.maxValue
                                 * (yOffset));
 
                 this.drag = false;
@@ -97,9 +105,8 @@ public class ViewportScrollable extends WidgetBase {
 
     public ViewportScrollable(IWidget parent) {
         super(parent);
-        this.addWidget("Cropping", new LayoutCropping(null))
-                .setGeometry(
-                        new WidgetGeometry(0.0, 0.0, 100.0, 100.0, CType.RELXY, CType.RELXY, WAlign.LEFT, WAlign.TOP));
+        this.addWidget("Cropping", new LayoutCropping(null)).setGeometry(
+                new WidgetGeometry(0.0, 0.0, 100.0, 100.0, CType.RELXY, CType.RELXY, WAlign.LEFT, WAlign.TOP));
         this.addWidget("Escalator", new Escalator(null, this.step * 5))
                 .setGeometry(new WidgetGeometry(100.0, 0, 8, 100.0, CType.RELXY, CType.REL_Y, WAlign.RIGHT, WAlign.TOP))
                 .hide();
@@ -122,8 +129,7 @@ public class ViewportScrollable extends WidgetBase {
 
     public int getOffset() {
         return this.yOffset;
-    }
-    ;
+    };
 
     @Override
     public void draw(Point pos) {}
@@ -132,8 +138,7 @@ public class ViewportScrollable extends WidgetBase {
     public void draw() {
         // if (Display.wasResized())
 
-        if ((this.attachedWidget != null)
-                && (this.attachedWidget.getSize().getY() > this.getSize().getY()))
+        if ((this.attachedWidget != null) && (this.attachedWidget.getSize().getY() > this.getSize().getY()))
             this.getWidget("Escalator").show();
         else this.getWidget("Escalator").hide();
 
@@ -144,9 +149,7 @@ public class ViewportScrollable extends WidgetBase {
     public void onMouseWheel(MouseEvent event) {
         this.yOffset += event.z / 120.0 * this.step;
 
-        this.yOffset = Math.max(
-                this.yOffset,
-                this.getSize().getY() - this.attachedWidget.getSize().getY());
+        this.yOffset = Math.max(this.yOffset, this.getSize().getY() - this.attachedWidget.getSize().getY());
         this.yOffset = Math.min(this.yOffset, 0);
 
         ((LayoutCropping) this.getWidget("Cropping")).setOffsets(0, this.yOffset);
@@ -156,8 +159,7 @@ public class ViewportScrollable extends WidgetBase {
     @Override
     public void onWidgetEvent(IWidget srcwidget, Signal signal, Object... params) {
         if (srcwidget.equals(this.attachedWidget) && signal == Signal.GEOM_CHANGED) {
-            ((Escalator) this.getWidget("Escalator"))
-                    .setMaxValue(this.getSize().getY() - srcwidget.getSize().getY());
+            ((Escalator) this.getWidget("Escalator")).setMaxValue(this.getSize().getY() - srcwidget.getSize().getY());
         } else if (srcwidget.equals(this.getWidget("Escalator")) && signal == Signal.VALUE_CHANGED) {
             this.yOffset = (Integer) params[0];
             ((LayoutCropping) this.getWidget("Cropping")).setOffsets(0, this.yOffset);

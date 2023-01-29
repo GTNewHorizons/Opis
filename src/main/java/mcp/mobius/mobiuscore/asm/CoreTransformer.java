@@ -2,13 +2,16 @@ package mcp.mobius.mobiuscore.asm;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+
 import mcp.mobius.mobiuscore.asm.transformers.common.*;
 import mcp.mobius.mobiuscore.asm.transformers.crucible.TransformerWorldCrucible;
 import mcp.mobius.mobiuscore.asm.transformers.forge.TransformerWorld;
 import mcp.mobius.mobiuscore.asm.transformers.kcauldron.TransformerWorldKCauldron;
 import mcp.mobius.mobiuscore.asm.transformers.mcpc.TransformerWorldCauldron;
 import mcp.mobius.mobiuscore.asm.transformers.thermos.TransformerWorldThermos;
+
 import net.minecraft.launchwrapper.IClassTransformer;
+
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.util.TraceClassVisitor;
@@ -70,7 +73,7 @@ public class CoreTransformer implements IClassTransformer {
             }
 
             // if (srgname.equals("cpw.mods.fml.common.network.internal.FMLProxyPacket")){
-            //	bytes = new TransformerFMLProxyPacket().transform(name, srgname, bytes);
+            // bytes = new TransformerFMLProxyPacket().transform(name, srgname, bytes);
             // }
 
             if (srgname.equals("cpw.mods.fml.common.eventhandler.ASMEventHandler")) {

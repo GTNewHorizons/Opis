@@ -1,10 +1,12 @@
 package mcp.mobius.mobiuscore.asm;
 
-import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 import java.io.File;
 import java.util.Map;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 
 @IFMLLoadingPlugin.MCVersion("1.7.10")
 @IFMLLoadingPlugin.TransformerExclusions("mcp.mobius.mobiuscore.asm")
@@ -14,7 +16,7 @@ public class CoreDescription implements IFMLLoadingPlugin {
 
     @Override
     public String[] getASMTransformerClass() {
-        return new String[] {"mcp.mobius.mobiuscore.asm.CoreTransformer"};
+        return new String[] { "mcp.mobius.mobiuscore.asm.CoreTransformer" };
     }
 
     @Override

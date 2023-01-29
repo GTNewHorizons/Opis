@@ -2,6 +2,7 @@ package mcp.mobius.opis.swing.panels.timingserver;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+
 import mcp.mobius.opis.api.ITabPanel;
 import mcp.mobius.opis.data.holders.newtypes.CachedString;
 import mcp.mobius.opis.data.holders.newtypes.DataEvent;
@@ -14,9 +15,11 @@ import mcp.mobius.opis.swing.actions.ActionRunOpis;
 import mcp.mobius.opis.swing.widgets.JButtonAccess;
 import mcp.mobius.opis.swing.widgets.JPanelMsgHandler;
 import mcp.mobius.opis.swing.widgets.JTableStats;
+
 import net.miginfocom.swing.MigLayout;
 
 public class PanelTimingHandlers extends JPanelMsgHandler implements ITabPanel {
+
     private JButtonAccess btnRun;
     private JLabel lblSummary;
 
@@ -35,8 +38,8 @@ public class PanelTimingHandlers extends JPanelMsgHandler implements ITabPanel {
         add(scrollPane, "cell 0 1 2 1,grow");
 
         table = new JTableStats(
-                new String[] {"Mod", "Tick", "Update Time"},
-                new Class[] {CachedString.class, String.class, DataTiming.class});
+                new String[] { "Mod", "Tick", "Update Time" },
+                new Class[] { CachedString.class, String.class, DataTiming.class });
         scrollPane.setViewportView(table);
 
         lblSummary = new JLabel("TmpText");
@@ -65,12 +68,10 @@ public class PanelTimingHandlers extends JPanelMsgHandler implements ITabPanel {
                     for (Object o : rawdata.array) {
                         DataEvent data = (DataEvent) o;
                         try {
-                            model.addRow(new Object[] {
-                                data.mod, data.event.toString().split("\\$")[1], data.update
-                            });
+                            model.addRow(new Object[] { data.mod, data.event.toString().split("\\$")[1], data.update });
                         } catch (ArrayIndexOutOfBoundsException e) {
                             // System.out.printf("AIOOB : %s %s\n", data.event.index, data.event.toString());
-                            model.addRow(new Object[] {data.mod, data.event.toString(), data.update});
+                            model.addRow(new Object[] { data.mod, data.event.toString(), data.update });
                         }
                     }
 
@@ -79,22 +80,20 @@ public class PanelTimingHandlers extends JPanelMsgHandler implements ITabPanel {
                 break;
             }
             case VALUE_TIMING_HANDLERS: {
-                SwingUtilities.invokeLater(() -> {
-                    this.getLblSummary().setText(String.format("Total update time : %s", (rawdata.value).toString()));
-                });
+                SwingUtilities.invokeLater(
+                        () -> {
+                            this.getLblSummary()
+                                    .setText(String.format("Total update time : %s", (rawdata.value).toString()));
+                        });
                 break;
             }
             case STATUS_START:
             case STATUS_RUNNING: {
-                SwingUtilities.invokeLater(() -> {
-                    this.getBtnRun().setText("Running...");
-                });
+                SwingUtilities.invokeLater(() -> { this.getBtnRun().setText("Running..."); });
                 break;
             }
             case STATUS_STOP: {
-                SwingUtilities.invokeLater(() -> {
-                    this.getBtnRun().setText("Run Opis");
-                });
+                SwingUtilities.invokeLater(() -> { this.getBtnRun().setText("Run Opis"); });
                 break;
             }
             default:

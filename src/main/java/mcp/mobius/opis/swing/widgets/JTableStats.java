@@ -2,16 +2,19 @@ package mcp.mobius.opis.swing.widgets;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+
 import mcp.mobius.opis.data.holders.ISerializable;
 
 public class JTableStats extends JTable {
 
     public class OpisTableModel extends DefaultTableModel {
+
         String[] headers;
         Class[] columnTypes;
         boolean[] columnEditables;
@@ -41,44 +44,28 @@ public class JTableStats extends JTable {
         this(
                 headers,
                 columnTypes,
-                new int[] {
-                    SwingConstants.CENTER,
-                    SwingConstants.CENTER,
-                    SwingConstants.CENTER,
-                    SwingConstants.CENTER,
-                    SwingConstants.CENTER,
-                    SwingConstants.CENTER,
-                    SwingConstants.CENTER,
-                    SwingConstants.CENTER,
-                    SwingConstants.CENTER,
-                    SwingConstants.CENTER
-                },
-                new boolean[] {false, false, false, false, false, false, false, false, false, false});
+                new int[] { SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER,
+                        SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER,
+                        SwingConstants.CENTER, SwingConstants.CENTER },
+                new boolean[] { false, false, false, false, false, false, false, false, false, false });
     }
 
     public JTableStats(String[] headers, Class[] columnTypes, boolean[] editable) {
         this(
                 headers,
                 columnTypes,
-                new int[] {
-                    SwingConstants.CENTER,
-                    SwingConstants.CENTER,
-                    SwingConstants.CENTER,
-                    SwingConstants.CENTER,
-                    SwingConstants.CENTER,
-                    SwingConstants.CENTER,
-                    SwingConstants.CENTER,
-                    SwingConstants.CENTER,
-                    SwingConstants.CENTER,
-                    SwingConstants.CENTER
-                },
+                new int[] { SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER,
+                        SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER,
+                        SwingConstants.CENTER, SwingConstants.CENTER },
                 editable);
     }
 
     public JTableStats(String[] headers, Class[] columnTypes, int[] align) {
-        this(headers, columnTypes, align, new boolean[] {
-            false, false, false, false, false, false, false, false, false, false
-        });
+        this(
+                headers,
+                columnTypes,
+                align,
+                new boolean[] { false, false, false, false, false, false, false, false, false, false });
     }
 
     public JTableStats(String[] headers, Class[] columnTypes, int[] align, boolean[] editable) {
@@ -132,8 +119,7 @@ public class JTableStats extends JTable {
         int row = this.getSelectedRow();
         try {
             this.getModel().setRowCount(0);
-        } catch (NullPointerException e) {
-        }
+        } catch (NullPointerException e) {}
         return row;
     }
 
@@ -148,12 +134,8 @@ public class JTableStats extends JTable {
     }
 
     /*
-    public void setStatistics(ArrayList<ISerializable> statistics){
-    	this.statistics = new ArrayList<ISerializable>();
-    	for (Object o : statistics){
-    		this.statistics.add((StatAbstract)o);
-    	}
-    }
-    */
+     * public void setStatistics(ArrayList<ISerializable> statistics){ this.statistics = new ArrayList<ISerializable>();
+     * for (Object o : statistics){ this.statistics.add((StatAbstract)o); } }
+     */
 
 }

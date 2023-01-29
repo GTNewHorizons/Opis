@@ -1,6 +1,7 @@
 package mcp.mobius.mobiuscore.profiler;
 
 public class DummyProfiler implements IProfilerBase {
+
     @Override
     public void reset() {}
 

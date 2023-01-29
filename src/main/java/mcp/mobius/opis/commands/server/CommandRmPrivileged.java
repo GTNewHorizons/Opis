@@ -2,6 +2,7 @@ package mcp.mobius.opis.commands.server;
 
 import mcp.mobius.opis.commands.IOpisCommand;
 import mcp.mobius.opis.events.PlayerTracker;
+
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -27,8 +28,8 @@ public class CommandRmPrivileged extends CommandBase implements IOpisCommand {
             icommandsender.addChatMessage(
                     new ChatComponentText(String.format("Player %s removed from Opis user list.", astring[0])));
         } else {
-            icommandsender.addChatMessage(
-                    new ChatComponentText(String.format("Player %s not found in list.", astring[0])));
+            icommandsender
+                    .addChatMessage(new ChatComponentText(String.format("Player %s not found in list.", astring[0])));
         }
     }
 

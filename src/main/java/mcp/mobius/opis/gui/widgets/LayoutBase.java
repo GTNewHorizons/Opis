@@ -2,6 +2,7 @@ package mcp.mobius.opis.gui.widgets;
 
 import mcp.mobius.opis.gui.helpers.UIHelper;
 import mcp.mobius.opis.gui.interfaces.IWidget;
+
 import org.lwjgl.util.Point;
 
 public class LayoutBase extends WidgetBase {
@@ -16,9 +17,14 @@ public class LayoutBase extends WidgetBase {
 
     @Override
     public void draw(Point pos) {
-        if (this.renderBG)
-            UIHelper.drawGradientRect(
-                    this.getLeft(), this.getTop(), this.getRight(), this.getBottom(), 0, this.bgcolor1, this.bgcolor2);
+        if (this.renderBG) UIHelper.drawGradientRect(
+                this.getLeft(),
+                this.getTop(),
+                this.getRight(),
+                this.getBottom(),
+                0,
+                this.bgcolor1,
+                this.bgcolor2);
     }
 
     public void setBackgroundColors(int bg1, int bg2) {
@@ -28,19 +34,10 @@ public class LayoutBase extends WidgetBase {
     }
 
     /*
-    @Override
-    public void onMouseEnter(MouseEvent event) {
-    	IWidget widget = this.getWidgetAtCoordinates(event.x, event.y);
-    	if (widget != null && widget != this)
-    		widget.onMouseEnter(event);
-    }
-
-    @Override
-    public void onMouseLeave(MouseEvent event) {
-    	IWidget widget = this.getWidgetAtCoordinates(event.x, event.y);
-    	if (widget != null && widget != this)
-    		widget.onMouseLeave(event);
-    }
-    */
+     * @Override public void onMouseEnter(MouseEvent event) { IWidget widget = this.getWidgetAtCoordinates(event.x,
+     * event.y); if (widget != null && widget != this) widget.onMouseEnter(event); }
+     * @Override public void onMouseLeave(MouseEvent event) { IWidget widget = this.getWidgetAtCoordinates(event.x,
+     * event.y); if (widget != null && widget != this) widget.onMouseLeave(event); }
+     */
 
 }

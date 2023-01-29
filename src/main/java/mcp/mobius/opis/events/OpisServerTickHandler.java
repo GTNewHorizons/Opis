@@ -1,12 +1,9 @@
 package mcp.mobius.opis.events;
 
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.relauncher.Side;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+
 import mcp.mobius.mobiuscore.profiler.ProfilerSection;
 import mcp.mobius.opis.data.holders.basetypes.SerialInt;
 import mcp.mobius.opis.data.holders.basetypes.SerialLong;
@@ -23,10 +20,17 @@ import mcp.mobius.opis.network.enums.AccessLevel;
 import mcp.mobius.opis.network.enums.Message;
 import mcp.mobius.opis.network.packets.server.NetDataList;
 import mcp.mobius.opis.network.packets.server.NetDataValue;
+
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.DimensionManager;
 
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
+import cpw.mods.fml.relauncher.Side;
+
 public enum OpisServerTickHandler {
+
     INSTANCE;
 
     public long profilerUpdateTickCounter = 0;
@@ -62,38 +66,42 @@ public enum OpisServerTickHandler {
         // One second timer
         if (timer1000.isDone() && PlayerTracker.INSTANCE.playersSwing.size() > 0) {
 
-            DataTiming tickTiming =
-                    new DataTiming(((ProfilerTick) ProfilerSection.TICK.getProfiler()).data.getGeometricMean());
+            DataTiming tickTiming = new DataTiming(
+                    ((ProfilerTick) ProfilerSection.TICK.getProfiler()).data.getGeometricMean());
             if (!tickTiming.timing.isNaN()) {
-                PacketManager.sendPacketToAllSwing(new NetDataValue(
-                        Message.NEXUS_DATA,
-                        new NexusData(
-                                new SerialLong(
-                                        ((ProfilerPacket) ProfilerSection.PACKET_OUTBOUND.getProfiler()).dataAmount),
-                                new SerialLong(
-                                        ((ProfilerPacket) ProfilerSection.PACKET_INBOUND.getProfiler()).dataAmount),
-                                new SerialInt(ChunkManager.INSTANCE.getForcedChunkAmount()),
-                                new SerialInt(ChunkManager.INSTANCE.getLoadedChunkAmount()),
-                                new DataTiming(
-                                        ((ProfilerTick) ProfilerSection.TICK.getProfiler()).data.getGeometricMean()),
-                                new SerialInt(TileEntityManager.INSTANCE.getAmountTileEntities()),
-                                new SerialInt(EntityManager.INSTANCE.getAmountEntities()),
-                                new SerialInt(FMLCommonHandler.instance()
-                                        .getMinecraftServerInstance()
-                                        .getCurrentPlayerCount()))));
+                PacketManager.sendPacketToAllSwing(
+                        new NetDataValue(
+                                Message.NEXUS_DATA,
+                                new NexusData(
+                                        new SerialLong(
+                                                ((ProfilerPacket) ProfilerSection.PACKET_OUTBOUND
+                                                        .getProfiler()).dataAmount),
+                                        new SerialLong(
+                                                ((ProfilerPacket) ProfilerSection.PACKET_INBOUND
+                                                        .getProfiler()).dataAmount),
+                                        new SerialInt(ChunkManager.INSTANCE.getForcedChunkAmount()),
+                                        new SerialInt(ChunkManager.INSTANCE.getLoadedChunkAmount()),
+                                        new DataTiming(
+                                                ((ProfilerTick) ProfilerSection.TICK.getProfiler()).data
+                                                        .getGeometricMean()),
+                                        new SerialInt(TileEntityManager.INSTANCE.getAmountTileEntities()),
+                                        new SerialInt(EntityManager.INSTANCE.getAmountEntities()),
+                                        new SerialInt(
+                                                FMLCommonHandler.instance().getMinecraftServerInstance()
+                                                        .getCurrentPlayerCount()))));
             }
             // End of summary update
 
             for (EntityPlayerMP player : PlayerTracker.INSTANCE.playersSwing) {
                 if (!cachedAccess.containsKey(player)
                         || cachedAccess.get(player) != PlayerTracker.INSTANCE.getPlayerAccessLevel(player)) {
-                    PacketManager.validateAndSend(
-                            new NetDataValue(
-                                    Message.STATUS_ACCESS_LEVEL,
-                                    new SerialInt(PlayerTracker.INSTANCE
-                                            .getPlayerAccessLevel(player)
-                                            .ordinal())),
-                            player);
+                    PacketManager
+                            .validateAndSend(
+                                    new NetDataValue(
+                                            Message.STATUS_ACCESS_LEVEL,
+                                            new SerialInt(
+                                                    PlayerTracker.INSTANCE.getPlayerAccessLevel(player).ordinal())),
+                                    player);
                     cachedAccess.put(player, PlayerTracker.INSTANCE.getPlayerAccessLevel(player));
                 }
             }
@@ -133,35 +141,41 @@ public enum OpisServerTickHandler {
         if (timer5000.isDone() && PlayerTracker.INSTANCE.playersSwing.size() > 0) {
             PacketManager.sendPacketToAllSwing(
                     new NetDataList(Message.LIST_AMOUNT_ENTITIES, EntityManager.INSTANCE.getCumulativeEntities(false)));
-            PacketManager.sendPacketToAllSwing(new NetDataList(
-                    Message.LIST_AMOUNT_TILEENTS, TileEntityManager.INSTANCE.getCumulativeAmountTileEntities()));
+            PacketManager.sendPacketToAllSwing(
+                    new NetDataList(
+                            Message.LIST_AMOUNT_TILEENTS,
+                            TileEntityManager.INSTANCE.getCumulativeAmountTileEntities()));
 
-            PacketManager.sendPacketToAllSwing(new NetDataList(
-                    Message.LIST_PACKETS_OUTBOUND,
-                    new ArrayList<DataPacket>(
-                            ((ProfilerPacket) ProfilerSection.PACKET_OUTBOUND.getProfiler()).data.values())));
-            PacketManager.sendPacketToAllSwing(new NetDataList(
-                    Message.LIST_PACKETS_INBOUND,
-                    new ArrayList<DataPacket>(
-                            ((ProfilerPacket) ProfilerSection.PACKET_INBOUND.getProfiler()).data.values())));
+            PacketManager.sendPacketToAllSwing(
+                    new NetDataList(
+                            Message.LIST_PACKETS_OUTBOUND,
+                            new ArrayList<DataPacket>(
+                                    ((ProfilerPacket) ProfilerSection.PACKET_OUTBOUND.getProfiler()).data.values())));
+            PacketManager.sendPacketToAllSwing(
+                    new NetDataList(
+                            Message.LIST_PACKETS_INBOUND,
+                            new ArrayList<DataPacket>(
+                                    ((ProfilerPacket) ProfilerSection.PACKET_INBOUND.getProfiler()).data.values())));
 
-            PacketManager.sendPacketToAllSwing(new NetDataList(
-                    Message.LIST_PACKETS_OUTBOUND_250,
-                    new ArrayList<DataPacket250>(
-                            ((ProfilerPacket) ProfilerSection.PACKET_OUTBOUND.getProfiler()).data250.values())));
-            PacketManager.sendPacketToAllSwing(new NetDataList(
-                    Message.LIST_PACKETS_INBOUND_250,
-                    new ArrayList<DataPacket250>(
-                            ((ProfilerPacket) ProfilerSection.PACKET_INBOUND.getProfiler()).data250.values())));
+            PacketManager.sendPacketToAllSwing(
+                    new NetDataList(
+                            Message.LIST_PACKETS_OUTBOUND_250,
+                            new ArrayList<DataPacket250>(
+                                    ((ProfilerPacket) ProfilerSection.PACKET_OUTBOUND.getProfiler()).data250
+                                            .values())));
+            PacketManager.sendPacketToAllSwing(
+                    new NetDataList(
+                            Message.LIST_PACKETS_INBOUND_250,
+                            new ArrayList<DataPacket250>(
+                                    ((ProfilerPacket) ProfilerSection.PACKET_INBOUND.getProfiler()).data250.values())));
 
             ((ProfilerPacket) ProfilerSection.PACKET_OUTBOUND.getProfiler()).startInterval();
             ((ProfilerPacket) ProfilerSection.PACKET_INBOUND.getProfiler()).startInterval();
 
             /*
-            for (DataPacket data : ((ProfilerPacket)ProfilerSection.PACKET_OUTBOUND.getProfiler()).jabbaSpec){
-            	System.out.printf("[ %d ] %d %d\n", data.id, data.amount, data.size);
-            }
-            */
+             * for (DataPacket data : ((ProfilerPacket)ProfilerSection.PACKET_OUTBOUND.getProfiler()).jabbaSpec){
+             * System.out.printf("[ %d ] %d %d\n", data.id, data.amount, data.size); }
+             */
         }
 
         profilerUpdateTickCounter++;

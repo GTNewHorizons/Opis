@@ -1,11 +1,14 @@
 package mcp.mobius.opis.data.holders.newtypes;
 
-import com.google.common.io.ByteArrayDataInput;
-import com.google.common.io.ByteArrayDataOutput;
 import mcp.mobius.opis.data.holders.ISerializable;
+
 import net.minecraft.network.Packet;
 
+import com.google.common.io.ByteArrayDataInput;
+import com.google.common.io.ByteArrayDataOutput;
+
 public class DataPacket implements ISerializable {
+
     public int id;
     public DataByteSize size;
     public DataByteRate rate;
@@ -23,15 +26,9 @@ public class DataPacket implements ISerializable {
 
     public DataPacket fill(Packet packet, int pktsize) {
         /*
-        PacketBuffer buff = new PacketBuffer(Unpooled.buffer());
-        int pktsize = 0;
-        try{
-        	packet.writePacketData(buff);
-        	pktsize = buff.readableBytes();
-        } catch (Exception e){
-
-        }
-        */
+         * PacketBuffer buff = new PacketBuffer(Unpooled.buffer()); int pktsize = 0; try{ packet.writePacketData(buff);
+         * pktsize = buff.readableBytes(); } catch (Exception e){ }
+         */
         this.size.size += pktsize;
         this.rate.size += pktsize;
         this.amount.size += 1;

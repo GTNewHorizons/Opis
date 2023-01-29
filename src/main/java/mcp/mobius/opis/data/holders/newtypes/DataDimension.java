@@ -1,19 +1,23 @@
 package mcp.mobius.opis.data.holders.newtypes;
 
-import com.google.common.io.ByteArrayDataInput;
-import com.google.common.io.ByteArrayDataOutput;
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import mcp.mobius.mobiuscore.profiler.ProfilerSection;
 import mcp.mobius.opis.data.holders.ISerializable;
 import mcp.mobius.opis.data.profilers.ProfilerDimTick;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
+
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+
+import com.google.common.io.ByteArrayDataInput;
+import com.google.common.io.ByteArrayDataOutput;
 
 /* Data holder for infos about dimensions */
 
@@ -39,8 +43,8 @@ public class DataDimension implements ISerializable {
         this.forced = world.getPersistentChunks().size();
         this.loaded = world.getChunkProvider().getLoadedChunkCount();
 
-        HashMap<Integer, DescriptiveStatistics> data =
-                ((ProfilerDimTick) (ProfilerSection.DIMENSION_TICK.getProfiler())).data;
+        HashMap<Integer, DescriptiveStatistics> data = ((ProfilerDimTick) (ProfilerSection.DIMENSION_TICK
+                .getProfiler())).data;
         this.update = new DataTiming(data.containsKey(dim) ? data.get(dim).getGeometricMean() : 0.0D);
 
         this.mobs = 0;
@@ -81,7 +85,7 @@ public class DataDimension implements ISerializable {
         retVal.mobs = stream.readInt();
         retVal.neutral = stream.readInt();
         retVal.itemstacks = stream.readInt();
-        // retVal.update  = stream.readDouble();
+        // retVal.update = stream.readDouble();
         retVal.update = DataTiming.readFromStream(stream);
         retVal.name = CachedString.readFromStream(stream);
         return retVal;

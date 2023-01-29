@@ -1,19 +1,24 @@
 package mcp.mobius.opis.data.holders.basetypes;
 
-import com.google.common.io.ByteArrayDataInput;
-import com.google.common.io.ByteArrayDataOutput;
 import mcp.mobius.opis.data.holders.ISerializable;
+
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.ChunkCoordIntPair;
 
+import com.google.common.io.ByteArrayDataInput;
+import com.google.common.io.ByteArrayDataOutput;
+
 public final class CoordinatesChunk implements ISerializable {
+
     public final int dim, x, y, z;
     public final int chunkX, chunkZ;
     public final byte metadata;
     // public boolean isChunk;
 
-    public static final CoordinatesChunk INVALID =
-            new CoordinatesChunk(Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE);
+    public static final CoordinatesChunk INVALID = new CoordinatesChunk(
+            Integer.MAX_VALUE,
+            Integer.MAX_VALUE,
+            Integer.MAX_VALUE);
 
     public CoordinatesChunk(CoordinatesBlock coord) {
         this.dim = coord.dim;

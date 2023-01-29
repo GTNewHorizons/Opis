@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import mcp.mobius.mobiuscore.monitors.MonitoredEntityList;
 import mcp.mobius.mobiuscore.profiler.ProfilerSection;
 import mcp.mobius.opis.data.holders.basetypes.AmountHolder;
@@ -19,6 +20,7 @@ import mcp.mobius.opis.helpers.Teleport;
 import mcp.mobius.opis.modOpis;
 import mcp.mobius.opis.network.PacketManager;
 import mcp.mobius.opis.network.enums.PlayerEv;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -29,6 +31,7 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
 
 public enum EntityManager {
+
     INSTANCE;
 
     public ArrayList<DataEntity> getWorses(int amount) {
@@ -85,8 +88,7 @@ public enum EntityManager {
 
     /* Returns a hashmap of all entities per chunk (not timing) */
     public HashMap<CoordinatesChunk, ArrayList<DataEntity>> getAllEntitiesPerChunk() {
-        HashMap<CoordinatesChunk, ArrayList<DataEntity>> entities =
-                new HashMap<CoordinatesChunk, ArrayList<DataEntity>>();
+        HashMap<CoordinatesChunk, ArrayList<DataEntity>> entities = new HashMap<CoordinatesChunk, ArrayList<DataEntity>>();
         for (int i : DimensionManager.getIDs()) {
             entities.putAll(this.getEntitiesPerChunkInDim(i));
         }
@@ -95,8 +97,7 @@ public enum EntityManager {
 
     /* Returns a hashmap of entities in the given dimension (not timing) */
     public HashMap<CoordinatesChunk, ArrayList<DataEntity>> getEntitiesPerChunkInDim(int dim) {
-        HashMap<CoordinatesChunk, ArrayList<DataEntity>> entities =
-                new HashMap<CoordinatesChunk, ArrayList<DataEntity>>();
+        HashMap<CoordinatesChunk, ArrayList<DataEntity>> entities = new HashMap<CoordinatesChunk, ArrayList<DataEntity>>();
         World world = DimensionManager.getWorld(dim);
         if (world == null) return entities;
 
@@ -238,9 +239,7 @@ public enum EntityManager {
     public DataTiming getTotalUpdateTime() {
         double updateTime = 0D;
         for (Entity entity : ((ProfilerEntityUpdate) ProfilerSection.ENTITY_UPDATETIME.getProfiler()).data.keySet()) {
-            updateTime += ((ProfilerEntityUpdate) ProfilerSection.ENTITY_UPDATETIME.getProfiler())
-                    .data
-                    .get(entity)
+            updateTime += ((ProfilerEntityUpdate) ProfilerSection.ENTITY_UPDATETIME.getProfiler()).data.get(entity)
                     .getGeometricMean();
         }
         return new DataTiming(updateTime);
@@ -283,13 +282,14 @@ public enum EntityManager {
         for (Object o : players) {
             // outList.add(new DataEntity().fill((EntityPlayer) p));
             EntityPlayer p = (EntityPlayer) o;
-            outList.add(new PlayerStatus(
-                    p.getGameProfile().getName(),
-                    PlayerEv.ONLINE,
-                    p.worldObj.provider.dimensionId,
-                    (int) p.posX,
-                    (int) p.posY,
-                    (int) p.posZ));
+            outList.add(
+                    new PlayerStatus(
+                            p.getGameProfile().getName(),
+                            PlayerEv.ONLINE,
+                            p.worldObj.provider.dimensionId,
+                            (int) p.posX,
+                            (int) p.posY,
+                            (int) p.posZ));
         }
 
         return outList;
@@ -327,10 +327,8 @@ public enum EntityManager {
             String name = this.getEntityName(entity, true);
             if (!data.containsKey(name)) data.put(name, new DataEntityPerClass(name));
 
-            data.get(name)
-                    .add(((ProfilerEntityUpdate) ProfilerSection.ENTITY_UPDATETIME.getProfiler())
-                            .data
-                            .get(entity)
+            data.get(name).add(
+                    ((ProfilerEntityUpdate) ProfilerSection.ENTITY_UPDATETIME.getProfiler()).data.get(entity)
                             .getGeometricMean());
         }
         return new ArrayList<DataEntityPerClass>(data.values());

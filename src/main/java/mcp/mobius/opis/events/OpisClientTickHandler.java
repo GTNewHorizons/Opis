@@ -1,15 +1,9 @@
 package mcp.mobius.opis.events;
 
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.Table.Cell;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.concurrent.ConcurrentLinkedQueue;
+
 import mcp.mobius.mobiuscore.profiler.ProfilerSection;
 import mcp.mobius.opis.api.TabPanelRegistrar;
 import mcp.mobius.opis.data.holders.basetypes.CoordinatesBlock;
@@ -31,11 +25,23 @@ import mcp.mobius.opis.swing.panels.timingclient.PanelEventClient;
 import mcp.mobius.opis.swing.panels.timingclient.PanelRenderEntities;
 import mcp.mobius.opis.swing.panels.timingclient.PanelRenderHandlers;
 import mcp.mobius.opis.swing.panels.timingclient.PanelRenderTileEnts;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
+
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Table.Cell;
+
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 public enum OpisClientTickHandler {
+
     INSTANCE;
 
     public long profilerUpdateTickCounter = 0;
@@ -75,30 +81,22 @@ public enum OpisClientTickHandler {
         }
 
         if (modOpis.profilerRunClient) {
-            ((PanelRenderTileEnts) (TabPanelRegistrar.INSTANCE.getTab(SelectedTab.RENDERTILEENTS)))
-                    .getBtnRunRender()
+            ((PanelRenderTileEnts) (TabPanelRegistrar.INSTANCE.getTab(SelectedTab.RENDERTILEENTS))).getBtnRunRender()
                     .setText("Running...");
-            ((PanelRenderEntities) (TabPanelRegistrar.INSTANCE.getTab(SelectedTab.RENDERENTITIES)))
-                    .getBtnRunRender()
+            ((PanelRenderEntities) (TabPanelRegistrar.INSTANCE.getTab(SelectedTab.RENDERENTITIES))).getBtnRunRender()
                     .setText("Running...");
-            ((PanelRenderHandlers) (TabPanelRegistrar.INSTANCE.getTab(SelectedTab.RENDERHANDLERS)))
-                    .getBtnRunRender()
+            ((PanelRenderHandlers) (TabPanelRegistrar.INSTANCE.getTab(SelectedTab.RENDERHANDLERS))).getBtnRunRender()
                     .setText("Running...");
-            ((PanelEventClient) (TabPanelRegistrar.INSTANCE.getTab(SelectedTab.CLIENTEVENTS)))
-                    .getBtnRunRender()
+            ((PanelEventClient) (TabPanelRegistrar.INSTANCE.getTab(SelectedTab.CLIENTEVENTS))).getBtnRunRender()
                     .setText("Running...");
         } else {
-            ((PanelRenderTileEnts) (TabPanelRegistrar.INSTANCE.getTab(SelectedTab.RENDERTILEENTS)))
-                    .getBtnRunRender()
+            ((PanelRenderTileEnts) (TabPanelRegistrar.INSTANCE.getTab(SelectedTab.RENDERTILEENTS))).getBtnRunRender()
                     .setText("Run Render");
-            ((PanelRenderEntities) (TabPanelRegistrar.INSTANCE.getTab(SelectedTab.RENDERENTITIES)))
-                    .getBtnRunRender()
+            ((PanelRenderEntities) (TabPanelRegistrar.INSTANCE.getTab(SelectedTab.RENDERENTITIES))).getBtnRunRender()
                     .setText("Run Render");
-            ((PanelRenderHandlers) (TabPanelRegistrar.INSTANCE.getTab(SelectedTab.RENDERHANDLERS)))
-                    .getBtnRunRender()
+            ((PanelRenderHandlers) (TabPanelRegistrar.INSTANCE.getTab(SelectedTab.RENDERHANDLERS))).getBtnRunRender()
                     .setText("Run Render");
-            ((PanelEventClient) (TabPanelRegistrar.INSTANCE.getTab(SelectedTab.CLIENTEVENTS)))
-                    .getBtnRunRender()
+            ((PanelEventClient) (TabPanelRegistrar.INSTANCE.getTab(SelectedTab.CLIENTEVENTS))).getBtnRunRender()
                     .setText("Run Render");
         }
 
@@ -122,8 +120,8 @@ public enum OpisClientTickHandler {
 
         ArrayList<DataTileEntityRender> tileEntData = new ArrayList<DataTileEntityRender>();
         double tileEntTotal = 0.0D;
-        for (TileEntity te :
-                ((ProfilerRenderTileEntity) ProfilerSection.RENDER_TILEENTITY.getProfiler()).data.keySet()) {
+        for (TileEntity te : ((ProfilerRenderTileEntity) ProfilerSection.RENDER_TILEENTITY.getProfiler()).data
+                .keySet()) {
             try {
                 DataTileEntityRender dataTe = new DataTileEntityRender().fill(te);
                 tileEntData.add(dataTe);
@@ -137,8 +135,7 @@ public enum OpisClientTickHandler {
 
         Collections.sort(tileEntData);
         ((PanelRenderTileEnts) (TabPanelRegistrar.INSTANCE.getTab(SelectedTab.RENDERTILEENTS))).setTable(tileEntData);
-        ((PanelRenderTileEnts) (TabPanelRegistrar.INSTANCE.getTab(SelectedTab.RENDERTILEENTS)))
-                .getLblTotal()
+        ((PanelRenderTileEnts) (TabPanelRegistrar.INSTANCE.getTab(SelectedTab.RENDERTILEENTS))).getLblTotal()
                 .setText(String.format("Total : %.3f µs", tileEntTotal / 1000.0));
 
         // ====================================================================================
@@ -159,8 +156,7 @@ public enum OpisClientTickHandler {
 
         Collections.sort(entData);
         ((PanelRenderEntities) (TabPanelRegistrar.INSTANCE.getTab(SelectedTab.RENDERENTITIES))).setTable(entData);
-        ((PanelRenderEntities) (TabPanelRegistrar.INSTANCE.getTab(SelectedTab.RENDERENTITIES)))
-                .getLblTotal()
+        ((PanelRenderEntities) (TabPanelRegistrar.INSTANCE.getTab(SelectedTab.RENDERENTITIES))).getLblTotal()
                 .setText(String.format("Total : %.3f µs", entTotal / 1000.0));
 
         // ====================================================================================
@@ -170,10 +166,10 @@ public enum OpisClientTickHandler {
         // ====================================================================================
 
         ArrayList<DataRenderEvent> timingEvents = new ArrayList<DataRenderEvent>();
-        HashBasedTable<Class, String, DescriptiveStatistics> eventData =
-                ((ProfilerEvent) ProfilerSection.EVENT_INVOKE.getProfiler()).data;
-        HashBasedTable<Class, String, String> eventMod =
-                ((ProfilerEvent) ProfilerSection.EVENT_INVOKE.getProfiler()).dataMod;
+        HashBasedTable<Class, String, DescriptiveStatistics> eventData = ((ProfilerEvent) ProfilerSection.EVENT_INVOKE
+                .getProfiler()).data;
+        HashBasedTable<Class, String, String> eventMod = ((ProfilerEvent) ProfilerSection.EVENT_INVOKE
+                .getProfiler()).dataMod;
         for (Cell<Class, String, DescriptiveStatistics> cell : eventData.cellSet()) {
             timingEvents.add(new DataRenderEvent().fill(cell, eventMod.get(cell.getRowKey(), cell.getColumnKey())));
         }
@@ -182,8 +178,8 @@ public enum OpisClientTickHandler {
         // ====================================================================================
 
         ArrayList<DataBlockRender> blockData = new ArrayList<DataBlockRender>();
-        for (CoordinatesBlock coord :
-                ((ProfilerRenderBlock) ProfilerSection.RENDER_BLOCK.getProfiler()).data.keySet()) {
+        for (CoordinatesBlock coord : ((ProfilerRenderBlock) ProfilerSection.RENDER_BLOCK.getProfiler()).data
+                .keySet()) {
             try {
                 DataBlockRender dataBlock = new DataBlockRender().fill(coord);
                 blockData.add(dataBlock);
@@ -193,13 +189,9 @@ public enum OpisClientTickHandler {
         }
 
         /*
-        Collections.sort(blockData);
-        for (DataBlockRender data : blockData){
-        	ItemStack stack = new ItemStack(data.id, 0, data.meta);
-        	String    name  = stack.getDisplayName();
-
-        	System.out.printf("%s %s : %s\n", data.pos, name, data.update);
-        }
-        */
+         * Collections.sort(blockData); for (DataBlockRender data : blockData){ ItemStack stack = new ItemStack(data.id,
+         * 0, data.meta); String name = stack.getDisplayName(); System.out.printf("%s %s : %s\n", data.pos, name,
+         * data.update); }
+         */
     }
 }

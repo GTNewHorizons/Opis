@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+
 import mcp.mobius.mobiuscore.profiler.ProfilerSection;
 import mcp.mobius.opis.api.IMessageHandler;
 import mcp.mobius.opis.data.holders.ISerializable;
@@ -16,6 +17,7 @@ import mcp.mobius.opis.data.profilers.ProfilerEntityUpdate;
 import mcp.mobius.opis.data.profilers.ProfilerTileEntityUpdate;
 import mcp.mobius.opis.network.PacketBase;
 import mcp.mobius.opis.network.enums.Message;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.WorldServer;
@@ -24,6 +26,7 @@ import net.minecraft.world.gen.ChunkProviderServer;
 import net.minecraftforge.common.DimensionManager;
 
 public enum ChunkManager implements IMessageHandler {
+
     INSTANCE;
 
     private ArrayList<CoordinatesChunk> chunksLoad = new ArrayList<CoordinatesChunk>();
@@ -62,8 +65,8 @@ public enum ChunkManager implements IMessageHandler {
     public synchronized ArrayList<StatsChunk> getChunksUpdateTime() {
         HashMap<CoordinatesChunk, StatsChunk> chunks = new HashMap<CoordinatesChunk, StatsChunk>();
 
-        for (CoordinatesBlock coords :
-                ((ProfilerTileEntityUpdate) ProfilerSection.TILEENT_UPDATETIME.getProfiler()).data.keySet()) {
+        for (CoordinatesBlock coords : ((ProfilerTileEntityUpdate) ProfilerSection.TILEENT_UPDATETIME
+                .getProfiler()).data.keySet()) {
             DataBlockTileEntity data = new DataBlockTileEntity().fill(coords);
             CoordinatesChunk chunk = data.pos.asCoordinatesChunk();
 
@@ -101,7 +104,7 @@ public enum ChunkManager implements IMessageHandler {
         for (WorldServer world : DimensionManager.getWorlds()) {
             int loadedChunksForDim = world.getChunkProvider().getLoadedChunkCount();
             loadedChunks += loadedChunksForDim;
-            // System.out.printf("[ %2d ]  %d chunks\n", world.provider.dimensionId, loadedChunksForDim);
+            // System.out.printf("[ %2d ] %d chunks\n", world.provider.dimensionId, loadedChunksForDim);
         }
         // System.out.printf("Total : %d chunks\n", loadedChunks);
         return loadedChunks;

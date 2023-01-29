@@ -1,7 +1,9 @@
 package mcp.mobius.opis.gui.events;
 
 import mcp.mobius.opis.gui.interfaces.IWidget;
+
 import net.minecraft.client.Minecraft;
+
 import org.lwjgl.input.Mouse;
 
 public class MouseEvent {
@@ -53,8 +55,8 @@ public class MouseEvent {
     }
 
     public String toString() {
-        String retstring =
-                String.format("MOUSE %s :  [%s] [ %.2f %.2f %d ] [", this.type, this.timestamp, this.x, this.y, this.z);
+        String retstring = String
+                .format("MOUSE %s :  [%s] [ %.2f %.2f %d ] [", this.type, this.timestamp, this.x, this.y, this.z);
         if (this.buttonCount < 5)
             for (int i = 0; i < this.buttonCount; i++) retstring += String.format(" %s ", this.buttonState[i]);
         else for (int i = 0; i < 5; i++) retstring += String.format(" %s ", this.buttonState[i]);

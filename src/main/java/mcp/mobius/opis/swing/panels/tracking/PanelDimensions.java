@@ -2,6 +2,7 @@ package mcp.mobius.opis.swing.panels.tracking;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+
 import mcp.mobius.opis.api.IMessageHandler;
 import mcp.mobius.opis.api.ITabPanel;
 import mcp.mobius.opis.data.holders.newtypes.DataDimension;
@@ -15,9 +16,11 @@ import mcp.mobius.opis.swing.widgets.JButtonAccess;
 import mcp.mobius.opis.swing.widgets.JPanelMsgHandler;
 import mcp.mobius.opis.swing.widgets.JTableButton;
 import mcp.mobius.opis.swing.widgets.JTableStats;
+
 import net.miginfocom.swing.MigLayout;
 
 public class PanelDimensions extends JPanelMsgHandler implements IMessageHandler, ITabPanel {
+
     private JButtonAccess btnPurgeAll;
 
     public PanelDimensions() {
@@ -31,31 +34,11 @@ public class PanelDimensions extends JPanelMsgHandler implements IMessageHandler
         add(scrollPane, "cell 0 1,grow");
 
         table = new JTableStats(
-                new String[] {
-                    "Dim",
-                    "Name",
-                    "Players",
-                    "Forced chunks",
-                    "Loaded chunks",
-                    "Monsters",
-                    "Animals",
-                    "Stacks",
-                    "Update time",
-                    "Purge"
-                },
-                new Class[] {
-                    Integer.class,
-                    String.class,
-                    Integer.class,
-                    Integer.class,
-                    Integer.class,
-                    Integer.class,
-                    Integer.class,
-                    Integer.class,
-                    DataTimingMillisecond.class,
-                    JTableButton.class
-                },
-                new boolean[] {false, false, false, false, false, false, false, false, false, true});
+                new String[] { "Dim", "Name", "Players", "Forced chunks", "Loaded chunks", "Monsters", "Animals",
+                        "Stacks", "Update time", "Purge" },
+                new Class[] { Integer.class, String.class, Integer.class, Integer.class, Integer.class, Integer.class,
+                        Integer.class, Integer.class, DataTimingMillisecond.class, JTableButton.class },
+                new boolean[] { false, false, false, false, false, false, false, false, false, true });
         table.setBackground(this.getBackground());
         table.setAutoCreateRowSorter(true);
         table.setShowGrid(false);
@@ -77,18 +60,9 @@ public class PanelDimensions extends JPanelMsgHandler implements IMessageHandler
 
                     for (Object o : rawdata.array) {
                         DataDimension data = (DataDimension) o;
-                        model.addRow(new Object[] {
-                            data.dim,
-                            data.name,
-                            data.players,
-                            data.forced,
-                            data.loaded,
-                            data.mobs,
-                            data.neutral,
-                            data.itemstacks,
-                            data.update.asMillisecond(),
-                            "Purge"
-                        });
+                        model.addRow(
+                                new Object[] { data.dim, data.name, data.players, data.forced, data.loaded, data.mobs,
+                                        data.neutral, data.itemstacks, data.update.asMillisecond(), "Purge" });
                     }
                     this.getTable().dataUpdated(row);
                 });

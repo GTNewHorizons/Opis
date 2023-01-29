@@ -1,10 +1,8 @@
 package mcp.mobius.opis.data.managers;
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
-import com.google.common.collect.Maps;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentLinkedQueue;
+
 import mcp.mobius.opis.api.IMessageHandler;
 import mcp.mobius.opis.api.TabPanelRegistrar;
 import mcp.mobius.opis.data.holders.ISerializable;
@@ -14,18 +12,27 @@ import mcp.mobius.opis.network.PacketManager;
 import mcp.mobius.opis.network.enums.Message;
 import mcp.mobius.opis.network.packets.server.NetDataList;
 import mcp.mobius.opis.network.packets.server.NetDataValue;
+
 import net.minecraft.entity.player.EntityPlayerMP;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
+import com.google.common.collect.Maps;
+
 public enum StringCache implements IMessageHandler {
+
     INSTANCE;
 
     private int currentIndex = -1;
-    // private HashBiMap<Integer, String>  cache  = HashBiMap.create();
+    // private HashBiMap<Integer, String> cache = HashBiMap.create();
     // private ArrayList<DataStringUpdate> toSend = new ArrayList<DataStringUpdate>();
     private final BiMap<Integer, String> cache = Maps.synchronizedBiMap(HashBiMap.<Integer, String>create());
     private ConcurrentLinkedQueue<DataStringUpdate> fullsync = new ConcurrentLinkedQueue<DataStringUpdate>();
-    private ConcurrentLinkedQueue<DataStringUpdate> unsynced =
-            new ConcurrentLinkedQueue<DataStringUpdate>(); // This is the current list of unsynced
+    private ConcurrentLinkedQueue<DataStringUpdate> unsynced = new ConcurrentLinkedQueue<DataStringUpdate>(); // This is
+                                                                                                              // the
+                                                                                                              // current
+                                                                                                              // list of
+                                                                                                              // unsynced
 
     private StringCache() {
         this.getIndex("Server");
@@ -67,7 +74,8 @@ public enum StringCache implements IMessageHandler {
         while (i < toSendCopy.size()) {
             PacketManager.sendToPlayer(
                     new NetDataList(
-                            Message.STATUS_STRINGUPD_FULL, toSendCopy.subList(i, Math.min(i + 50, toSendCopy.size()))),
+                            Message.STATUS_STRINGUPD_FULL,
+                            toSendCopy.subList(i, Math.min(i + 50, toSendCopy.size()))),
                     player);
             i += 50;
         }

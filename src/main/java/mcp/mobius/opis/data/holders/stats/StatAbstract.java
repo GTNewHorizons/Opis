@@ -1,12 +1,15 @@
 package mcp.mobius.opis.data.holders.stats;
 
-import com.google.common.io.ByteArrayDataOutput;
 import mcp.mobius.opis.data.holders.ISerializable;
 import mcp.mobius.opis.data.holders.basetypes.CoordinatesBlock;
 import mcp.mobius.opis.data.holders.basetypes.CoordinatesChunk;
+
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
+import com.google.common.io.ByteArrayDataOutput;
+
 public abstract class StatAbstract implements Comparable<StatAbstract>, ISerializable {
+
     protected DescriptiveStatistics dstat = new DescriptiveStatistics();
     public Long dataPoints = 0L;
     protected Double geomMean = null;
@@ -16,14 +19,9 @@ public abstract class StatAbstract implements Comparable<StatAbstract>, ISeriali
     protected String name;
 
     /*
-    public StatAbstract(){
-    	dstat = new DescriptiveStatistics();
-    }
-
-    public StatAbstract(int points){
-    	dstat = new DescriptiveStatistics(points);
-    }
-    */
+     * public StatAbstract(){ dstat = new DescriptiveStatistics(); } public StatAbstract(int points){ dstat = new
+     * DescriptiveStatistics(points); }
+     */
 
     public void addMeasure(long timing) {
         // this.dstat.addValue((double)timing/1000.0);
@@ -72,8 +70,7 @@ public abstract class StatAbstract implements Comparable<StatAbstract>, ISeriali
 
     public String getName() {
         return this.name;
-    }
-    ;
+    };
 
     public CoordinatesBlock getCoordinates() {
         return this.coord;

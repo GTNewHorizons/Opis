@@ -15,14 +15,28 @@ public class ButtonBoolean extends ButtonBase {
         super(parent);
 
         this.addWidget("LabelFalse", new LabelFixedFont(this, textFalse));
-        this.getWidget("LabelFalse")
-                .setGeometry(new WidgetGeometry(
-                        50.0D, 50.0D, 100.0D, 20.0D, CType.RELXY, CType.ABSXY, WAlign.CENTER, WAlign.CENTER));
+        this.getWidget("LabelFalse").setGeometry(
+                new WidgetGeometry(
+                        50.0D,
+                        50.0D,
+                        100.0D,
+                        20.0D,
+                        CType.RELXY,
+                        CType.ABSXY,
+                        WAlign.CENTER,
+                        WAlign.CENTER));
         this.addWidget("LabelTrue", new LabelFixedFont(this, textTrue));
         this.getWidget("LabelTrue").hide();
-        this.getWidget("LabelTrue")
-                .setGeometry(new WidgetGeometry(
-                        50.0D, 50.0D, 100.0D, 20.0D, CType.RELXY, CType.ABSXY, WAlign.CENTER, WAlign.CENTER));
+        this.getWidget("LabelTrue").setGeometry(
+                new WidgetGeometry(
+                        50.0D,
+                        50.0D,
+                        100.0D,
+                        20.0D,
+                        CType.RELXY,
+                        CType.ABSXY,
+                        WAlign.CENTER,
+                        WAlign.CENTER));
     }
 
     @Override

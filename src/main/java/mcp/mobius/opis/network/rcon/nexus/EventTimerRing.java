@@ -7,10 +7,12 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+
 import mcp.mobius.opis.events.EventTimer;
 import mcp.mobius.opis.network.enums.Message;
 
 public class EventTimerRing {
+
     Map<Message, EventTimer> ring = new HashMap<Message, EventTimer>();
     Properties prop;
 

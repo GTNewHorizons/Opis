@@ -2,6 +2,7 @@ package mcp.mobius.opis.swing.panels.timingserver;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+
 import mcp.mobius.opis.api.ITabPanel;
 import mcp.mobius.opis.data.holders.newtypes.DataEntity;
 import mcp.mobius.opis.data.holders.newtypes.DataTiming;
@@ -14,9 +15,11 @@ import mcp.mobius.opis.swing.actions.ActionTimingEntities;
 import mcp.mobius.opis.swing.widgets.JButtonAccess;
 import mcp.mobius.opis.swing.widgets.JPanelMsgHandler;
 import mcp.mobius.opis.swing.widgets.JTableStats;
+
 import net.miginfocom.swing.MigLayout;
 
 public class PanelTimingEntities extends JPanelMsgHandler implements ITabPanel {
+
     private JButtonAccess btnRun;
     private JButtonAccess btnPull;
     private JButtonAccess btnTeleport;
@@ -43,9 +46,10 @@ public class PanelTimingEntities extends JPanelMsgHandler implements ITabPanel {
         JScrollPane scrollPane = new JScrollPane();
         add(scrollPane, "cell 0 1 5 1,grow");
 
-        table = new JTableStats(new String[] {"Type", "ID", "Dim", "Pos", "Update Time", "Data"}, new Class[] {
-            String.class, Integer.class, Integer.class, Object.class, DataTiming.class, Integer.class
-        });
+        table = new JTableStats(
+                new String[] { "Type", "ID", "Dim", "Pos", "Update Time", "Data" },
+                new Class[] { String.class, Integer.class, Integer.class, Object.class, DataTiming.class,
+                        Integer.class });
         scrollPane.setViewportView(table);
 
         lblSummary = new JLabel("New label");
@@ -81,14 +85,10 @@ public class PanelTimingEntities extends JPanelMsgHandler implements ITabPanel {
 
                     for (Object o : rawdata.array) {
                         DataEntity data = (DataEntity) o;
-                        model.addRow(new Object[] {
-                            data.name,
-                            data.eid,
-                            data.pos.dim,
-                            String.format("[ %4d %4d %4d ]", data.pos.x, data.pos.y, data.pos.z),
-                            data.update,
-                            data.npoints
-                        });
+                        model.addRow(
+                                new Object[] { data.name, data.eid, data.pos.dim,
+                                        String.format("[ %4d %4d %4d ]", data.pos.x, data.pos.y, data.pos.z),
+                                        data.update, data.npoints });
                     }
 
                     this.getTable().dataUpdated(row);
@@ -102,15 +102,11 @@ public class PanelTimingEntities extends JPanelMsgHandler implements ITabPanel {
             }
             case STATUS_START:
             case STATUS_RUNNING: {
-                SwingUtilities.invokeLater(() -> {
-                    this.getBtnRun().setText("Running...");
-                });
+                SwingUtilities.invokeLater(() -> { this.getBtnRun().setText("Running..."); });
                 break;
             }
             case STATUS_STOP: {
-                SwingUtilities.invokeLater(() -> {
-                    this.getBtnRun().setText("Run Opis");
-                });
+                SwingUtilities.invokeLater(() -> { this.getBtnRun().setText("Run Opis"); });
                 break;
             }
             default:

@@ -1,45 +1,38 @@
 package mcp.mobius.opis.gui.font;
 
 import java.awt.Font;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 
 public class Fonts {
 
     /**
-     *  USAGE GUIDE, HUE!
+     * USAGE GUIDE, HUE!
      *
-     *  create a TrueTypeFont object variable
-     *  using either a resource location to a .ttf or
-     *  name of a system font, choose base size and
-     *  whether or not you want anti aliasing like so:
+     * create a TrueTypeFont object variable using either a resource location to a .ttf or name of a system font, choose
+     * base size and whether or not you want anti aliasing like so:
      *
-     *  testFont = createFont(new ResourceLocation("modid", "testfont.ttf"), 24f, false);
+     * testFont = createFont(new ResourceLocation("modid", "testfont.ttf"), 24f, false);
      *
      *
-     *  Once the font has been created, to render to screen, simply use the static call:
+     * Once the font has been created, to render to screen, simply use the static call:
      *
-     *  FontHelper.drawString(String name, int x, int y, TrueTypeFont font, float scaleX, float scaleY, float... rgba)
+     * FontHelper.drawString(String name, int x, int y, TrueTypeFont font, float scaleX, float scaleY, float... rgba)
      *
-     *  (^ help me think of a better class name for that class please o7)
-     *  --
+     * (^ help me think of a better class name for that class please o7) --
      *
-     *  Example:
+     * Example:
      *
-     *  FontHelper.drawString(windowTitle, posX, posY, Fonts.fontHelvetica, 1f, 1f);
+     * FontHelper.drawString(windowTitle, posX, posY, Fonts.fontHelvetica, 1f, 1f);
      *
-     *  --
+     * --
      *
-     *  gl&hf
-     *   - oku
+     * gl&hf - oku
      *
-     * */
-    public static TrueTypeFont fontHelvetica = null,
-            fontMinecraft = null,
-            fontCoolvetica = null,
-            fontArial = null,
-            fontArialSmall = null,
-            fontVenice = null;
+     */
+    public static TrueTypeFont fontHelvetica = null, fontMinecraft = null, fontCoolvetica = null, fontArial = null,
+            fontArialSmall = null, fontVenice = null;
 
     public static void initFonts() {
         fontVenice = createFont(new ResourceLocation("okuguiapi", "venice.ttf"), 25, false);
@@ -75,12 +68,8 @@ public class Fonts {
         Font font;
         TrueTypeFont out = null;
         try {
-            font = Font.createFont(
-                    type,
-                    Minecraft.getMinecraft()
-                            .getResourceManager()
-                            .getResource(res)
-                            .getInputStream());
+            font = Font
+                    .createFont(type, Minecraft.getMinecraft().getResourceManager().getResource(res).getInputStream());
             font = font.deriveFont(defSize);
             out = new TrueTypeFont(font, antialias);
         } catch (Exception e) {

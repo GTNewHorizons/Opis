@@ -1,5 +1,10 @@
 package mcp.mobius.opis.network.rcon.server;
 
+import java.security.cert.CertificateException;
+
+import javax.net.ssl.SSLException;
+
+import mcp.mobius.opis.modOpis;
 import io.nettyopis.bootstrap.ServerBootstrap;
 import io.nettyopis.channel.ChannelFuture;
 import io.nettyopis.channel.ChannelInitializer;
@@ -11,13 +16,11 @@ import io.nettyopis.channel.socket.nio.NioServerSocketChannel;
 import io.nettyopis.handler.ssl.SslContext;
 import io.nettyopis.handler.ssl.util.SelfSignedCertificate;
 import io.nettyopis.handler.timeout.ReadTimeoutHandler;
-import java.security.cert.CertificateException;
-import javax.net.ssl.SSLException;
-import mcp.mobius.opis.modOpis;
 
 public class RConServer implements Runnable {
 
     class ChannelInit extends ChannelInitializer<SocketChannel> {
+
         private final SslContext sslCtx;
 
         public ChannelInit(SslContext sslCtx) {
@@ -69,11 +72,8 @@ public class RConServer implements Runnable {
 
         try {
             ServerBootstrap b = new ServerBootstrap();
-            b.group(bossGroup, workerGroup)
-                    .channel(NioServerSocketChannel.class)
-                    .childHandler(new ChannelInit(sslCtx))
-                    .option(ChannelOption.SO_BACKLOG, 128)
-                    .childOption(ChannelOption.SO_KEEPALIVE, true);
+            b.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class).childHandler(new ChannelInit(sslCtx))
+                    .option(ChannelOption.SO_BACKLOG, 128).childOption(ChannelOption.SO_KEEPALIVE, true);
 
             ChannelFuture f = b.bind(port).sync(); // (7)
 

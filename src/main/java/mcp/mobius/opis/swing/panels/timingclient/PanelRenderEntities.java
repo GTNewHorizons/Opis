@@ -1,8 +1,10 @@
 package mcp.mobius.opis.swing.panels.timingclient;
 
 import java.util.ArrayList;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+
 import mcp.mobius.opis.api.IMessageHandler;
 import mcp.mobius.opis.api.ITabPanel;
 import mcp.mobius.opis.data.holders.clienttypes.DataEntityRender;
@@ -13,9 +15,11 @@ import mcp.mobius.opis.network.enums.Message;
 import mcp.mobius.opis.swing.SelectedTab;
 import mcp.mobius.opis.swing.actions.ActionRunOpisClient;
 import mcp.mobius.opis.swing.widgets.JTableStats;
+
 import net.miginfocom.swing.MigLayout;
 
 public class PanelRenderEntities extends JPanel implements ITabPanel, IMessageHandler {
+
     private JTableStats table;
     private JButton btnRunRender;
     private JLabel lblTotal;
@@ -34,8 +38,8 @@ public class PanelRenderEntities extends JPanel implements ITabPanel, IMessageHa
         add(scrollPane, "cell 0 1 3 1,grow");
 
         table = new JTableStats(
-                new String[] {"Name", "Coordinates", "Timing"},
-                new Class[] {CachedString.class, Object.class, DataTiming.class});
+                new String[] { "Name", "Coordinates", "Timing" },
+                new Class[] { CachedString.class, Object.class, DataTiming.class });
         scrollPane.setViewportView(table);
 
         lblTotal = new JLabel("Total : 0 µs");
@@ -49,7 +53,8 @@ public class PanelRenderEntities extends JPanel implements ITabPanel, IMessageHa
 
         for (DataEntityRender o : data) {
 
-            model.addRow(new Object[] {o.name, String.format("[ %4d %4d %4d ]", o.pos.x, o.pos.y, o.pos.z), o.update});
+            model.addRow(
+                    new Object[] { o.name, String.format("[ %4d %4d %4d ]", o.pos.x, o.pos.y, o.pos.z), o.update });
         }
 
         this.dataUpdated(table, model, row);

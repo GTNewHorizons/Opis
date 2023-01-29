@@ -4,6 +4,7 @@ import mcp.mobius.mobiuscore.asm.ObfTable;
 import mcp.mobius.mobiuscore.asm.Opcode;
 import mcp.mobius.mobiuscore.asm.transformers.TransformerBase;
 import mcp.mobius.mobiuscore.profiler.ProfilerSection;
+
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.tree.AbstractInsnNode;
@@ -23,10 +24,8 @@ public class TransformerFMLProxyPacket extends TransformerBase {
         FMLPP_PROCESS = ObfTable.FMLPP_PROCESSPACKET.getFullDescriptor();
 
         FMLPP_PROCESS_PAYLOAD = new AbstractInsnNode[] {
-            Opcode.GETSTATIC(profilerClass, ProfilerSection.PACKET_INBOUND.name(), profilerType),
-            Opcode.ALOAD(0),
-            Opcode.INVOKEVIRTUAL(profilerClass, "stop", "(Ljava/lang/Object;)V"),
-        };
+                Opcode.GETSTATIC(profilerClass, ProfilerSection.PACKET_INBOUND.name(), profilerType), Opcode.ALOAD(0),
+                Opcode.INVOKEVIRTUAL(profilerClass, "stop", "(Ljava/lang/Object;)V"), };
     }
 
     @Override

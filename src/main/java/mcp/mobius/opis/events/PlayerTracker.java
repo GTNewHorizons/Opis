@@ -1,10 +1,8 @@
 package mcp.mobius.opis.events;
 
-import com.mojang.authlib.GameProfile;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.PlayerEvent;
 import java.util.HashMap;
 import java.util.HashSet;
+
 import mcp.mobius.opis.data.holders.basetypes.SerialLong;
 import mcp.mobius.opis.data.holders.newtypes.PlayerStatus;
 import mcp.mobius.opis.data.managers.StringCache;
@@ -16,22 +14,29 @@ import mcp.mobius.opis.network.enums.PlayerEv;
 import mcp.mobius.opis.network.packets.server.NetDataValue;
 import mcp.mobius.opis.network.rcon.RConHandler;
 import mcp.mobius.opis.swing.SelectedTab;
+
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.util.FakePlayer;
 
+import com.mojang.authlib.GameProfile;
+
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent;
+
 // public class PlayerTracker implements IPlayerTracker{
 public enum PlayerTracker {
+
     INSTANCE;
 
     private PlayerTracker() {}
 
-    public HashSet<EntityPlayerMP> playersSwing =
-            new HashSet<EntityPlayerMP>(); // This is the list of players who have opened the UI
-    // public HashSet<Player> playersOpis  = new HashSet<Player>();		 //This is the list of players who have opened the
+    public HashSet<EntityPlayerMP> playersSwing = new HashSet<EntityPlayerMP>(); // This is the list of players who have
+                                                                                 // opened the UI
+    // public HashSet<Player> playersOpis = new HashSet<Player>(); //This is the list of players who have opened the
     // UI or used the command line
-    public HashMap<String, Boolean> filteredAmount =
-            new HashMap<String, Boolean>(); // Should the entity amount be filtered or not
+    public HashMap<String, Boolean> filteredAmount = new HashMap<String, Boolean>(); // Should the entity amount be
+                                                                                     // filtered or not
     public HashMap<EntityPlayerMP, Integer> playerDimension = new HashMap<EntityPlayerMP, Integer>();
     public HashMap<EntityPlayerMP, SelectedTab> playerTab = new HashMap<EntityPlayerMP, SelectedTab>();
     private HashSet<String> playerPrivileged = new HashSet<String>();
@@ -49,12 +54,12 @@ public enum PlayerTracker {
 
     public AccessLevel getPlayerAccessLevel(String name) {
 
-        EntityPlayerMP player =
-                MinecraftServer.getServer().getConfigurationManager().func_152612_a(name);
+        EntityPlayerMP player = MinecraftServer.getServer().getConfigurationManager().func_152612_a(name);
         GameProfile profile = player.getGameProfile();
 
         if (MinecraftServer.getServer().getConfigurationManager().func_152596_g(profile)
-                || MinecraftServer.getServer().isSinglePlayer()) return AccessLevel.ADMIN;
+                || MinecraftServer.getServer().isSinglePlayer())
+            return AccessLevel.ADMIN;
         else if (playerPrivileged.contains(name)) return AccessLevel.PRIVILEGED;
         else return AccessLevel.NONE;
     }
@@ -62,9 +67,7 @@ public enum PlayerTracker {
     public void addPrivilegedPlayer(String name, boolean save) {
         this.playerPrivileged.add(name);
         if (save) {
-            modOpis.instance
-                    .config
-                    .get("ACCESS_RIGHTS", "privileged", new String[] {}, modOpis.commentPrivileged)
+            modOpis.instance.config.get("ACCESS_RIGHTS", "privileged", new String[] {}, modOpis.commentPrivileged)
                     .set(playerPrivileged.toArray(new String[] {}));
             modOpis.instance.config.save();
         }
@@ -76,18 +79,14 @@ public enum PlayerTracker {
 
     public void rmPrivilegedPlayer(String name) {
         this.playerPrivileged.remove(name);
-        modOpis.instance
-                .config
-                .get("ACCESS_RIGHTS", "privileged", new String[] {}, modOpis.commentPrivileged)
+        modOpis.instance.config.get("ACCESS_RIGHTS", "privileged", new String[] {}, modOpis.commentPrivileged)
                 .set(playerPrivileged.toArray(new String[] {}));
         modOpis.instance.config.save();
     }
 
     public void reloeadPriviligedPlayers() {
-        String[] users = modOpis.instance
-                .config
-                .get("ACCESS_RIGHTS", "privileged", new String[] {}, modOpis.commentPrivileged)
-                .getStringList();
+        String[] users = modOpis.instance.config
+                .get("ACCESS_RIGHTS", "privileged", new String[] {}, modOpis.commentPrivileged).getStringList();
         for (String s : users) PlayerTracker.INSTANCE.addPrivilegedPlayer(s, false);
     }
 
@@ -110,15 +109,16 @@ public enum PlayerTracker {
         this.playerDimension.remove(event.player);
         // this.playersOpis.remove(player);
         this.playersSwing.remove(event.player);
-        PacketManager.sendPacketToAllSwing(new NetDataValue(
-                Message.PLAYER_STATUS_UPDATE,
-                new PlayerStatus(
-                        event.player.getGameProfile().getName(),
-                        PlayerEv.LOGOUT,
-                        event.player.worldObj.provider.dimensionId,
-                        (int) event.player.posX,
-                        (int) event.player.posY,
-                        (int) event.player.posZ)));
+        PacketManager.sendPacketToAllSwing(
+                new NetDataValue(
+                        Message.PLAYER_STATUS_UPDATE,
+                        new PlayerStatus(
+                                event.player.getGameProfile().getName(),
+                                PlayerEv.LOGOUT,
+                                event.player.worldObj.provider.dimensionId,
+                                (int) event.player.posX,
+                                (int) event.player.posY,
+                                (int) event.player.posZ)));
     }
 
     @SubscribeEvent
@@ -128,21 +128,21 @@ public enum PlayerTracker {
                 (EntityPlayerMP) event.player);
 
         /*
-        if (manager instanceof MemoryConnection){
-        	System.out.printf("Adding SSP player to list of privileged users\n");
-        	PlayerTracker.INSTANCE.addPrivilegedPlayer(((EntityPlayer)event.player).getGameProfile().getName(), false);
-        }
-        */
+         * if (manager instanceof MemoryConnection){
+         * System.out.printf("Adding SSP player to list of privileged users\n");
+         * PlayerTracker.INSTANCE.addPrivilegedPlayer(((EntityPlayer)event.player).getGameProfile().getName(), false); }
+         */
 
         StringCache.INSTANCE.syncCache((EntityPlayerMP) event.player);
-        PacketManager.sendPacketToAllSwing(new NetDataValue(
-                Message.PLAYER_STATUS_UPDATE,
-                new PlayerStatus(
-                        event.player.getGameProfile().getName(),
-                        PlayerEv.LOGIN,
-                        event.player.worldObj.provider.dimensionId,
-                        (int) event.player.posX,
-                        (int) event.player.posY,
-                        (int) event.player.posZ)));
+        PacketManager.sendPacketToAllSwing(
+                new NetDataValue(
+                        Message.PLAYER_STATUS_UPDATE,
+                        new PlayerStatus(
+                                event.player.getGameProfile().getName(),
+                                PlayerEv.LOGIN,
+                                event.player.worldObj.provider.dimensionId,
+                                (int) event.player.posX,
+                                (int) event.player.posY,
+                                (int) event.player.posZ)));
     }
 }

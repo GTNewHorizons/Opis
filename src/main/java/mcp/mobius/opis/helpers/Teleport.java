@@ -1,8 +1,9 @@
 package mcp.mobius.opis.helpers;
 
-import cpw.mods.fml.common.FMLCommonHandler;
 import java.util.Iterator;
+
 import mcp.mobius.opis.data.holders.basetypes.CoordinatesBlock;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -18,14 +19,15 @@ import net.minecraft.world.WorldProvider;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
 
+import cpw.mods.fml.common.FMLCommonHandler;
+
 public class Teleport {
 
     private static Teleport _instance = new Teleport();
 
     public static Teleport instance() {
         return _instance;
-    }
-    ;
+    };
 
     // Originally in EntityPlayerMP
     public boolean movePlayerToDimension(EntityPlayerMP player, int dim) {
@@ -47,18 +49,19 @@ public class Teleport {
         // player.playerNetServerHandler.sendPacket(new Packet9Respawn(player.dimension,
         // (byte)player.worldObj.difficultySetting, targetWorld.getWorldInfo().getTerrainType(),
         // targetWorld.getHeight(), player.theItemInWorldManager.getGameType()));
-        player.playerNetServerHandler.sendPacket(new S07PacketRespawn(
-                player.dimension,
-                player.worldObj.difficultySetting,
-                player.worldObj.getWorldInfo().getTerrainType(),
-                player.theItemInWorldManager.getGameType()));
+        player.playerNetServerHandler.sendPacket(
+                new S07PacketRespawn(
+                        player.dimension,
+                        player.worldObj.difficultySetting,
+                        player.worldObj.getWorldInfo().getTerrainType(),
+                        player.theItemInWorldManager.getGameType()));
         sourceWorld.removePlayerEntityDangerously(player);
         player.isDead = false;
         this.transferEntityToWorld(player, sourceID, sourceWorld, targetWorld);
         this.preloadChunk(player, sourceWorld);
 
-        player.playerNetServerHandler.setPlayerLocation(
-                player.posX, player.posY, player.posZ, player.rotationYaw, player.rotationPitch);
+        player.playerNetServerHandler
+                .setPlayerLocation(player.posX, player.posY, player.posZ, player.rotationYaw, player.rotationPitch);
         player.theItemInWorldManager.setWorld(targetWorld);
 
         manager.updateTimeAndWeatherForPlayer(player, targetWorld);

@@ -21,11 +21,8 @@ public final class MethodDescriptor {
     }
 
     /*
-    public MethodDescriptor(String name, String vdesc, String cdesc){
-    	this.methodName = name;
-    	this.vanillaDesc = vdesc;
-    	this.coremodDesc = cdesc;
-    }
-    */
+     * public MethodDescriptor(String name, String vdesc, String cdesc){ this.methodName = name; this.vanillaDesc =
+     * vdesc; this.coremodDesc = cdesc; }
+     */
 
 }

@@ -2,6 +2,7 @@ package mcp.mobius.opis.swing.actions;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import mcp.mobius.opis.api.TabPanelRegistrar;
 import mcp.mobius.opis.network.PacketManager;
 import mcp.mobius.opis.network.enums.Message;
@@ -16,11 +17,10 @@ public class ActionAmountTileEnts implements ActionListener {
         PanelAmountTileEnts panel = (PanelAmountTileEnts) TabPanelRegistrar.INSTANCE.getTab(SelectedTab.AMOUNTTES);
 
         /*
-        JTableStats table       = panel.getTable();
-        if (table == null || table.getSelectedRow() == -1) return;
-        int indexData           = table.convertRowIndexToModel(table.getSelectedRow());
-        DataBlockTileEntityPerClass data       = (DataBlockTileEntityPerClass)table.getTableData().get(indexData);
-        */
+         * JTableStats table = panel.getTable(); if (table == null || table.getSelectedRow() == -1) return; int
+         * indexData = table.convertRowIndexToModel(table.getSelectedRow()); DataBlockTileEntityPerClass data =
+         * (DataBlockTileEntityPerClass)table.getTableData().get(indexData);
+         */
 
         if (e.getSource() == panel.getBtnRefresh()) {
             PacketManager.sendToServer(new PacketReqData(Message.LIST_AMOUNT_TILEENTS));

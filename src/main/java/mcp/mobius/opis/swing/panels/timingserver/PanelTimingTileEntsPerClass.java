@@ -1,8 +1,10 @@
 package mcp.mobius.opis.swing.panels.timingserver;
 
 import java.util.HashMap;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+
 import mcp.mobius.opis.api.ITabPanel;
 import mcp.mobius.opis.data.holders.newtypes.DataBlockTileEntityPerClass;
 import mcp.mobius.opis.data.holders.newtypes.DataTiming;
@@ -15,9 +17,11 @@ import mcp.mobius.opis.swing.actions.ActionRunOpis;
 import mcp.mobius.opis.swing.widgets.JButtonAccess;
 import mcp.mobius.opis.swing.widgets.JPanelMsgHandler;
 import mcp.mobius.opis.swing.widgets.JTableStats;
+
 import net.miginfocom.swing.MigLayout;
 
 public class PanelTimingTileEntsPerClass extends JPanelMsgHandler implements ITabPanel {
+
     private JButtonAccess btnRun;
 
     public PanelTimingTileEntsPerClass() {
@@ -31,15 +35,10 @@ public class PanelTimingTileEntsPerClass extends JPanelMsgHandler implements ITa
         add(scrollPane, "cell 0 1 2 1,grow");
 
         table = new JTableStats(
-                new String[] {"Name", "Mod", "Amount", "Timing", "Mean value"},
-                new Class[] {String.class, String.class, Integer.class, DataTiming.class, DataTiming.class},
-                new int[] {
-                    SwingConstants.LEFT,
-                    SwingConstants.CENTER,
-                    SwingConstants.CENTER,
-                    SwingConstants.CENTER,
-                    SwingConstants.CENTER
-                });
+                new String[] { "Name", "Mod", "Amount", "Timing", "Mean value" },
+                new Class[] { String.class, String.class, Integer.class, DataTiming.class, DataTiming.class },
+                new int[] { SwingConstants.LEFT, SwingConstants.CENTER, SwingConstants.CENTER, SwingConstants.CENTER,
+                        SwingConstants.CENTER });
         scrollPane.setViewportView(table);
     }
 
@@ -54,8 +53,7 @@ public class PanelTimingTileEntsPerClass extends JPanelMsgHandler implements ITa
                     DefaultTableModel model = table.getModel();
                     int row = this.getTable().clearTable(DataBlockTileEntityPerClass.class);
 
-                    HashMap<String, DataBlockTileEntityPerClass> cumData =
-                            new HashMap<String, DataBlockTileEntityPerClass>();
+                    HashMap<String, DataBlockTileEntityPerClass> cumData = new HashMap<String, DataBlockTileEntityPerClass>();
 
                     for (Object o : rawdata.array) {
                         DataBlockTileEntityPerClass data = (DataBlockTileEntityPerClass) o;
@@ -70,13 +68,9 @@ public class PanelTimingTileEntsPerClass extends JPanelMsgHandler implements ITa
                     for (String s : cumData.keySet()) {
                         String name = s;
                         String modID = ModIdentification.getModStackName(cumData.get(s).id, cumData.get(s).meta);
-                        model.addRow(new Object[] {
-                            name,
-                            modID,
-                            cumData.get(s).amount,
-                            cumData.get(s).update,
-                            new DataTiming(cumData.get(s).update.timing / cumData.get(s).amount)
-                        });
+                        model.addRow(
+                                new Object[] { name, modID, cumData.get(s).amount, cumData.get(s).update,
+                                        new DataTiming(cumData.get(s).update.timing / cumData.get(s).amount) });
                     }
 
                     this.getTable().dataUpdated(row);
@@ -86,15 +80,11 @@ public class PanelTimingTileEntsPerClass extends JPanelMsgHandler implements ITa
 
             case STATUS_START:
             case STATUS_RUNNING: {
-                SwingUtilities.invokeLater(() -> {
-                    this.getBtnRun().setText("Running...");
-                });
+                SwingUtilities.invokeLater(() -> { this.getBtnRun().setText("Running..."); });
                 break;
             }
             case STATUS_STOP: {
-                SwingUtilities.invokeLater(() -> {
-                    this.getBtnRun().setText("Run Opis");
-                });
+                SwingUtilities.invokeLater(() -> { this.getBtnRun().setText("Run Opis"); });
                 break;
             }
             default:

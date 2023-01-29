@@ -13,9 +13,16 @@ public class ButtonLabel extends ButtonBase {
         super(parent);
 
         this.addWidget("Label", new LabelFixedFont(this, text));
-        this.getWidget("Label")
-                .setGeometry(new WidgetGeometry(
-                        50.0D, 50.0D, 100.0D, 20.0D, CType.RELXY, CType.ABSXY, WAlign.CENTER, WAlign.CENTER));
+        this.getWidget("Label").setGeometry(
+                new WidgetGeometry(
+                        50.0D,
+                        50.0D,
+                        100.0D,
+                        20.0D,
+                        CType.RELXY,
+                        CType.ABSXY,
+                        WAlign.CENTER,
+                        WAlign.CENTER));
     }
 
     @Override

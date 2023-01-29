@@ -1,6 +1,7 @@
 package mcp.mobius.opis.gui.helpers;
 
 import net.minecraft.client.renderer.Tessellator;
+
 import org.lwjgl.opengl.GL11;
 
 public class UIHelper {
@@ -9,15 +10,19 @@ public class UIHelper {
         UIHelper.drawTexture(posX, posY, sizeX, sizeY, 0, 0, 256, 256);
     }
 
-    public static void drawTexture(
-            int posX, int posY, int sizeX, int sizeY, int texU, int texV, int texSizeU, int texSizeV) {
+    public static void drawTexture(int posX, int posY, int sizeX, int sizeY, int texU, int texV, int texSizeU,
+            int texSizeV) {
         float zLevel = 0.0F;
         float f = 0.00390625F;
 
         Tessellator tess = Tessellator.instance;
         tess.startDrawingQuads();
         tess.addVertexWithUV(
-                (double) (posX + 0), (double) (posY + sizeY), (double) zLevel, texU * f, (texV + texSizeV) * f);
+                (double) (posX + 0),
+                (double) (posY + sizeY),
+                (double) zLevel,
+                texU * f,
+                (texV + texSizeV) * f);
         tess.addVertexWithUV(
                 (double) (posX + sizeX),
                 (double) (posY + sizeY),
@@ -25,7 +30,11 @@ public class UIHelper {
                 (texU + texSizeU) * f,
                 (texV + texSizeV) * f);
         tess.addVertexWithUV(
-                (double) (posX + sizeX), (double) (posY + 0), (double) zLevel, (texU + texSizeU) * f, texV * f);
+                (double) (posX + sizeX),
+                (double) (posY + 0),
+                (double) zLevel,
+                (texU + texSizeU) * f,
+                texV * f);
         tess.addVertexWithUV((double) (posX + 0), (double) (posY + 0), (double) zLevel, texU * f, texV * f);
         tess.draw();
     }
@@ -75,7 +84,7 @@ public class UIHelper {
         tess.addVertex(x2, y2, 0);
 
         tess.draw();
-        GL11.glDisable(32826 /*GL_RESCALE_NORMAL_EXT*/);
+        GL11.glDisable(32826 /* GL_RESCALE_NORMAL_EXT */);
         GL11.glEnable(GL11.GL_TEXTURE_2D);
         GL11.glPopMatrix();
     }

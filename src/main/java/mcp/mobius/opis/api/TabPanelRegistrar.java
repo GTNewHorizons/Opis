@@ -2,10 +2,12 @@ package mcp.mobius.opis.api;
 
 import java.awt.Component;
 import java.util.HashMap;
+
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
 import mcp.mobius.opis.data.holders.basetypes.SerialInt;
 import mcp.mobius.opis.network.PacketManager;
 import mcp.mobius.opis.network.enums.Message;
@@ -14,10 +16,11 @@ import mcp.mobius.opis.swing.SelectedTab;
 import mcp.mobius.opis.swing.SwingUI;
 
 public enum TabPanelRegistrar implements ChangeListener {
+
     INSTANCE;
 
-    // private ArrayList<ITabPanel>       panels     = new ArrayList<ITabPanel>();
-    // private HashMap<String, ITabPanel> lookup     = new HashMap<String, ITabPanel>();
+    // private ArrayList<ITabPanel> panels = new ArrayList<ITabPanel>();
+    // private HashMap<String, ITabPanel> lookup = new HashMap<String, ITabPanel>();
     private HashMap<String, JTabbedPane> sections = new HashMap<String, JTabbedPane>();
     private HashMap<SelectedTab, ITabPanel> lookup = new HashMap<SelectedTab, ITabPanel>();
 
@@ -63,15 +66,12 @@ public enum TabPanelRegistrar implements ChangeListener {
 
         if (source instanceof ITabPanel) {
             ITabPanel panel = (ITabPanel) source;
-            PacketManager.sendToServer(new PacketReqData(
-                    Message.SWING_TAB_CHANGED,
-                    new SerialInt(panel.getSelectedTab().ordinal())));
+            PacketManager.sendToServer(
+                    new PacketReqData(Message.SWING_TAB_CHANGED, new SerialInt(panel.getSelectedTab().ordinal())));
         }
     }
 
     /*
-    public ArrayList<ITabPanel> getTabs(){
-    	return this.panels;
-    }
-    */
+     * public ArrayList<ITabPanel> getTabs(){ return this.panels; }
+     */
 }

@@ -2,6 +2,7 @@ package mcp.mobius.opis.swing.panels.tracking;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+
 import mcp.mobius.opis.api.ITabPanel;
 import mcp.mobius.opis.data.holders.basetypes.AmountHolder;
 import mcp.mobius.opis.network.PacketBase;
@@ -12,9 +13,11 @@ import mcp.mobius.opis.swing.actions.ActionAmountEntities;
 import mcp.mobius.opis.swing.widgets.JButtonAccess;
 import mcp.mobius.opis.swing.widgets.JPanelMsgHandler;
 import mcp.mobius.opis.swing.widgets.JTableStats;
+
 import net.miginfocom.swing.MigLayout;
 
 public class PanelAmountEntities extends JPanelMsgHandler implements ITabPanel {
+
     private JCheckBox chckbxFilter;
     private JButtonAccess btnKillAll;
     private JButtonAccess btnRefresh;
@@ -41,7 +44,7 @@ public class PanelAmountEntities extends JPanelMsgHandler implements ITabPanel {
         JScrollPane scrollPane = new JScrollPane();
         add(scrollPane, "cell 0 1 4 1,grow");
 
-        table = new JTableStats(new String[] {"Type", "Amount"}, new Class[] {String.class, Integer.class});
+        table = new JTableStats(new String[] { "Type", "Amount" }, new Class[] { String.class, Integer.class });
         scrollPane.setViewportView(table);
 
         lblSummary = new JLabel("New label");
@@ -78,7 +81,7 @@ public class PanelAmountEntities extends JPanelMsgHandler implements ITabPanel {
 
                     for (Object o : rawdata.array) {
                         AmountHolder entity = (AmountHolder) o;
-                        model.addRow(new Object[] {entity.key, entity.value});
+                        model.addRow(new Object[] { entity.key, entity.value });
                         totalEntities += entity.value;
                     }
 

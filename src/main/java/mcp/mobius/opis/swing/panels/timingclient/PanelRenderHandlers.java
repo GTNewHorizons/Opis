@@ -1,11 +1,13 @@
 package mcp.mobius.opis.swing.panels.timingclient;
 
 import java.util.ArrayList;
+
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+
 import mcp.mobius.opis.api.IMessageHandler;
 import mcp.mobius.opis.api.ITabPanel;
 import mcp.mobius.opis.data.holders.newtypes.CachedString;
@@ -16,9 +18,11 @@ import mcp.mobius.opis.network.enums.Message;
 import mcp.mobius.opis.swing.SelectedTab;
 import mcp.mobius.opis.swing.actions.ActionRunOpisClient;
 import mcp.mobius.opis.swing.widgets.JTableStats;
+
 import net.miginfocom.swing.MigLayout;
 
 public class PanelRenderHandlers extends JPanel implements ITabPanel, IMessageHandler {
+
     private JTableStats table;
     private JButton btnRunRender;
 
@@ -36,8 +40,8 @@ public class PanelRenderHandlers extends JPanel implements ITabPanel, IMessageHa
         add(scrollPane, "cell 0 1 3 1,grow");
 
         table = new JTableStats(
-                new String[] {"Mod", "Tick", "Update Time"},
-                new Class[] {CachedString.class, String.class, DataTiming.class});
+                new String[] { "Mod", "Tick", "Update Time" },
+                new Class[] { CachedString.class, String.class, DataTiming.class });
         scrollPane.setViewportView(table);
     }
 
@@ -47,7 +51,7 @@ public class PanelRenderHandlers extends JPanel implements ITabPanel, IMessageHa
         int row = this.updateData(table, model, DataEvent.class);
 
         for (DataEvent o : data) {
-            model.addRow(new Object[] {o.mod, o.event.toString().split("\\$")[1], o.update});
+            model.addRow(new Object[] { o.mod, o.event.toString().split("\\$")[1], o.update });
         }
 
         this.dataUpdated(table, model, row);

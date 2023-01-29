@@ -7,6 +7,7 @@ import mcp.mobius.opis.gui.widgets.LabelFixedFont;
 import mcp.mobius.opis.gui.widgets.LayoutBase;
 import mcp.mobius.opis.gui.widgets.WidgetBase;
 import mcp.mobius.opis.gui.widgets.WidgetGeometry;
+
 import org.lwjgl.util.Point;
 
 // TODO : THIS CLASS IS WIP AND CAN'T WORK RIGHT NOW
@@ -38,8 +39,8 @@ public class ButtonContainerLabel extends WidgetBase {
         int row = this.nButtons / this.columns;
         double sizeColumn = 100.0 / (this.columns * 2);
 
-        this.getWidget(layoutName)
-                .setGeometry(new WidgetGeometry(
+        this.getWidget(layoutName).setGeometry(
+                new WidgetGeometry(
                         sizeColumn * (column + 1),
                         spacing * row,
                         sizeColumn,
@@ -49,13 +50,19 @@ public class ButtonContainerLabel extends WidgetBase {
                         WAlign.LEFT,
                         WAlign.TOP));
         this.getWidget(layoutName).addWidget(buttonName, button);
-        this.getWidget(layoutName)
-                .getWidget(buttonName)
-                .setGeometry(new WidgetGeometry(
-                        50.0, 50.0, buttonSize, 20.0, CType.RELXY, CType.ABSXY, WAlign.CENTER, WAlign.CENTER));
+        this.getWidget(layoutName).getWidget(buttonName).setGeometry(
+                new WidgetGeometry(
+                        50.0,
+                        50.0,
+                        buttonSize,
+                        20.0,
+                        CType.RELXY,
+                        CType.ABSXY,
+                        WAlign.CENTER,
+                        WAlign.CENTER));
 
-        this.getWidget(layoutLabelName)
-                .setGeometry(new WidgetGeometry(
+        this.getWidget(layoutLabelName).setGeometry(
+                new WidgetGeometry(
                         sizeColumn * column,
                         spacing * row,
                         sizeColumn,
@@ -65,10 +72,16 @@ public class ButtonContainerLabel extends WidgetBase {
                         WAlign.LEFT,
                         WAlign.TOP));
         this.getWidget(layoutLabelName).addWidget(labelName, new LabelFixedFont(this, label));
-        this.getWidget(layoutLabelName)
-                .getWidget(labelName)
-                .setGeometry(new WidgetGeometry(
-                        50.0, 50.0, buttonSize, 20.0, CType.RELXY, CType.ABSXY, WAlign.CENTER, WAlign.CENTER));
+        this.getWidget(layoutLabelName).getWidget(labelName).setGeometry(
+                new WidgetGeometry(
+                        50.0,
+                        50.0,
+                        buttonSize,
+                        20.0,
+                        CType.RELXY,
+                        CType.ABSXY,
+                        WAlign.CENTER,
+                        WAlign.CENTER));
 
         this.nButtons += 1;
     }

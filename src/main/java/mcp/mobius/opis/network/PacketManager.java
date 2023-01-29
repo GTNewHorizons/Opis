@@ -3,26 +3,10 @@ package mcp.mobius.opis.network;
 import static cpw.mods.fml.relauncher.Side.CLIENT;
 import static cpw.mods.fml.relauncher.Side.SERVER;
 
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Table.Cell;
-import com.google.common.io.ByteArrayDataInput;
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.network.FMLEmbeddedChannel;
-import cpw.mods.fml.common.network.FMLIndexedMessageToMessageCodec;
-import cpw.mods.fml.common.network.FMLOutboundHandler;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import io.netty.buffer.ByteBuf;
-import io.netty.channel.ChannelHandler.Sharable;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.SimpleChannelInboundHandler;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.EnumMap;
+
 import mcp.mobius.mobiuscore.profiler.ProfilerSection;
 import mcp.mobius.opis.data.holders.ISerializable;
 import mcp.mobius.opis.data.holders.basetypes.AmountHolder;
@@ -42,6 +26,7 @@ import mcp.mobius.opis.network.packets.server.NetDataCommand;
 import mcp.mobius.opis.network.packets.server.NetDataList;
 import mcp.mobius.opis.network.packets.server.NetDataValue;
 import mcp.mobius.opis.network.rcon.RConHandler;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -50,20 +35,41 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S02PacketChat;
 import net.minecraft.util.ChatComponentText;
 import net.minecraftforge.common.util.FakePlayer;
+
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Table.Cell;
+import com.google.common.io.ByteArrayDataInput;
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
+
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.network.FMLEmbeddedChannel;
+import cpw.mods.fml.common.network.FMLIndexedMessageToMessageCodec;
+import cpw.mods.fml.common.network.FMLOutboundHandler;
+import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelHandler.Sharable;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.SimpleChannelInboundHandler;
+
 @Sharable
 // public class PacketManager extends FMLIndexedMessageToMessageCodec<PacketBase>
 public class PacketManager {
+
     // private static final PacketManager INSTANCE = new PacketManager();
-    // private static final Logger        LOGGER   = LogManager.getLogger();
+    // private static final Logger LOGGER = LogManager.getLogger();
     private static final EnumMap<Side, FMLEmbeddedChannel> channels = Maps.newEnumMap(Side.class);
 
     public static void init() {
         if (!channels.isEmpty()) // avoid duplicate inits..
-        return;
+            return;
 
         Codec codec = new Codec();
 
@@ -92,10 +98,10 @@ public class PacketManager {
     }
 
     /**
-     * @author abrarsyed
-     * This class converts FMLMessage to PacketBase for my system to handle.
+     * @author abrarsyed This class converts FMLMessage to PacketBase for my system to handle.
      */
     private static final class Codec extends FMLIndexedMessageToMessageCodec<PacketBase> {
+
         @Override
         public void encodeInto(ChannelHandlerContext ctx, PacketBase packet, ByteBuf target) throws Exception {
             ByteArrayDataOutput output = ByteStreams.newDataOutput();
@@ -123,15 +129,14 @@ public class PacketManager {
         }
 
         private void actionServer(ChannelHandlerContext ctx, PacketBase packet) {
-            EntityPlayerMP player = ((NetHandlerPlayServer)
-                            ctx.channel().attr(NetworkRegistry.NET_HANDLER).get())
-                    .playerEntity;
+            EntityPlayerMP player = ((NetHandlerPlayServer) ctx.channel().attr(NetworkRegistry.NET_HANDLER)
+                    .get()).playerEntity;
             packet.actionServer(player.worldObj, player);
         }
 
         @Override
-        public FMLIndexedMessageToMessageCodec<PacketBase> addDiscriminator(
-                int discriminator, Class<? extends PacketBase> type) {
+        public FMLIndexedMessageToMessageCodec<PacketBase> addDiscriminator(int discriminator,
+                Class<? extends PacketBase> type) {
             // double check it has an empty constructor. or fail early.
             // This is to guard myself against my own stupidity.
 
@@ -161,6 +166,7 @@ public class PacketManager {
     @Sharable
     @SideOnly(Side.CLIENT)
     private static final class HandlerClient extends SimpleChannelInboundHandler<PacketBase> {
+
         @Override
         protected void channelRead0(ChannelHandlerContext ctx, PacketBase packet) throws Exception {
             Minecraft mc = Minecraft.getMinecraft();
@@ -170,11 +176,11 @@ public class PacketManager {
 
     @Sharable
     private static final class HandlerServer extends SimpleChannelInboundHandler<PacketBase> {
+
         @Override
         protected void channelRead0(ChannelHandlerContext ctx, PacketBase packet) throws Exception {
-            EntityPlayerMP player = ((NetHandlerPlayServer)
-                            ctx.channel().attr(NetworkRegistry.NET_HANDLER).get())
-                    .playerEntity;
+            EntityPlayerMP player = ((NetHandlerPlayServer) ctx.channel().attr(NetworkRegistry.NET_HANDLER)
+                    .get()).playerEntity;
             packet.actionServer(player.worldObj, player);
         }
     }
@@ -192,8 +198,7 @@ public class PacketManager {
         } else if ((player instanceof FakePlayer) && (RConHandler.fakePlayersNexus.containsKey(player))) {
             RConHandler.sendToPlayerNexus(packet, (FakePlayer) player);
         } else {
-            channels.get(SERVER)
-                    .attr(FMLOutboundHandler.FML_MESSAGETARGET)
+            channels.get(SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGET)
                     .set(FMLOutboundHandler.OutboundTarget.PLAYER);
             channels.get(SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(player);
             channels.get(SERVER).writeAndFlush(packet);
@@ -205,16 +210,14 @@ public class PacketManager {
     }
 
     public static void sendToAllAround(PacketBase packet, NetworkRegistry.TargetPoint point) {
-        channels.get(SERVER)
-                .attr(FMLOutboundHandler.FML_MESSAGETARGET)
+        channels.get(SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGET)
                 .set(FMLOutboundHandler.OutboundTarget.ALLAROUNDPOINT);
         channels.get(SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(point);
         channels.get(SERVER).writeAndFlush(packet);
     }
 
     public static void sendToDimension(PacketBase packet, int dimension) {
-        channels.get(SERVER)
-                .attr(FMLOutboundHandler.FML_MESSAGETARGET)
+        channels.get(SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGET)
                 .set(FMLOutboundHandler.OutboundTarget.DIMENSION);
         channels.get(SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(dimension);
         channels.get(SERVER).writeAndFlush(packet);
@@ -238,20 +241,11 @@ public class PacketManager {
     }
 
     /*
-    public void writeString(ByteArrayDataOutput buffer, String data) throws IOException
-    {
-        byte[] abyte = data.getBytes(Charsets.UTF_8);
-       	buffer.writeShort(abyte.length);
-       	buffer.writeBytes(abyte);
-    }
-
-    public String readString(ByteArrayDataInput buffer) throws IOException
-    {
-        int j = buffer.readShort();
-        String s = new String(buffer.readBytes(j).array(), Charsets.UTF_8);
-        return s;
-    }
-    */
+     * public void writeString(ByteArrayDataOutput buffer, String data) throws IOException { byte[] abyte =
+     * data.getBytes(Charsets.UTF_8); buffer.writeShort(abyte.length); buffer.writeBytes(abyte); } public String
+     * readString(ByteArrayDataInput buffer) throws IOException { int j = buffer.readShort(); String s = new
+     * String(buffer.readBytes(j).array(), Charsets.UTF_8); return s; }
+     */
 
     public static void validateAndSend(PacketBase capsule, EntityPlayerMP player) {
         if (!capsule.msg.isDisplayActive(PlayerTracker.INSTANCE.getPlayerSelectedTab(player))) return;
@@ -279,32 +273,32 @@ public class PacketManager {
     public static void sendFullUpdate(EntityPlayerMP player) {
         ArrayList<DataEntity> timingEntities = EntityManager.INSTANCE.getWorses(100);
         ArrayList<DataBlockTileEntity> timingTileEnts = TileEntityManager.INSTANCE.getWorses(100);
-        // ArrayList<DataHandler>      timingHandlers = TickHandlerManager.getCumulatedStatsServer();
+        // ArrayList<DataHandler> timingHandlers = TickHandlerManager.getCumulatedStatsServer();
         ArrayList<StatsChunk> timingChunks = ChunkManager.INSTANCE.getTopChunks(100);
         ArrayList<DataEntityPerClass> timingEntsClass = EntityManager.INSTANCE.getTotalPerClass();
-        ArrayList<DataBlockTileEntityPerClass> timingTEsClass =
-                TileEntityManager.INSTANCE.getCumulativeTimingTileEntities();
+        ArrayList<DataBlockTileEntityPerClass> timingTEsClass = TileEntityManager.INSTANCE
+                .getCumulativeTimingTileEntities();
 
         DataTiming totalTimeTE = TileEntityManager.INSTANCE.getTotalUpdateTime();
         DataTiming totalTimeEnt = EntityManager.INSTANCE.getTotalUpdateTime();
-        // DataTiming    totalTimeHandler = TickHandlerManager.getTotalUpdateTime();
+        // DataTiming totalTimeHandler = TickHandlerManager.getTotalUpdateTime();
         DataNetworkTick totalNetwork = new DataNetworkTick().fill();
         DataBlockTick totalWorldTick = new DataBlockTick().fill();
 
         ArrayList<DataEvent> timingEvents = new ArrayList<DataEvent>();
-        HashBasedTable<Class, String, DescriptiveStatistics> eventData =
-                ((ProfilerEvent) ProfilerSection.EVENT_INVOKE.getProfiler()).data;
-        HashBasedTable<Class, String, String> eventMod =
-                ((ProfilerEvent) ProfilerSection.EVENT_INVOKE.getProfiler()).dataMod;
+        HashBasedTable<Class, String, DescriptiveStatistics> eventData = ((ProfilerEvent) ProfilerSection.EVENT_INVOKE
+                .getProfiler()).data;
+        HashBasedTable<Class, String, String> eventMod = ((ProfilerEvent) ProfilerSection.EVENT_INVOKE
+                .getProfiler()).dataMod;
         for (Cell<Class, String, DescriptiveStatistics> cell : eventData.cellSet()) {
             timingEvents.add(new DataEvent().fill(cell, eventMod.get(cell.getRowKey(), cell.getColumnKey())));
         }
 
         ArrayList<DataEvent> timingTicks = new ArrayList<DataEvent>();
-        HashBasedTable<Class, String, DescriptiveStatistics> eventTickData =
-                ((ProfilerEvent) ProfilerSection.EVENT_INVOKE.getProfiler()).dataTick;
-        HashBasedTable<Class, String, String> eventTickMod =
-                ((ProfilerEvent) ProfilerSection.EVENT_INVOKE.getProfiler()).dataModTick;
+        HashBasedTable<Class, String, DescriptiveStatistics> eventTickData = ((ProfilerEvent) ProfilerSection.EVENT_INVOKE
+                .getProfiler()).dataTick;
+        HashBasedTable<Class, String, String> eventTickMod = ((ProfilerEvent) ProfilerSection.EVENT_INVOKE
+                .getProfiler()).dataModTick;
         for (Cell<Class, String, DescriptiveStatistics> cell : eventTickData.cellSet()) {
             timingTicks.add(new DataEvent().fill(cell, eventTickMod.get(cell.getRowKey(), cell.getColumnKey())));
         }
@@ -318,7 +312,7 @@ public class PacketManager {
         PacketManager.validateAndSend(new NetDataList(Message.LIST_TIMING_ENTITIES_PER_CLASS, timingEntsClass), player);
         PacketManager.validateAndSend(new NetDataValue(Message.VALUE_TIMING_TILEENTS, totalTimeTE), player);
         PacketManager.validateAndSend(new NetDataValue(Message.VALUE_TIMING_ENTITIES, totalTimeEnt), player);
-        // PacketManager.validateAndSend(NetDataValue_OLD.create(Message.VALUE_TIMING_HANDLERS,  totalTimeHandler),
+        // PacketManager.validateAndSend(NetDataValue_OLD.create(Message.VALUE_TIMING_HANDLERS, totalTimeHandler),
         // player);
         PacketManager.validateAndSend(new NetDataValue(Message.VALUE_TIMING_WORLDTICK, totalWorldTick), player);
         PacketManager.validateAndSend(new NetDataValue(Message.VALUE_TIMING_NETWORK, totalNetwork), player);
@@ -333,9 +327,7 @@ public class PacketManager {
         PacketManager.validateAndSend(
                 new NetDataValue(
                         Message.STATUS_ACCESS_LEVEL,
-                        new SerialInt(PlayerTracker.INSTANCE
-                                .getPlayerAccessLevel(player)
-                                .ordinal())),
+                        new SerialInt(PlayerTracker.INSTANCE.getPlayerAccessLevel(player).ordinal())),
                 player);
 
         // This portion is to get the proper filtered amounts depending on the player preferences.

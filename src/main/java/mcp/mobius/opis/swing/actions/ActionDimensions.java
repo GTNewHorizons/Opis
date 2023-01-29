@@ -2,7 +2,9 @@ package mcp.mobius.opis.swing.actions;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import javax.swing.JOptionPane;
+
 import mcp.mobius.opis.api.TabPanelRegistrar;
 import mcp.mobius.opis.data.holders.basetypes.SerialInt;
 import mcp.mobius.opis.data.holders.newtypes.DataDimension;
@@ -21,15 +23,19 @@ public class ActionDimensions implements ActionListener {
 
         if (e.getSource() == panel.getBtnPurgeAll()) {
             if (JOptionPane.showConfirmDialog(
-                            null, "Do you want to kill all hostiles in game ?", "Warning", JOptionPane.YES_NO_OPTION)
-                    == JOptionPane.YES_OPTION)
+                    null,
+                    "Do you want to kill all hostiles in game ?",
+                    "Warning",
+                    JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
                 PacketManager.sendToServer(new PacketReqData(Message.COMMAND_KILL_HOSTILES_ALL));
             if (JOptionPane.showConfirmDialog(
-                            null, "Do you want to remove all the dropped items ?", "Warning", JOptionPane.YES_NO_OPTION)
-                    == JOptionPane.YES_OPTION)
+                    null,
+                    "Do you want to remove all the dropped items ?",
+                    "Warning",
+                    JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
                 PacketManager.sendToServer(new PacketReqData(Message.COMMAND_KILL_STACKS_ALL));
-            if (JOptionPane.showConfirmDialog(
-                            null, "Do you want to purge chunks ?", "Warning", JOptionPane.YES_NO_OPTION)
+            if (JOptionPane
+                    .showConfirmDialog(null, "Do you want to purge chunks ?", "Warning", JOptionPane.YES_NO_OPTION)
                     == JOptionPane.YES_OPTION)
                 PacketManager.sendToServer(new PacketReqData(Message.COMMAND_PURGE_CHUNKS_ALL));
 
@@ -39,20 +45,22 @@ public class ActionDimensions implements ActionListener {
             int indexData = table.convertRowIndexToModel(table.getSelectedRow());
             DataDimension data = (DataDimension) table.getTableData().get(indexData);
 
-            if (JOptionPane.showConfirmDialog(
-                            null, "Do you want to kill all hostiles ?", "Warning", JOptionPane.YES_NO_OPTION)
+            if (JOptionPane
+                    .showConfirmDialog(null, "Do you want to kill all hostiles ?", "Warning", JOptionPane.YES_NO_OPTION)
                     == JOptionPane.YES_OPTION)
-                PacketManager.sendToServer(
-                        new PacketReqData(Message.COMMAND_KILL_HOSTILES_DIM, new SerialInt(data.dim)));
+                PacketManager
+                        .sendToServer(new PacketReqData(Message.COMMAND_KILL_HOSTILES_DIM, new SerialInt(data.dim)));
             if (JOptionPane.showConfirmDialog(
-                            null, "Do you want to remove all the dropped items ?", "Warning", JOptionPane.YES_NO_OPTION)
-                    == JOptionPane.YES_OPTION)
+                    null,
+                    "Do you want to remove all the dropped items ?",
+                    "Warning",
+                    JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
                 PacketManager.sendToServer(new PacketReqData(Message.COMMAND_KILL_STACKS_DIM, new SerialInt(data.dim)));
-            if (JOptionPane.showConfirmDialog(
-                            null, "Do you want to purge chunks ?", "Warning", JOptionPane.YES_NO_OPTION)
+            if (JOptionPane
+                    .showConfirmDialog(null, "Do you want to purge chunks ?", "Warning", JOptionPane.YES_NO_OPTION)
                     == JOptionPane.YES_OPTION)
-                PacketManager.sendToServer(
-                        new PacketReqData(Message.COMMAND_PURGE_CHUNKS_DIM, new SerialInt(data.dim)));
+                PacketManager
+                        .sendToServer(new PacketReqData(Message.COMMAND_PURGE_CHUNKS_DIM, new SerialInt(data.dim)));
         }
     }
 }

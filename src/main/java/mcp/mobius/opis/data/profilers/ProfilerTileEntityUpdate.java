@@ -1,16 +1,18 @@
 package mcp.mobius.opis.data.profilers;
 
 import java.util.HashMap;
+
 import mcp.mobius.opis.data.holders.basetypes.CoordinatesBlock;
 import mcp.mobius.opis.data.profilers.Clock.IClock;
+
 import net.minecraft.tileentity.TileEntity;
+
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
 public class ProfilerTileEntityUpdate extends ProfilerAbstract {
 
     private IClock clock = Clock.getNewClock();
-    public HashMap<CoordinatesBlock, DescriptiveStatistics> data =
-            new HashMap<CoordinatesBlock, DescriptiveStatistics>();
+    public HashMap<CoordinatesBlock, DescriptiveStatistics> data = new HashMap<CoordinatesBlock, DescriptiveStatistics>();
     public HashMap<CoordinatesBlock, Class> refs = new HashMap<CoordinatesBlock, Class>();
 
     @Override

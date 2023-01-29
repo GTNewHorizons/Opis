@@ -1,6 +1,7 @@
 package mcp.mobius.opis.swing.widgets;
 
 import javax.swing.JPanel;
+
 import mcp.mobius.opis.api.IMessageHandler;
 import mcp.mobius.opis.network.PacketBase;
 import mcp.mobius.opis.network.enums.Message;

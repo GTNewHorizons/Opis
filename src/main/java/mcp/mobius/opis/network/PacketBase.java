@@ -1,24 +1,28 @@
 package mcp.mobius.opis.network;
 
-import com.google.common.io.ByteArrayDataInput;
-import com.google.common.io.ByteArrayDataOutput;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+
 import mcp.mobius.opis.data.holders.ISerializable;
 import mcp.mobius.opis.data.holders.newtypes.DataError;
 import mcp.mobius.opis.network.enums.Message;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;
 
+import com.google.common.io.ByteArrayDataInput;
+import com.google.common.io.ByteArrayDataOutput;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 /**
- * @author abrarsyed
- * This is the base packet type for tall the SecretRoomsMod network stuff.
- * Any class that extends this should have an empty constructor, otherwise the network system will fail.
+ * @author abrarsyed This is the base packet type for tall the SecretRoomsMod network stuff. Any class that extends this
+ *         should have an empty constructor, otherwise the network system will fail.
  */
 public abstract class PacketBase {
+
     public byte header;
     public Message msg;
     public String clazzStr;

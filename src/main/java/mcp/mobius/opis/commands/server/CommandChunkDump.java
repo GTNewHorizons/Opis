@@ -2,12 +2,15 @@ package mcp.mobius.opis.commands.server;
 
 import java.util.HashMap;
 import java.util.Set;
+
 import mcp.mobius.opis.commands.IOpisCommand;
 import mcp.mobius.opis.modOpis;
+
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraftforge.common.DimensionManager;
+
 import org.apache.logging.log4j.Level;
 
 public class CommandChunkDump extends CommandBase implements IOpisCommand {
@@ -36,8 +39,7 @@ public class CommandChunkDump extends CommandBase implements IOpisCommand {
 
         Integer[] worldIDs = DimensionManager.getIDs();
         for (Integer worldID : worldIDs) {
-            Set<ChunkCoordIntPair> persistantChunks =
-                    DimensionManager.getWorld(worldID).getPersistentChunks().keySet();
+            Set<ChunkCoordIntPair> persistantChunks = DimensionManager.getWorld(worldID).getPersistentChunks().keySet();
             Set<ChunkCoordIntPair> chunks = (Set<ChunkCoordIntPair>) DimensionManager.getWorld(worldID).activeChunkSet;
 
             for (ChunkCoordIntPair chunk : chunks) {

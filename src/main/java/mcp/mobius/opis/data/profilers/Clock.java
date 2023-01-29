@@ -6,6 +6,7 @@ import java.lang.management.ThreadMXBean;
 public class Clock {
 
     public interface IClock {
+
         void start();
 
         void stop();
@@ -18,6 +19,7 @@ public class Clock {
     public static boolean canThreadCPU = false;
 
     public class ClockMX implements IClock {
+
         public long startTime = 0;
         public long timeDelta = 0;
 
@@ -38,6 +40,7 @@ public class Clock {
     }
 
     public class ClockNano implements IClock {
+
         public long startTime = 0;
         public long timeDelta = 0;
 

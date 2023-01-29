@@ -5,6 +5,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class SerialNumeral<U> {
+
     private enum Type {
         INTEGER,
         LONG,

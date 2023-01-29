@@ -3,11 +3,14 @@ package mcp.mobius.opis.network.enums;
 import static mcp.mobius.opis.network.enums.AccessLevel.PRIVILEGED;
 
 import java.util.EnumSet;
+
 import mcp.mobius.opis.events.PlayerTracker;
 import mcp.mobius.opis.swing.SelectedTab;
+
 import net.minecraft.entity.player.EntityPlayerMP;
 
 public enum Message {
+
     LIST_CHUNK_LOADED,
     LIST_CHUNK_LOADED_CLEAR,
     LIST_TIMING_TILEENTS,

@@ -2,6 +2,7 @@ package mcp.mobius.opis.commands.server;
 
 import mcp.mobius.opis.commands.IOpisCommand;
 import mcp.mobius.opis.events.PlayerTracker;
+
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -23,8 +24,8 @@ public class CommandAddPrivileged extends CommandBase implements IOpisCommand {
     @Override
     public void processCommand(ICommandSender icommandsender, String[] astring) {
         PlayerTracker.INSTANCE.addPrivilegedPlayer(astring[0]);
-        icommandsender.addChatMessage(
-                new ChatComponentText(String.format("Player %s added to Opis user list", astring[0])));
+        icommandsender
+                .addChatMessage(new ChatComponentText(String.format("Player %s added to Opis user list", astring[0])));
     }
 
     @Override

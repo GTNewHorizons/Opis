@@ -1,7 +1,7 @@
 package mcp.mobius.opis.network;
 
-import cpw.mods.fml.relauncher.Side;
 import java.util.ArrayList;
+
 import mcp.mobius.mobiuscore.profiler.ProfilerSection;
 import mcp.mobius.opis.data.holders.ISerializable;
 import mcp.mobius.opis.data.holders.basetypes.*;
@@ -18,12 +18,16 @@ import mcp.mobius.opis.network.packets.server.NetDataCommand;
 import mcp.mobius.opis.network.packets.server.NetDataList;
 import mcp.mobius.opis.network.packets.server.NetDataValue;
 import mcp.mobius.opis.swing.SelectedTab;
+
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
+
 import org.apache.logging.log4j.Level;
+
+import cpw.mods.fml.relauncher.Side;
 
 public class ServerMessageHandler {
 
@@ -62,15 +66,15 @@ public class ServerMessageHandler {
             // OpisPacketHandler_OLD.validateAndSend(NetDataList_OLD.create(Message.LIST_TIMING_HANDLERS,
             // timingHandlers), player);
             // OpisPacketHandler_OLD.validateAndSend(NetDataValue_OLD.create(Message.VALUE_TIMING_HANDLERS, totalTime),
-            //    player);
+            // player);
         } else if (maintype == Message.LIST_TIMING_CHUNK) {
             ArrayList<StatsChunk> timingChunks = ChunkManager.INSTANCE.getTopChunks(100);
             PacketManager.validateAndSend(new NetDataList(Message.LIST_TIMING_CHUNK, timingChunks), player);
         } else if (maintype == Message.VALUE_TIMING_WORLDTICK) {
             PacketManager.validateAndSend(
-                    new NetDataValue(Message.VALUE_TIMING_WORLDTICK, new DataBlockTick().fill()), player);
-        } else if (maintype == Message.VALUE_TIMING_ENTUPDATE) {
-        } else if (maintype == Message.LIST_AMOUNT_ENTITIES) {
+                    new NetDataValue(Message.VALUE_TIMING_WORLDTICK, new DataBlockTick().fill()),
+                    player);
+        } else if (maintype == Message.VALUE_TIMING_ENTUPDATE) {} else if (maintype == Message.LIST_AMOUNT_ENTITIES) {
             boolean filtered = false;
             if (PlayerTracker.INSTANCE.filteredAmount.containsKey(name))
                 filtered = PlayerTracker.INSTANCE.filteredAmount.get(name);
@@ -80,7 +84,8 @@ public class ServerMessageHandler {
         } else if (maintype == Message.LIST_AMOUNT_TILEENTS) {
             PacketManager.validateAndSend(
                     new NetDataList(
-                            Message.LIST_AMOUNT_TILEENTS, TileEntityManager.INSTANCE.getCumulativeAmountTileEntities()),
+                            Message.LIST_AMOUNT_TILEENTS,
+                            TileEntityManager.INSTANCE.getCumulativeAmountTileEntities()),
                     player);
         } else if (maintype == Message.COMMAND_FILTERING_TRUE) {
             PlayerTracker.INSTANCE.filteredAmount.put(name, true);

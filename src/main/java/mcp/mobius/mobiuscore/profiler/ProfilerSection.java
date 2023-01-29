@@ -1,25 +1,27 @@
 package mcp.mobius.mobiuscore.profiler;
 
-import cpw.mods.fml.relauncher.Side;
 import java.util.EnumSet;
 
+import cpw.mods.fml.relauncher.Side;
+
 public enum ProfilerSection implements IProfilerBase {
+
     DIMENSION_TICK(RunType.REALTIME, Side.SERVER), // Global section around the ticks for each dim (Blocks & ents).
     DIMENSION_BLOCKTICK(RunType.ONREQUEST, Side.SERVER), // Subsection for dimension block tick.
     ENTITY_UPDATETIME(RunType.ONREQUEST, Side.SERVER), // Profiling of the entity tick time, per entity.
     TICK(RunType.REALTIME, Side.SERVER), // Tick timing profiling
     TILEENT_UPDATETIME(RunType.ONREQUEST, Side.SERVER), // Profiling of the TileEntity tick time, per TE.
-    // HANDLER_TICKSTART  (RunType.ONREQUEST, EnumSet.of(Side.CLIENT, Side.SERVER)), 		//Server handler for ServerTick
+    // HANDLER_TICKSTART (RunType.ONREQUEST, EnumSet.of(Side.CLIENT, Side.SERVER)), //Server handler for ServerTick
     // start.
-    // HANDLER_TICKSTOP   (RunType.ONREQUEST, EnumSet.of(Side.CLIENT, Side.SERVER)),  		//Server handler for ServerTick
+    // HANDLER_TICKSTOP (RunType.ONREQUEST, EnumSet.of(Side.CLIENT, Side.SERVER)), //Server handler for ServerTick
     // stop.
     PACKET_INBOUND(RunType.REALTIME, Side.SERVER), // Outbound packet analysis
     PACKET_OUTBOUND(RunType.REALTIME, Side.SERVER), // Inbound packet analysis
-    // PACKETFML_INBOUND  (RunType.REALTIME,  Side.SERVER),		//Outbound packet analysis
-    // PACKETFML_OUTBOUND (RunType.REALTIME,  Side.SERVER),		//Inbound packet analysis
+    // PACKETFML_INBOUND (RunType.REALTIME, Side.SERVER), //Outbound packet analysis
+    // PACKETFML_OUTBOUND (RunType.REALTIME, Side.SERVER), //Inbound packet analysis
 
-    NETWORK_TICK(
-            RunType.ONREQUEST, Side.SERVER), // The time it takes for the server to handle the packets during a tick.
+    NETWORK_TICK(RunType.ONREQUEST, Side.SERVER), // The time it takes for the server to handle the packets during a
+                                                  // tick.
     EVENT_INVOKE(RunType.ONREQUEST, EnumSet.of(Side.CLIENT, Side.SERVER)), // Timing of the event invokation
 
     RENDER_TILEENTITY(RunType.ONREQUEST, Side.CLIENT), // Profiler for TileEnt rendering
@@ -33,10 +35,8 @@ public enum ProfilerSection implements IProfilerBase {
 
     private EnumSet<Side> sides;
     private RunType runType;
-    private IProfilerBase profiler = new DummyProfiler();
-    ;
-    private IProfilerBase profilerSuspended = new DummyProfiler();
-    ;
+    private IProfilerBase profiler = new DummyProfiler();;
+    private IProfilerBase profilerSuspended = new DummyProfiler();;
 
     public static long timeStampLastRun;
 

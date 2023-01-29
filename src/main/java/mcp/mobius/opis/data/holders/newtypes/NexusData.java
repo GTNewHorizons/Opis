@@ -1,10 +1,11 @@
 package mcp.mobius.opis.data.holders.newtypes;
 
-import com.google.common.io.ByteArrayDataInput;
-import com.google.common.io.ByteArrayDataOutput;
 import mcp.mobius.opis.data.holders.ISerializable;
 import mcp.mobius.opis.data.holders.basetypes.SerialInt;
 import mcp.mobius.opis.data.holders.basetypes.SerialLong;
+
+import com.google.common.io.ByteArrayDataInput;
+import com.google.common.io.ByteArrayDataOutput;
 
 public class NexusData implements ISerializable {
 
@@ -18,14 +19,8 @@ public class NexusData implements ISerializable {
     public SerialInt amountPlayers;
     long timestamp;
 
-    public NexusData(
-            SerialLong Packet_Outbound,
-            SerialLong Packet_Inbound,
-            SerialInt Chunk_Forced,
-            SerialInt Chunk_Loaded,
-            DataTiming Timing_Tick,
-            SerialInt Amount_TileEnts,
-            SerialInt Amount_Entities,
+    public NexusData(SerialLong Packet_Outbound, SerialLong Packet_Inbound, SerialInt Chunk_Forced,
+            SerialInt Chunk_Loaded, DataTiming Timing_Tick, SerialInt Amount_TileEnts, SerialInt Amount_Entities,
             SerialInt Amount_Players) {
         this.packetOutbound = Packet_Outbound;
         this.packetInbound = Packet_Inbound;

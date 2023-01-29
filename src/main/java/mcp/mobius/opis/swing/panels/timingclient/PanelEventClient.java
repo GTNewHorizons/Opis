@@ -1,8 +1,10 @@
 package mcp.mobius.opis.swing.panels.timingclient;
 
 import java.util.ArrayList;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+
 import mcp.mobius.opis.api.IMessageHandler;
 import mcp.mobius.opis.api.ITabPanel;
 import mcp.mobius.opis.data.holders.clienttypes.DataRenderEvent;
@@ -14,9 +16,11 @@ import mcp.mobius.opis.network.enums.Message;
 import mcp.mobius.opis.swing.SelectedTab;
 import mcp.mobius.opis.swing.actions.ActionRunOpisClient;
 import mcp.mobius.opis.swing.widgets.JTableStats;
+
 import net.miginfocom.swing.MigLayout;
 
 public class PanelEventClient extends JPanel implements ITabPanel, IMessageHandler {
+
     private JTableStats table;
     private JButton btnRunRender;
 
@@ -34,23 +38,11 @@ public class PanelEventClient extends JPanel implements ITabPanel, IMessageHandl
         add(scrollPane, "cell 0 1 3 1,grow");
 
         table = new JTableStats(
-                new String[] {"Event", "Mod", "Class", "Handler", "Calls", "Timing"},
-                new Class[] {
-                    CachedString.class,
-                    CachedString.class,
-                    CachedString.class,
-                    CachedString.class,
-                    Long.class,
-                    DataTiming.class
-                },
-                new int[] {
-                    SwingConstants.LEFT,
-                    SwingConstants.LEFT,
-                    SwingConstants.LEFT,
-                    SwingConstants.LEFT,
-                    SwingConstants.CENTER,
-                    SwingConstants.CENTER
-                });
+                new String[] { "Event", "Mod", "Class", "Handler", "Calls", "Timing" },
+                new Class[] { CachedString.class, CachedString.class, CachedString.class, CachedString.class,
+                        Long.class, DataTiming.class },
+                new int[] { SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.LEFT, SwingConstants.LEFT,
+                        SwingConstants.CENTER, SwingConstants.CENTER });
 
         scrollPane.setViewportView(table);
     }
@@ -61,7 +53,7 @@ public class PanelEventClient extends JPanel implements ITabPanel, IMessageHandl
         int row = this.updateData(table, model, DataEvent.class);
 
         for (DataRenderEvent o : data) {
-            model.addRow(new Object[] {o.event, o.mod, o.package_, o.handler, o.nCalls, o.update});
+            model.addRow(new Object[] { o.event, o.mod, o.package_, o.handler, o.nCalls, o.update });
         }
 
         this.dataUpdated(table, model, row);

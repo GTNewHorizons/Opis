@@ -1,12 +1,15 @@
 package mcp.mobius.opis.network.rcon.nexus;
 
+import java.util.List;
+
+import mcp.mobius.opis.network.PacketBase;
+import mcp.mobius.opis.network.rcon.RConHandler;
+
 import com.google.common.io.ByteStreams;
+
 import io.nettyopis.buffer.ByteBuf;
 import io.nettyopis.channel.ChannelHandlerContext;
 import io.nettyopis.handler.codec.ByteToMessageDecoder;
-import java.util.List;
-import mcp.mobius.opis.network.PacketBase;
-import mcp.mobius.opis.network.rcon.RConHandler;
 
 public class NexusMsgDecoder extends ByteToMessageDecoder {
 

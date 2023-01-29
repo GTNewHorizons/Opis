@@ -5,7 +5,9 @@ import mcp.mobius.opis.gui.events.MouseEvent.EventType;
 import mcp.mobius.opis.gui.interfaces.CType;
 import mcp.mobius.opis.gui.interfaces.IWidget;
 import mcp.mobius.opis.gui.interfaces.Signal;
+
 import net.minecraft.client.gui.ScaledResolution;
+
 import org.lwjgl.input.Mouse;
 import org.lwjgl.util.Point;
 
@@ -27,12 +29,9 @@ public class LayoutCanvas extends LayoutBase {
         this.setGeometry(0, 0, this.rez.getScaledWidth(), this.rez.getScaledHeight(), CType.ABSXY, CType.ABSXY);
 
         /*
-        this.draw(this.getPos());
-
-        for (IWidget widget: this.widgets.values())
-        	if (widget.shouldRender())
-        		widget.draw();
-        */
+         * this.draw(this.getPos()); for (IWidget widget: this.widgets.values()) if (widget.shouldRender())
+         * widget.draw();
+         */
 
         super.draw();
 

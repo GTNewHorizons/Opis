@@ -1,13 +1,16 @@
 package mcp.mobius.mobiuscore.monitors;
 
+import java.util.Map;
+import java.util.WeakHashMap;
+
+import mcp.mobius.mobiuscore.asm.CoreDescription;
+
+import net.minecraft.block.Block;
+import net.minecraft.tileentity.TileEntity;
+
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import com.google.common.collect.Table.Cell;
-import java.util.Map;
-import java.util.WeakHashMap;
-import mcp.mobius.mobiuscore.asm.CoreDescription;
-import net.minecraft.block.Block;
-import net.minecraft.tileentity.TileEntity;
 
 public class MonitoredTileList<E> extends MonitoredList<E> {
 
@@ -16,6 +19,7 @@ public class MonitoredTileList<E> extends MonitoredList<E> {
     private Map<Object, BlockData> blockdata = new WeakHashMap<>();
 
     private static class BlockData {
+
         public final Block block;
         public final int meta;
 
@@ -57,12 +61,10 @@ public class MonitoredTileList<E> extends MonitoredList<E> {
         // WITHOUT ACCESSING THE WORLD !!!!
 
         /*
-        TileEntity te = ((TileEntity)o);
-        if (te == null || te.getWorldObj() == null) return;
-
-        Block block = te.getWorldObj().getBlock(te.xCoord, te.yCoord, te.zCoord);
-        int   meta  = te.getWorldObj().getBlockMetadata(te.xCoord, te.yCoord, te.zCoord);
-        */
+         * TileEntity te = ((TileEntity)o); if (te == null || te.getWorldObj() == null) return; Block block =
+         * te.getWorldObj().getBlock(te.xCoord, te.yCoord, te.zCoord); int meta =
+         * te.getWorldObj().getBlockMetadata(te.xCoord, te.yCoord, te.zCoord);
+         */
 
         if (blockdata.containsKey(o)) {
             BlockData d = blockdata.get(o);

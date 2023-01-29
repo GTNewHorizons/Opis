@@ -1,13 +1,14 @@
 package mcp.mobius.mobiuscore.asm;
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.FieldInsnNode;
 import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.TypeInsnNode;
 import org.objectweb.asm.tree.VarInsnNode;
+
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 
 public class Opcode {
 

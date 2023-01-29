@@ -2,6 +2,7 @@ package mcp.mobius.opis.swing.panels.tracking;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+
 import mcp.mobius.opis.api.ITabPanel;
 import mcp.mobius.opis.data.holders.newtypes.DataEntity;
 import mcp.mobius.opis.data.holders.newtypes.PlayerStatus;
@@ -13,9 +14,11 @@ import mcp.mobius.opis.swing.actions.ActionPlayers;
 import mcp.mobius.opis.swing.widgets.JButtonAccess;
 import mcp.mobius.opis.swing.widgets.JPanelMsgHandler;
 import mcp.mobius.opis.swing.widgets.JTableStats;
+
 import net.miginfocom.swing.MigLayout;
 
 public class PanelPlayers extends JPanelMsgHandler implements ITabPanel {
+
     private JButtonAccess btnTeleport;
     private JButtonAccess btnPull;
 
@@ -45,8 +48,8 @@ public class PanelPlayers extends JPanelMsgHandler implements ITabPanel {
         add(scrollPane, "cell 0 1 6 1,grow");
 
         table = new JTableStats(
-                new String[] {"Name", "Dimension", "Coordinates"},
-                new Class[] {String.class, Integer.class, Object.class});
+                new String[] { "Name", "Dimension", "Coordinates" },
+                new Class[] { String.class, Integer.class, Object.class });
         scrollPane.setViewportView(table);
     }
 
@@ -71,9 +74,9 @@ public class PanelPlayers extends JPanelMsgHandler implements ITabPanel {
 
                     for (Object o : rawdata.array) {
                         PlayerStatus player = (PlayerStatus) o;
-                        model.addRow(new Object[] {
-                            player.name, player.dim, String.format("[ %4d %4d %4d ]", player.x, player.y, player.z),
-                        });
+                        model.addRow(
+                                new Object[] { player.name, player.dim,
+                                        String.format("[ %4d %4d %4d ]", player.x, player.y, player.z), });
                     }
 
                     this.getTable().dataUpdated(row);

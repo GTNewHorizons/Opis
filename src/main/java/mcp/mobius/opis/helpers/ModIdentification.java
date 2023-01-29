@@ -1,13 +1,15 @@
 package mcp.mobius.opis.helpers;
 
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.ModContainer;
-import cpw.mods.fml.common.registry.*;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.HashMap;
+
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
+
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.ModContainer;
+import cpw.mods.fml.common.registry.*;
 
 public class ModIdentification {
 
@@ -37,11 +39,7 @@ public class ModIdentification {
     }
 
     public static String nameFromObject(Object obj) {
-        String objPath = obj.getClass()
-                .getProtectionDomain()
-                .getCodeSource()
-                .getLocation()
-                .toString();
+        String objPath = obj.getClass().getProtectionDomain().getCodeSource().getLocation().toString();
 
         try {
             objPath = URLDecoder.decode(objPath, "UTF-8");
@@ -50,11 +48,10 @@ public class ModIdentification {
         }
 
         String modName = "<Unknown>";
-        for (String s : modSource_Name.keySet())
-            if (objPath.contains(s)) {
-                modName = modSource_Name.get(s);
-                break;
-            }
+        for (String s : modSource_Name.keySet()) if (objPath.contains(s)) {
+            modName = modSource_Name.get(s);
+            break;
+        }
 
         if (modName.equals("Minecraft Coder Pack")) modName = "Minecraft";
 
@@ -85,8 +82,7 @@ public class ModIdentification {
         try {
             is = new ItemStack(block, 1, meta);
             name = is.getDisplayName();
-        } catch (Exception e) {
-        }
+        } catch (Exception e) {}
 
         return name;
     }
@@ -102,8 +98,7 @@ public class ModIdentification {
         try {
             is = new ItemStack(block, 1, meta);
             modID = nameFromStack(is);
-        } catch (Exception e) {
-        }
+        } catch (Exception e) {}
 
         return modID;
     }

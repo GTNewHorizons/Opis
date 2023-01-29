@@ -1,13 +1,17 @@
 package mcp.mobius.opis.gui.screens;
 
 import java.util.HashMap;
+
 import mcp.mobius.opis.gui.interfaces.IWidget;
 import mcp.mobius.opis.gui.widgets.LayoutCanvas;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+
 import org.lwjgl.input.Mouse;
 
 public abstract class ScreenBase extends GuiScreen {
+
     protected GuiScreen parent; // Return screen if available.
     protected Minecraft mc; // Minecraft instance
     protected HashMap<String, IWidget> widgets; // List of widgets on this ui
@@ -66,17 +70,16 @@ public abstract class ScreenBase extends GuiScreen {
     }
 
     /////////////////////
-    // INPUT METHODS   //
+    // INPUT METHODS //
     /////////////////////
 
     // Keyboard handling. Basic one is just returning to the previous UI when Esc is pressed
     @Override
     public void keyTyped(char keyChar, int keyID) {
-        if (keyID == 1)
-            if (this.parent == null) {
-                this.mc.displayGuiScreen((GuiScreen) null);
-                this.mc.setIngameFocus();
-            } else this.mc.displayGuiScreen(this.parent);
+        if (keyID == 1) if (this.parent == null) {
+            this.mc.displayGuiScreen((GuiScreen) null);
+            this.mc.setIngameFocus();
+        } else this.mc.displayGuiScreen(this.parent);
     }
 
     @Override

@@ -1,13 +1,11 @@
 package mcp.mobius.opis.data.managers;
 
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.Table;
-import com.google.common.collect.Table.Cell;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+
 import mcp.mobius.mobiuscore.monitors.MonitoredTileList;
 import mcp.mobius.mobiuscore.profiler.ProfilerSection;
 import mcp.mobius.opis.data.holders.basetypes.AmountHolder;
@@ -21,6 +19,7 @@ import mcp.mobius.opis.data.holders.stats.StatsChunk;
 import mcp.mobius.opis.data.profilers.ProfilerTileEntityUpdate;
 import mcp.mobius.opis.helpers.ModIdentification;
 import mcp.mobius.opis.modOpis;
+
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
@@ -28,24 +27,27 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
 
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Table;
+import com.google.common.collect.Table.Cell;
+
 public enum TileEntityManager {
+
     INSTANCE;
 
     public HashMap<CoordinatesChunk, StatsChunk> getTimes(int dim) {
         HashMap<CoordinatesChunk, StatsChunk> chunks = new HashMap<CoordinatesChunk, StatsChunk>();
 
-        for (CoordinatesBlock coord :
-                ((ProfilerTileEntityUpdate) ProfilerSection.TILEENT_UPDATETIME.getProfiler()).data.keySet()) {
+        for (CoordinatesBlock coord : ((ProfilerTileEntityUpdate) ProfilerSection.TILEENT_UPDATETIME.getProfiler()).data
+                .keySet()) {
             if (coord.dim == dim) {
 
                 CoordinatesChunk coordC = new CoordinatesChunk(coord);
                 if (!(chunks.containsKey(coordC))) chunks.put(coordC, new StatsChunk());
 
                 chunks.get(coordC).addEntity();
-                chunks.get(coordC)
-                        .addMeasure(((ProfilerTileEntityUpdate) ProfilerSection.TILEENT_UPDATETIME.getProfiler())
-                                .data
-                                .get(coord)
+                chunks.get(coordC).addMeasure(
+                        ((ProfilerTileEntityUpdate) ProfilerSection.TILEENT_UPDATETIME.getProfiler()).data.get(coord)
                                 .getGeometricMean());
             }
         }
@@ -55,23 +57,13 @@ public enum TileEntityManager {
     private void cleanUpStats() {
 
         /*
-        HashSet<CoordinatesBlock> dirty = new HashSet<CoordinatesBlock>();
-
-        for (CoordinatesBlock tecoord : TileEntityManager.stats.keySet()){
-        		World world     = DimensionManager.getWorld(tecoord.dim);
-        		int   blockID   = world.getBlockId(tecoord.x, tecoord.y, tecoord.z);
-        		short blockMeta = (short)world.getBlockMetadata(tecoord.x, tecoord.y, tecoord.z);
-
-        		if ((blockID != TileEntityManager.stats.get(tecoord).getID()) || (blockMeta != TileEntityManager.stats.get(tecoord).getMeta())){
-        			dirty.add(tecoord);
-        		}
-        }
-
-        for (CoordinatesBlock tecoord : dirty){
-        	stats.remove(tecoord);
-        	references.remove(tecoord);
-        }
-        */
+         * HashSet<CoordinatesBlock> dirty = new HashSet<CoordinatesBlock>(); for (CoordinatesBlock tecoord :
+         * TileEntityManager.stats.keySet()){ World world = DimensionManager.getWorld(tecoord.dim); int blockID =
+         * world.getBlockId(tecoord.x, tecoord.y, tecoord.z); short blockMeta = (short)world.getBlockMetadata(tecoord.x,
+         * tecoord.y, tecoord.z); if ((blockID != TileEntityManager.stats.get(tecoord).getID()) || (blockMeta !=
+         * TileEntityManager.stats.get(tecoord).getMeta())){ dirty.add(tecoord); } } for (CoordinatesBlock tecoord :
+         * dirty){ stats.remove(tecoord); references.remove(tecoord); }
+         */
 
     }
 
@@ -80,8 +72,8 @@ public enum TileEntityManager {
 
         ArrayList<DataBlockTileEntity> returnList = new ArrayList<DataBlockTileEntity>();
 
-        for (CoordinatesBlock tecoord :
-                ((ProfilerTileEntityUpdate) ProfilerSection.TILEENT_UPDATETIME.getProfiler()).data.keySet()) {
+        for (CoordinatesBlock tecoord : ((ProfilerTileEntityUpdate) ProfilerSection.TILEENT_UPDATETIME
+                .getProfiler()).data.keySet()) {
             if (coord.equals(tecoord.asCoordinatesChunk())) {
                 DataBlockTileEntity testats = new DataBlockTileEntity().fill(tecoord);
 
@@ -96,8 +88,8 @@ public enum TileEntityManager {
         ArrayList<DataBlockTileEntity> sorted = new ArrayList<DataBlockTileEntity>();
         ArrayList<DataBlockTileEntity> topEntities = new ArrayList<DataBlockTileEntity>();
 
-        for (CoordinatesBlock coord :
-                ((ProfilerTileEntityUpdate) ProfilerSection.TILEENT_UPDATETIME.getProfiler()).data.keySet())
+        for (CoordinatesBlock coord : ((ProfilerTileEntityUpdate) ProfilerSection.TILEENT_UPDATETIME.getProfiler()).data
+                .keySet())
             sorted.add(new DataBlockTileEntity().fill(coord));
 
         Collections.sort(sorted);
@@ -109,11 +101,9 @@ public enum TileEntityManager {
 
     public DataTiming getTotalUpdateTime() {
         double updateTime = 0D;
-        for (CoordinatesBlock coords :
-                ((ProfilerTileEntityUpdate) ProfilerSection.TILEENT_UPDATETIME.getProfiler()).data.keySet()) {
-            updateTime += ((ProfilerTileEntityUpdate) ProfilerSection.TILEENT_UPDATETIME.getProfiler())
-                    .data
-                    .get(coords)
+        for (CoordinatesBlock coords : ((ProfilerTileEntityUpdate) ProfilerSection.TILEENT_UPDATETIME
+                .getProfiler()).data.keySet()) {
+            updateTime += ((ProfilerTileEntityUpdate) ProfilerSection.TILEENT_UPDATETIME.getProfiler()).data.get(coords)
                     .getGeometricMean();
         }
         return new DataTiming(updateTime);
@@ -137,18 +127,19 @@ public enum TileEntityManager {
                 TileEntity tileEntity = (TileEntity) o;
                 if (tileEntity == null) continue;
                 CoordinatesBlock coord = new CoordinatesBlock(
-                        world.provider.dimensionId, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
+                        world.provider.dimensionId,
+                        tileEntity.xCoord,
+                        tileEntity.yCoord,
+                        tileEntity.zCoord);
                 int hash = System.identityHashCode(tileEntity);
 
                 if (registeredEntities.contains(hash)) continue; // This entitie has already been seen;
 
                 Block block = world.getBlock(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
-                if (block == Blocks.air
-                        || block == null
+                if (block == Blocks.air || block == null
                         || !block.hasTileEntity(0)
                         || world.getTileEntity(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord) == null
-                        || world.getTileEntity(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord)
-                                        .getClass()
+                        || world.getTileEntity(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord).getClass()
                                 != tileEntity.getClass()) {
 
                     orphans.add(new DataTileEntity().fill(tileEntity, "Orphan"));
@@ -182,26 +173,22 @@ public enum TileEntityManager {
             if (world == null) continue;
 
             if (!(world.loadedTileEntityList instanceof MonitoredTileList)) {
-                modOpis.log.info("Improper type detected for tile entity list in world " + dim
-                        + ". Regenerating tracking list.");
+                modOpis.log.info(
+                        "Improper type detected for tile entity list in world " + dim
+                                + ". Regenerating tracking list.");
 
                 /*
-                 * MonitoredTileList will, whenever a tile entity is added to it, load the block at the tile
-                 * entity's position. This can cause Minecraft to load chunks, which will result in more tile
-                 * entities being added to world.loadedTileEntityList.
-                 *
-                 * If we iterate through world.loadedTileEntityList and add its entries to newList, this would
-                 * result in getting a ConcurrentModificationException. We get around this by using a regular
-                 * for-loop instead of a for-each loop.
-                 *
-                 * As a bonus, since the for-loop checks world.loadedTileEntityList.size() at the start of each
-                 * loop iteration, it'll pick up any new entries in world.loadedTileEntityList immediately, and will
-                 * add them to newList without requiring us to check separately. However, this does require a few
-                 * assumptions about what can happen in the for-loop body:
-                 *   1. New entries are always added at the end of world.loadedTileEntityList
-                 *   2. Entries are never removed from world.loadedTileEntityList
-                 * WARNING: if any of those assumptions are broken, we will likely get unexpected behavior that is
-                 * also extremely difficult to debug!
+                 * MonitoredTileList will, whenever a tile entity is added to it, load the block at the tile entity's
+                 * position. This can cause Minecraft to load chunks, which will result in more tile entities being
+                 * added to world.loadedTileEntityList. If we iterate through world.loadedTileEntityList and add its
+                 * entries to newList, this would result in getting a ConcurrentModificationException. We get around
+                 * this by using a regular for-loop instead of a for-each loop. As a bonus, since the for-loop checks
+                 * world.loadedTileEntityList.size() at the start of each loop iteration, it'll pick up any new entries
+                 * in world.loadedTileEntityList immediately, and will add them to newList without requiring us to check
+                 * separately. However, this does require a few assumptions about what can happen in the for-loop body:
+                 * 1. New entries are always added at the end of world.loadedTileEntityList 2. Entries are never removed
+                 * from world.loadedTileEntityList WARNING: if any of those assumptions are broken, we will likely get
+                 * unexpected behavior that is also extremely difficult to debug!
                  */
 
                 List<TileEntity> newList = new MonitoredTileList<TileEntity>();
@@ -238,18 +225,16 @@ public enum TileEntityManager {
     public ArrayList<DataBlockTileEntityPerClass> getCumulativeTimingTileEntities() {
         HashBasedTable<Integer, Integer, DataBlockTileEntityPerClass> data = HashBasedTable.create();
 
-        for (CoordinatesBlock coord :
-                ((ProfilerTileEntityUpdate) ProfilerSection.TILEENT_UPDATETIME.getProfiler()).data.keySet()) {
+        for (CoordinatesBlock coord : ((ProfilerTileEntityUpdate) ProfilerSection.TILEENT_UPDATETIME.getProfiler()).data
+                .keySet()) {
             World world = DimensionManager.getWorld(coord.dim);
             int id = Block.getIdFromBlock(world.getBlock(coord.x, coord.y, coord.z));
             int meta = world.getBlockMetadata(coord.x, coord.y, coord.z);
 
             if (!data.contains(id, meta)) data.put(id, meta, new DataBlockTileEntityPerClass(id, meta));
 
-            data.get(id, meta)
-                    .add(((ProfilerTileEntityUpdate) ProfilerSection.TILEENT_UPDATETIME.getProfiler())
-                            .data
-                            .get(coord)
+            data.get(id, meta).add(
+                    ((ProfilerTileEntityUpdate) ProfilerSection.TILEENT_UPDATETIME.getProfiler()).data.get(coord)
                             .getGeometricMean());
         }
 

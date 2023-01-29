@@ -1,16 +1,5 @@
 package mcp.mobius.opis;
 
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.event.FMLServerStartingEvent;
-import cpw.mods.fml.common.event.FMLServerStoppedEvent;
-import cpw.mods.fml.common.registry.GameRegistry;
 import mcp.mobius.mobiuscore.profiler.ProfilerSection;
 import mcp.mobius.opis.commands.client.CommandOpis;
 import mcp.mobius.opis.commands.server.*;
@@ -26,12 +15,26 @@ import mcp.mobius.opis.tools.BlockDebug;
 import mcp.mobius.opis.tools.BlockLag;
 import mcp.mobius.opis.tools.TileDebug;
 import mcp.mobius.opis.tools.TileLag;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.Mod.EventHandler;
+import cpw.mods.fml.common.Mod.Instance;
+import cpw.mods.fml.common.SidedProxy;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.event.FMLServerStoppedEvent;
+import cpw.mods.fml.common.registry.GameRegistry;
 
 @Mod(
         modid = "GRADLETOKEN_MODID",
@@ -62,10 +65,8 @@ public class modOpis {
 
     public Configuration config = null;
 
-    public static String commentTables =
-            "Minimum access level to be able to view tables in /opis command. Valid values : NONE, PRIVILEGED, ADMIN";
-    public static String commentOpis =
-            "Minimum access level to be open Opis interface. Valid values : NONE, PRIVILEGED, ADMIN";
+    public static String commentTables = "Minimum access level to be able to view tables in /opis command. Valid values : NONE, PRIVILEGED, ADMIN";
+    public static String commentOpis = "Minimum access level to be open Opis interface. Valid values : NONE, PRIVILEGED, ADMIN";
     public static String commentPrivileged = "List of players with PRIVILEGED access level.";
 
     @EventHandler
@@ -73,32 +74,23 @@ public class modOpis {
 
         config = new Configuration(event.getSuggestedConfigurationFile());
 
-        profilerDelay =
-                config.get(Configuration.CATEGORY_GENERAL, "profiler.delay", 1).getInt();
-        lagGenID = config.get(Configuration.CATEGORY_GENERAL, "laggenerator_id", -1)
-                .getInt();
-        profilerMaxTicks = config.get(Configuration.CATEGORY_GENERAL, "profiler.maxpts", 250)
-                .getInt();
-        microseconds = config.get(Configuration.CATEGORY_GENERAL, "display.microseconds", true)
-                .getBoolean(true);
+        profilerDelay = config.get(Configuration.CATEGORY_GENERAL, "profiler.delay", 1).getInt();
+        lagGenID = config.get(Configuration.CATEGORY_GENERAL, "laggenerator_id", -1).getInt();
+        profilerMaxTicks = config.get(Configuration.CATEGORY_GENERAL, "profiler.maxpts", 250).getInt();
+        microseconds = config.get(Configuration.CATEGORY_GENERAL, "display.microseconds", true).getBoolean(true);
         rconport = config.get("REMOTE_CONSOLE", "opisrcon.port", 25566).getInt();
         rconactive = config.get("REMOTE_CONSOLE", "opisrcon.active", false).getBoolean(false);
         rconpass = config.get("REMOTE_CONSOLE", "opisrcon.password", "").getString();
 
-        String[] users = config.get("ACCESS_RIGHTS", "privileged", new String[] {}, commentPrivileged)
-                .getStringList();
+        String[] users = config.get("ACCESS_RIGHTS", "privileged", new String[] {}, commentPrivileged).getStringList();
         AccessLevel minTables = AccessLevel.PRIVILEGED;
         AccessLevel openOpis = AccessLevel.PRIVILEGED;
         try {
-            openOpis = AccessLevel.valueOf(
-                    config.get("ACCESS_RIGHTS", "opis", "NONE", commentTables).getString());
-        } catch (IllegalArgumentException e) {
-        }
+            openOpis = AccessLevel.valueOf(config.get("ACCESS_RIGHTS", "opis", "NONE", commentTables).getString());
+        } catch (IllegalArgumentException e) {}
         try {
-            minTables = AccessLevel.valueOf(
-                    config.get("ACCESS_RIGHTS", "tables", "NONE", commentTables).getString());
-        } catch (IllegalArgumentException e) {
-        }
+            minTables = AccessLevel.valueOf(config.get("ACCESS_RIGHTS", "tables", "NONE", commentTables).getString());
+        } catch (IllegalArgumentException e) {}
 
         Message.setTablesMinimumLevel(minTables);
         Message.setOpisMinimumLevel(openOpis);
@@ -178,10 +170,9 @@ public class modOpis {
 
         // DeadManSwitch.startDeadManSwitch(MinecraftServer.getServer());
         /*
-        for (ProfilerSection sec : ProfilerSection.values()){
-            System.out.printf("%s : %s\n", sec, sec.getProfiler().getClass().getSimpleName());
-        }
-        */
+         * for (ProfilerSection sec : ProfilerSection.values()){ System.out.printf("%s : %s\n", sec,
+         * sec.getProfiler().getClass().getSimpleName()); }
+         */
     }
 
     @EventHandler

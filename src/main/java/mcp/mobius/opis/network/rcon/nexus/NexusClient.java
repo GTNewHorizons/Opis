@@ -1,5 +1,13 @@
 package mcp.mobius.opis.network.rcon.nexus;
 
+import java.io.*;
+import java.lang.ref.WeakReference;
+import java.net.ConnectException;
+import java.util.Properties;
+
+import javax.net.ssl.SSLException;
+
+import mcp.mobius.opis.modOpis;
 import io.nettyopis.bootstrap.Bootstrap;
 import io.nettyopis.channel.*;
 import io.nettyopis.channel.nio.NioEventLoopGroup;
@@ -7,16 +15,11 @@ import io.nettyopis.channel.socket.SocketChannel;
 import io.nettyopis.channel.socket.nio.NioSocketChannel;
 import io.nettyopis.handler.ssl.SslContext;
 import io.nettyopis.handler.ssl.util.InsecureTrustManagerFactory;
-import java.io.*;
-import java.lang.ref.WeakReference;
-import java.net.ConnectException;
-import java.util.Properties;
-import javax.net.ssl.SSLException;
-import mcp.mobius.opis.modOpis;
 
 public class NexusClient implements Runnable {
 
     class ChannelInit extends ChannelInitializer<SocketChannel> {
+
         private final SslContext sslCtx;
 
         public ChannelInit(SslContext sslCtx) {
@@ -68,8 +71,7 @@ public class NexusClient implements Runnable {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-        }
-        ;
+        } ;
     }
 
     private boolean connect() {
