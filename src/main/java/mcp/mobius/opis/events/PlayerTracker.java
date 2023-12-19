@@ -3,6 +3,14 @@ package mcp.mobius.opis.events;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.server.MinecraftServer;
+import net.minecraftforge.common.util.FakePlayer;
+
+import com.mojang.authlib.GameProfile;
+
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent;
 import mcp.mobius.opis.data.holders.basetypes.SerialLong;
 import mcp.mobius.opis.data.holders.newtypes.PlayerStatus;
 import mcp.mobius.opis.data.managers.StringCache;
@@ -14,15 +22,6 @@ import mcp.mobius.opis.network.enums.PlayerEv;
 import mcp.mobius.opis.network.packets.server.NetDataValue;
 import mcp.mobius.opis.network.rcon.RConHandler;
 import mcp.mobius.opis.swing.SelectedTab;
-
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.server.MinecraftServer;
-import net.minecraftforge.common.util.FakePlayer;
-
-import com.mojang.authlib.GameProfile;
-
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.PlayerEvent;
 
 // public class PlayerTracker implements IPlayerTracker{
 public enum PlayerTracker {

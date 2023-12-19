@@ -3,6 +3,8 @@ package mcp.mobius.opis.swing.actions;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import net.minecraft.client.Minecraft;
+
 import mcp.mobius.opis.api.TabPanelRegistrar;
 import mcp.mobius.opis.data.holders.basetypes.CoordinatesBlock;
 import mcp.mobius.opis.data.holders.newtypes.DataBlockTileEntity;
@@ -13,8 +15,6 @@ import mcp.mobius.opis.network.packets.client.PacketReqData;
 import mcp.mobius.opis.swing.SelectedTab;
 import mcp.mobius.opis.swing.panels.timingserver.PanelTimingTileEnts;
 import mcp.mobius.opis.swing.widgets.JTableStats;
-
-import net.minecraft.client.Minecraft;
 
 public class ActionTimingTileEnts implements ActionListener {
 

@@ -3,10 +3,6 @@ package mcp.mobius.opis.data.holders.newtypes;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import mcp.mobius.mobiuscore.profiler.ProfilerSection;
-import mcp.mobius.opis.data.holders.ISerializable;
-import mcp.mobius.opis.data.profilers.ProfilerDimTick;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityMob;
@@ -18,6 +14,10 @@ import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
+
+import mcp.mobius.mobiuscore.profiler.ProfilerSection;
+import mcp.mobius.opis.data.holders.ISerializable;
+import mcp.mobius.opis.data.profilers.ProfilerDimTick;
 
 /* Data holder for infos about dimensions */
 

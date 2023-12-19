@@ -1,11 +1,11 @@
 package mcp.mobius.opis.gui.widgets;
 
+import org.lwjgl.util.Point;
+
 import mcp.mobius.opis.gui.font.FontHelper;
 import mcp.mobius.opis.gui.font.TrueTypeFont;
 import mcp.mobius.opis.gui.interfaces.CType;
 import mcp.mobius.opis.gui.interfaces.IWidget;
-
-import org.lwjgl.util.Point;
 
 public class LabelTTF extends WidgetBase {
 

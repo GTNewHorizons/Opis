@@ -2,8 +2,6 @@ package mcp.mobius.opis.helpers;
 
 import java.util.Iterator;
 
-import mcp.mobius.opis.data.holders.basetypes.CoordinatesBlock;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -20,6 +18,7 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
 
 import cpw.mods.fml.common.FMLCommonHandler;
+import mcp.mobius.opis.data.holders.basetypes.CoordinatesBlock;
 
 public class Teleport {
 

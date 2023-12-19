@@ -1,7 +1,12 @@
 package mcp.mobius.opis.swing.panels.timingserver;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
+
+import net.miginfocom.swing.MigLayout;
 
 import mcp.mobius.opis.api.ITabPanel;
 import mcp.mobius.opis.data.holders.newtypes.DataEntity;
@@ -15,8 +20,6 @@ import mcp.mobius.opis.swing.actions.ActionTimingEntities;
 import mcp.mobius.opis.swing.widgets.JButtonAccess;
 import mcp.mobius.opis.swing.widgets.JPanelMsgHandler;
 import mcp.mobius.opis.swing.widgets.JTableStats;
-
-import net.miginfocom.swing.MigLayout;
 
 public class PanelTimingEntities extends JPanelMsgHandler implements ITabPanel {
 

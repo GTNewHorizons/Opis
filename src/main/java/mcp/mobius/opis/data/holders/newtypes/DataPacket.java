@@ -1,11 +1,11 @@
 package mcp.mobius.opis.data.holders.newtypes;
 
-import mcp.mobius.opis.data.holders.ISerializable;
-
 import net.minecraft.network.Packet;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
+
+import mcp.mobius.opis.data.holders.ISerializable;
 
 public class DataPacket implements ISerializable {
 

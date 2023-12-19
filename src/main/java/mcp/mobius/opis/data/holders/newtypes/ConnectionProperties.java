@@ -2,11 +2,11 @@ package mcp.mobius.opis.data.holders.newtypes;
 
 import java.util.Properties;
 
-import mcp.mobius.opis.data.holders.ISerializable;
-import mcp.mobius.opis.data.holders.basetypes.SerialString;
-
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
+
+import mcp.mobius.opis.data.holders.ISerializable;
+import mcp.mobius.opis.data.holders.basetypes.SerialString;
 
 public class ConnectionProperties implements ISerializable {
 

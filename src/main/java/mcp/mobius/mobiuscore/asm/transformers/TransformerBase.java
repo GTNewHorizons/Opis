@@ -9,10 +9,6 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import mcp.mobius.mobiuscore.asm.CoreDescription;
-import mcp.mobius.mobiuscore.asm.MethodDescriptor;
-import mcp.mobius.mobiuscore.asm.Opcode;
-
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
@@ -27,6 +23,10 @@ import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TypeInsnNode;
 import org.objectweb.asm.tree.VarInsnNode;
+
+import mcp.mobius.mobiuscore.asm.CoreDescription;
+import mcp.mobius.mobiuscore.asm.MethodDescriptor;
+import mcp.mobius.mobiuscore.asm.Opcode;
 
 public abstract class TransformerBase {
 

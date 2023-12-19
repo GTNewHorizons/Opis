@@ -2,15 +2,15 @@ package mcp.mobius.opis.data.holders.clienttypes;
 
 import java.util.WeakHashMap;
 
+import net.minecraft.entity.Entity;
+
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+
 import mcp.mobius.mobiuscore.profiler.ProfilerSection;
 import mcp.mobius.opis.data.holders.basetypes.CoordinatesBlock;
 import mcp.mobius.opis.data.holders.newtypes.DataTiming;
 import mcp.mobius.opis.data.managers.EntityManager;
 import mcp.mobius.opis.data.profilers.ProfilerRenderEntity;
-
-import net.minecraft.entity.Entity;
-
-import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
 public class DataEntityRender implements Comparable<DataEntityRender> {
 

@@ -1,9 +1,9 @@
 package mcp.mobius.opis.gui.interfaces;
 
+import org.lwjgl.util.Point;
+
 import mcp.mobius.opis.gui.events.MouseEvent;
 import mcp.mobius.opis.gui.widgets.WidgetGeometry;
-
-import org.lwjgl.util.Point;
 
 public interface IWidget {
     // Should all the coordinates, sizes, etc be % or absolute values ?

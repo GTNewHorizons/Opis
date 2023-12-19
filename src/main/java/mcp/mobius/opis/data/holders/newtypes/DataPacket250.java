@@ -1,10 +1,10 @@
 package mcp.mobius.opis.data.holders.newtypes;
 
-import mcp.mobius.opis.data.holders.ISerializable;
-
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
+
 import cpw.mods.fml.common.network.internal.FMLProxyPacket;
+import mcp.mobius.opis.data.holders.ISerializable;
 
 public class DataPacket250 implements ISerializable {
 

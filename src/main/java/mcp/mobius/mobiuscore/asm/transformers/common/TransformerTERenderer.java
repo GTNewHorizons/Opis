@@ -1,9 +1,5 @@
 package mcp.mobius.mobiuscore.asm.transformers.common;
 
-import mcp.mobius.mobiuscore.asm.ObfTable;
-import mcp.mobius.mobiuscore.asm.transformers.TransformerBase;
-import mcp.mobius.mobiuscore.profiler.ProfilerSection;
-
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
@@ -13,6 +9,10 @@ import org.objectweb.asm.tree.FieldInsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
+
+import mcp.mobius.mobiuscore.asm.ObfTable;
+import mcp.mobius.mobiuscore.asm.transformers.TransformerBase;
+import mcp.mobius.mobiuscore.profiler.ProfilerSection;
 
 public class TransformerTERenderer extends TransformerBase {
 

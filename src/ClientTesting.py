@@ -1,4 +1,7 @@
-import asyncore, socket, binascii
+import asyncore
+import binascii
+import socket
+
 
 class ClientTest(asyncore.dispatcher):
 

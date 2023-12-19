@@ -1,11 +1,11 @@
 package mcp.mobius.opis.gui.widgets;
 
-import mcp.mobius.opis.gui.interfaces.IWidget;
-
 import net.minecraft.client.gui.ScaledResolution;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.Point;
+
+import mcp.mobius.opis.gui.interfaces.IWidget;
 
 public class LayoutCropping extends LayoutBase {
 

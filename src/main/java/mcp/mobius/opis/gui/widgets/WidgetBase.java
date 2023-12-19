@@ -2,19 +2,19 @@ package mcp.mobius.opis.gui.widgets;
 
 import java.util.LinkedHashMap;
 
-import mcp.mobius.opis.gui.events.MouseEvent;
-import mcp.mobius.opis.gui.helpers.ReverseIterator;
-import mcp.mobius.opis.gui.interfaces.CType;
-import mcp.mobius.opis.gui.interfaces.IWidget;
-import mcp.mobius.opis.gui.interfaces.RenderPriority;
-import mcp.mobius.opis.gui.interfaces.Signal;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.texture.TextureManager;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.Point;
+
+import mcp.mobius.opis.gui.events.MouseEvent;
+import mcp.mobius.opis.gui.helpers.ReverseIterator;
+import mcp.mobius.opis.gui.interfaces.CType;
+import mcp.mobius.opis.gui.interfaces.IWidget;
+import mcp.mobius.opis.gui.interfaces.RenderPriority;
+import mcp.mobius.opis.gui.interfaces.Signal;
 
 public abstract class WidgetBase implements IWidget {
 

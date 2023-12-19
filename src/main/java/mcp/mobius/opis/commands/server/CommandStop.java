@@ -1,10 +1,5 @@
 package mcp.mobius.opis.commands.server;
 
-import mcp.mobius.mobiuscore.profiler.ProfilerSection;
-import mcp.mobius.opis.commands.IOpisCommand;
-import mcp.mobius.opis.events.PlayerTracker;
-import mcp.mobius.opis.modOpis;
-
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -12,6 +7,10 @@ import net.minecraft.server.dedicated.DedicatedServer;
 import net.minecraft.util.ChatComponentText;
 
 import cpw.mods.fml.relauncher.Side;
+import mcp.mobius.mobiuscore.profiler.ProfilerSection;
+import mcp.mobius.opis.commands.IOpisCommand;
+import mcp.mobius.opis.events.PlayerTracker;
+import mcp.mobius.opis.modOpis;
 
 public class CommandStop extends CommandBase implements IOpisCommand {
 

@@ -1,9 +1,9 @@
 package mcp.mobius.opis.data.holders.stats;
 
-import mcp.mobius.opis.data.holders.basetypes.CoordinatesChunk;
-
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
+
+import mcp.mobius.opis.data.holders.basetypes.CoordinatesChunk;
 
 public class StatsChunk extends StatAbstract {
 

@@ -2,18 +2,18 @@ package mcp.mobius.opis.data.holders.newtypes;
 
 import java.util.WeakHashMap;
 
-import mcp.mobius.mobiuscore.profiler.ProfilerSection;
-import mcp.mobius.opis.data.holders.ISerializable;
-import mcp.mobius.opis.data.holders.basetypes.CoordinatesBlock;
-import mcp.mobius.opis.data.managers.EntityManager;
-import mcp.mobius.opis.data.profilers.ProfilerEntityUpdate;
-
 import net.minecraft.entity.Entity;
 
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
+
+import mcp.mobius.mobiuscore.profiler.ProfilerSection;
+import mcp.mobius.opis.data.holders.ISerializable;
+import mcp.mobius.opis.data.holders.basetypes.CoordinatesBlock;
+import mcp.mobius.opis.data.managers.EntityManager;
+import mcp.mobius.opis.data.profilers.ProfilerEntityUpdate;
 
 public class DataEntity implements ISerializable, Comparable<DataEntity> {
 

@@ -1,20 +1,30 @@
 package mcp.mobius.opis.network.rcon.nexus;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 import java.net.ConnectException;
 import java.util.Properties;
 
 import javax.net.ssl.SSLException;
 
-import mcp.mobius.opis.modOpis;
 import io.nettyopis.bootstrap.Bootstrap;
-import io.nettyopis.channel.*;
+import io.nettyopis.channel.ChannelFuture;
+import io.nettyopis.channel.ChannelHandlerContext;
+import io.nettyopis.channel.ChannelInitializer;
+import io.nettyopis.channel.ChannelOption;
+import io.nettyopis.channel.EventLoopGroup;
 import io.nettyopis.channel.nio.NioEventLoopGroup;
 import io.nettyopis.channel.socket.SocketChannel;
 import io.nettyopis.channel.socket.nio.NioSocketChannel;
 import io.nettyopis.handler.ssl.SslContext;
 import io.nettyopis.handler.ssl.util.InsecureTrustManagerFactory;
+import mcp.mobius.opis.modOpis;
 
 public class NexusClient implements Runnable {
 

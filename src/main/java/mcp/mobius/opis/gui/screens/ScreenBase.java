@@ -2,13 +2,13 @@ package mcp.mobius.opis.gui.screens;
 
 import java.util.HashMap;
 
-import mcp.mobius.opis.gui.interfaces.IWidget;
-import mcp.mobius.opis.gui.widgets.LayoutCanvas;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 
 import org.lwjgl.input.Mouse;
+
+import mcp.mobius.opis.gui.interfaces.IWidget;
+import mcp.mobius.opis.gui.widgets.LayoutCanvas;
 
 public abstract class ScreenBase extends GuiScreen {
 

@@ -1,13 +1,13 @@
 package mcp.mobius.opis.data.holders.basetypes;
 
-import mcp.mobius.opis.data.holders.ISerializable;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
+
+import mcp.mobius.opis.data.holders.ISerializable;
 
 public final class CoordinatesBlock implements ISerializable {
 

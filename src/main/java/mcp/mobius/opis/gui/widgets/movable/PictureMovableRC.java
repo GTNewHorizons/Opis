@@ -1,15 +1,15 @@
 package mcp.mobius.opis.gui.widgets.movable;
 
+import net.minecraft.util.ResourceLocation;
+
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.Point;
+
 import mcp.mobius.opis.gui.events.MouseEvent;
 import mcp.mobius.opis.gui.helpers.UIHelper;
 import mcp.mobius.opis.gui.interfaces.IWidget;
 import mcp.mobius.opis.gui.interfaces.Signal;
 import mcp.mobius.opis.gui.widgets.WidgetBase;
-
-import net.minecraft.util.ResourceLocation;
-
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.Point;
 
 // A movable picture setup especially for centered relative positions.
 

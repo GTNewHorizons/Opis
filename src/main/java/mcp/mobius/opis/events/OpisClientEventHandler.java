@@ -1,7 +1,5 @@
 package mcp.mobius.opis.events;
 
-import mcp.mobius.opis.modOpis;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.EntityLivingBase;
@@ -12,6 +10,7 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import mcp.mobius.opis.modOpis;
 
 public class OpisClientEventHandler {
 

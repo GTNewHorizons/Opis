@@ -1,16 +1,17 @@
 package mcp.mobius.mobiuscore.asm.transformers.common;
 
-import static org.objectweb.asm.Opcodes.*;
-
-import mcp.mobius.mobiuscore.asm.Opcode;
-import mcp.mobius.mobiuscore.asm.transformers.TransformerBase;
-import mcp.mobius.mobiuscore.profiler.ProfilerSection;
+import static org.objectweb.asm.Opcodes.ACC_FINAL;
+import static org.objectweb.asm.Opcodes.ACC_PRIVATE;
 
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
+
+import mcp.mobius.mobiuscore.asm.Opcode;
+import mcp.mobius.mobiuscore.asm.transformers.TransformerBase;
+import mcp.mobius.mobiuscore.profiler.ProfilerSection;
 
 public class TransformerASMEventHandler extends TransformerBase {
 

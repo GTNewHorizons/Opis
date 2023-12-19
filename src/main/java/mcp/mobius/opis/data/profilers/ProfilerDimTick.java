@@ -2,12 +2,12 @@ package mcp.mobius.opis.data.profilers;
 
 import java.util.HashMap;
 
-import mcp.mobius.mobiuscore.profiler.IProfilerBase;
-import mcp.mobius.opis.data.profilers.Clock.IClock;
-
 import net.minecraft.world.World;
 
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+
+import mcp.mobius.mobiuscore.profiler.IProfilerBase;
+import mcp.mobius.opis.data.profilers.Clock.IClock;
 
 public class ProfilerDimTick extends ProfilerAbstract implements IProfilerBase {
 

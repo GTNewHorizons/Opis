@@ -1,8 +1,8 @@
 package mcp.mobius.opis.tools;
 
-import mcp.mobius.opis.modOpis;
-
 import net.minecraft.tileentity.TileEntity;
+
+import mcp.mobius.opis.modOpis;
 
 public class TileDebug extends TileEntity {
 

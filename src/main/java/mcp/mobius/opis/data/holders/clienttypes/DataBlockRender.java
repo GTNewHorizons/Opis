@@ -2,17 +2,17 @@ package mcp.mobius.opis.data.holders.clienttypes;
 
 import java.util.HashMap;
 
-import mcp.mobius.mobiuscore.profiler.ProfilerSection;
-import mcp.mobius.opis.data.holders.basetypes.CoordinatesBlock;
-import mcp.mobius.opis.data.holders.newtypes.DataBlockTileEntity;
-import mcp.mobius.opis.data.holders.newtypes.DataTiming;
-import mcp.mobius.opis.data.profilers.ProfilerRenderBlock;
-
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.World;
 
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+
+import mcp.mobius.mobiuscore.profiler.ProfilerSection;
+import mcp.mobius.opis.data.holders.basetypes.CoordinatesBlock;
+import mcp.mobius.opis.data.holders.newtypes.DataBlockTileEntity;
+import mcp.mobius.opis.data.holders.newtypes.DataTiming;
+import mcp.mobius.opis.data.profilers.ProfilerRenderBlock;
 
 public class DataBlockRender extends DataBlockTileEntity {
 

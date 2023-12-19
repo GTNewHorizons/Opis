@@ -3,15 +3,15 @@ package mcp.mobius.opis.commands.server;
 import java.util.HashMap;
 import java.util.Set;
 
-import mcp.mobius.opis.commands.IOpisCommand;
-import mcp.mobius.opis.modOpis;
-
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraftforge.common.DimensionManager;
 
 import org.apache.logging.log4j.Level;
+
+import mcp.mobius.opis.commands.IOpisCommand;
+import mcp.mobius.opis.modOpis;
 
 public class CommandChunkDump extends CommandBase implements IOpisCommand {
 
