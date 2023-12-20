@@ -1,7 +1,12 @@
 package mcp.mobius.opis.swing.panels.debug;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JScrollPane;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
+
+import net.miginfocom.swing.MigLayout;
 
 import mcp.mobius.opis.api.ITabPanel;
 import mcp.mobius.opis.data.holders.newtypes.CachedString;
@@ -14,8 +19,6 @@ import mcp.mobius.opis.swing.actions.ActionOrphanTileEntities;
 import mcp.mobius.opis.swing.widgets.JButtonAccess;
 import mcp.mobius.opis.swing.widgets.JPanelMsgHandler;
 import mcp.mobius.opis.swing.widgets.JTableStats;
-
-import net.miginfocom.swing.MigLayout;
 
 public class PanelOrphanTileEntities extends JPanelMsgHandler implements ITabPanel {
 

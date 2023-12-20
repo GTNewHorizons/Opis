@@ -2,16 +2,16 @@ package mcp.mobius.opis.data.holders.newtypes;
 
 import java.util.WeakHashMap;
 
-import mcp.mobius.mobiuscore.profiler.ProfilerSection;
-import mcp.mobius.opis.data.holders.basetypes.CoordinatesBlock;
-import mcp.mobius.opis.data.profilers.ProfilerRenderTileEntity;
-
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+
+import mcp.mobius.mobiuscore.profiler.ProfilerSection;
+import mcp.mobius.opis.data.holders.basetypes.CoordinatesBlock;
+import mcp.mobius.opis.data.profilers.ProfilerRenderTileEntity;
 
 public class DataTileEntityRender extends DataBlockTileEntity {
 

@@ -1,11 +1,5 @@
 package mcp.mobius.mobiuscore.asm.transformers.mcpc;
 
-import mcp.mobius.mobiuscore.asm.CoreDescription;
-import mcp.mobius.mobiuscore.asm.ObfTable;
-import mcp.mobius.mobiuscore.asm.Opcode;
-import mcp.mobius.mobiuscore.asm.transformers.TransformerBase;
-import mcp.mobius.mobiuscore.profiler.ProfilerSection;
-
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.tree.AbstractInsnNode;
@@ -13,6 +7,12 @@ import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.LineNumberNode;
 import org.objectweb.asm.tree.MethodNode;
+
+import mcp.mobius.mobiuscore.asm.CoreDescription;
+import mcp.mobius.mobiuscore.asm.ObfTable;
+import mcp.mobius.mobiuscore.asm.Opcode;
+import mcp.mobius.mobiuscore.asm.transformers.TransformerBase;
+import mcp.mobius.mobiuscore.profiler.ProfilerSection;
 
 public class TransformerWorldCauldron extends TransformerBase {
 

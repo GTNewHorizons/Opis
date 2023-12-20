@@ -2,8 +2,14 @@ package mcp.mobius.opis.swing.panels.timingclient;
 
 import java.util.ArrayList;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+
+import net.miginfocom.swing.MigLayout;
 
 import mcp.mobius.opis.api.IMessageHandler;
 import mcp.mobius.opis.api.ITabPanel;
@@ -15,8 +21,6 @@ import mcp.mobius.opis.network.enums.Message;
 import mcp.mobius.opis.swing.SelectedTab;
 import mcp.mobius.opis.swing.actions.ActionRunOpisClient;
 import mcp.mobius.opis.swing.widgets.JTableStats;
-
-import net.miginfocom.swing.MigLayout;
 
 public class PanelRenderEntities extends JPanel implements ITabPanel, IMessageHandler {
 

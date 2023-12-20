@@ -2,12 +2,12 @@ package mcp.mobius.opis.data.profilers;
 
 import java.util.HashMap;
 
-import mcp.mobius.opis.data.holders.basetypes.CoordinatesBlock;
-import mcp.mobius.opis.data.profilers.Clock.IClock;
-
 import net.minecraft.client.Minecraft;
 
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+
+import mcp.mobius.opis.data.holders.basetypes.CoordinatesBlock;
+import mcp.mobius.opis.data.profilers.Clock.IClock;
 
 public class ProfilerRenderBlock extends ProfilerAbstract {
 

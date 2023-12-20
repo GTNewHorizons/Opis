@@ -6,6 +6,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
+import net.minecraftforge.common.DimensionManager;
+
 import mcp.mobius.mobiuscore.monitors.MonitoredEntityList;
 import mcp.mobius.mobiuscore.profiler.ProfilerSection;
 import mcp.mobius.opis.data.holders.basetypes.AmountHolder;
@@ -20,15 +29,6 @@ import mcp.mobius.opis.helpers.Teleport;
 import mcp.mobius.opis.modOpis;
 import mcp.mobius.opis.network.PacketManager;
 import mcp.mobius.opis.network.enums.PlayerEv;
-
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
-import net.minecraftforge.common.DimensionManager;
 
 public enum EntityManager {
 

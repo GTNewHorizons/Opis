@@ -1,7 +1,11 @@
 package mcp.mobius.opis.swing.panels.tracking;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
+
+import net.miginfocom.swing.MigLayout;
 
 import mcp.mobius.opis.api.ITabPanel;
 import mcp.mobius.opis.data.holders.newtypes.DataEntity;
@@ -14,8 +18,6 @@ import mcp.mobius.opis.swing.actions.ActionPlayers;
 import mcp.mobius.opis.swing.widgets.JButtonAccess;
 import mcp.mobius.opis.swing.widgets.JPanelMsgHandler;
 import mcp.mobius.opis.swing.widgets.JTableStats;
-
-import net.miginfocom.swing.MigLayout;
 
 public class PanelPlayers extends JPanelMsgHandler implements ITabPanel {
 

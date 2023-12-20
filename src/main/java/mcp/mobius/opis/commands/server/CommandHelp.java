@@ -1,10 +1,10 @@
 package mcp.mobius.opis.commands.server;
 
-import mcp.mobius.opis.commands.IOpisCommand;
-
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ChatComponentText;
+
+import mcp.mobius.opis.commands.IOpisCommand;
 
 public class CommandHelp extends CommandBase implements IOpisCommand {
 

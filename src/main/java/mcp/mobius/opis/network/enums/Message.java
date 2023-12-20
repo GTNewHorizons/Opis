@@ -4,10 +4,10 @@ import static mcp.mobius.opis.network.enums.AccessLevel.PRIVILEGED;
 
 import java.util.EnumSet;
 
+import net.minecraft.entity.player.EntityPlayerMP;
+
 import mcp.mobius.opis.events.PlayerTracker;
 import mcp.mobius.opis.swing.SelectedTab;
-
-import net.minecraft.entity.player.EntityPlayerMP;
 
 public enum Message {
 

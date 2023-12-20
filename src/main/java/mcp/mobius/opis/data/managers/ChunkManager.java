@@ -5,6 +5,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import net.minecraft.entity.Entity;
+import net.minecraft.world.ChunkCoordIntPair;
+import net.minecraft.world.WorldServer;
+import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.gen.ChunkProviderServer;
+import net.minecraftforge.common.DimensionManager;
+
 import mcp.mobius.mobiuscore.profiler.ProfilerSection;
 import mcp.mobius.opis.api.IMessageHandler;
 import mcp.mobius.opis.data.holders.ISerializable;
@@ -17,13 +24,6 @@ import mcp.mobius.opis.data.profilers.ProfilerEntityUpdate;
 import mcp.mobius.opis.data.profilers.ProfilerTileEntityUpdate;
 import mcp.mobius.opis.network.PacketBase;
 import mcp.mobius.opis.network.enums.Message;
-
-import net.minecraft.entity.Entity;
-import net.minecraft.world.ChunkCoordIntPair;
-import net.minecraft.world.WorldServer;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.gen.ChunkProviderServer;
-import net.minecraftforge.common.DimensionManager;
 
 public enum ChunkManager implements IMessageHandler {
 

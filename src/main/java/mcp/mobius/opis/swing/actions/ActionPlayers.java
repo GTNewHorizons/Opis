@@ -3,6 +3,8 @@ package mcp.mobius.opis.swing.actions;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import net.minecraft.client.Minecraft;
+
 import mcp.mobius.opis.api.TabPanelRegistrar;
 import mcp.mobius.opis.data.holders.basetypes.TargetEntity;
 import mcp.mobius.opis.data.holders.newtypes.DataEntity;
@@ -12,8 +14,6 @@ import mcp.mobius.opis.network.packets.client.PacketReqData;
 import mcp.mobius.opis.swing.SelectedTab;
 import mcp.mobius.opis.swing.panels.tracking.PanelPlayers;
 import mcp.mobius.opis.swing.widgets.JTableStats;
-
-import net.minecraft.client.Minecraft;
 
 public class ActionPlayers implements ActionListener {
 

@@ -1,13 +1,13 @@
 package mcp.mobius.opis.gui.widgets;
 
-import mcp.mobius.opis.gui.events.MouseEvent;
-import mcp.mobius.opis.gui.helpers.UIHelper;
-import mcp.mobius.opis.gui.interfaces.IWidget;
-
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.Point;
+
+import mcp.mobius.opis.gui.events.MouseEvent;
+import mcp.mobius.opis.gui.helpers.UIHelper;
+import mcp.mobius.opis.gui.interfaces.IWidget;
 
 public class PictureSwitch extends WidgetBase {
 

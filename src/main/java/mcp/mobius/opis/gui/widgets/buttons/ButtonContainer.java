@@ -1,13 +1,13 @@
 package mcp.mobius.opis.gui.widgets.buttons;
 
+import org.lwjgl.util.Point;
+
 import mcp.mobius.opis.gui.interfaces.CType;
 import mcp.mobius.opis.gui.interfaces.IWidget;
 import mcp.mobius.opis.gui.interfaces.WAlign;
 import mcp.mobius.opis.gui.widgets.LayoutBase;
 import mcp.mobius.opis.gui.widgets.WidgetBase;
 import mcp.mobius.opis.gui.widgets.WidgetGeometry;
-
-import org.lwjgl.util.Point;
 
 public class ButtonContainer extends WidgetBase {
 

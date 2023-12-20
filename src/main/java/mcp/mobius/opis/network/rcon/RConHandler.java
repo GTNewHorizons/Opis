@@ -4,17 +4,6 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.net.ConnectException;
 
-import mcp.mobius.opis.events.PlayerTracker;
-import mcp.mobius.opis.modOpis;
-import mcp.mobius.opis.network.PacketBase;
-import mcp.mobius.opis.network.packets.client.PacketReqChunks;
-import mcp.mobius.opis.network.packets.client.PacketReqData;
-import mcp.mobius.opis.network.packets.server.NetDataCommand;
-import mcp.mobius.opis.network.packets.server.NetDataList;
-import mcp.mobius.opis.network.packets.server.NetDataValue;
-import mcp.mobius.opis.network.rcon.nexus.NexusClient;
-import mcp.mobius.opis.network.rcon.nexus.NexusInboundHandler;
-
 import net.minecraftforge.common.util.FakePlayer;
 
 import com.google.common.collect.BiMap;
@@ -26,6 +15,16 @@ import io.nettyopis.buffer.ByteBuf;
 import io.nettyopis.channel.ChannelFuture;
 import io.nettyopis.channel.ChannelFutureListener;
 import io.nettyopis.channel.ChannelHandlerContext;
+import mcp.mobius.opis.events.PlayerTracker;
+import mcp.mobius.opis.modOpis;
+import mcp.mobius.opis.network.PacketBase;
+import mcp.mobius.opis.network.packets.client.PacketReqChunks;
+import mcp.mobius.opis.network.packets.client.PacketReqData;
+import mcp.mobius.opis.network.packets.server.NetDataCommand;
+import mcp.mobius.opis.network.packets.server.NetDataList;
+import mcp.mobius.opis.network.packets.server.NetDataValue;
+import mcp.mobius.opis.network.rcon.nexus.NexusClient;
+import mcp.mobius.opis.network.rcon.nexus.NexusInboundHandler;
 
 public class RConHandler {
 

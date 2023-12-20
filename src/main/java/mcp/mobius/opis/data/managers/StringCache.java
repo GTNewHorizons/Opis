@@ -3,6 +3,12 @@ package mcp.mobius.opis.data.managers;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import net.minecraft.entity.player.EntityPlayerMP;
+
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
+import com.google.common.collect.Maps;
+
 import mcp.mobius.opis.api.IMessageHandler;
 import mcp.mobius.opis.api.TabPanelRegistrar;
 import mcp.mobius.opis.data.holders.ISerializable;
@@ -12,12 +18,6 @@ import mcp.mobius.opis.network.PacketManager;
 import mcp.mobius.opis.network.enums.Message;
 import mcp.mobius.opis.network.packets.server.NetDataList;
 import mcp.mobius.opis.network.packets.server.NetDataValue;
-
-import net.minecraft.entity.player.EntityPlayerMP;
-
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
-import com.google.common.collect.Maps;
 
 public enum StringCache implements IMessageHandler {
 

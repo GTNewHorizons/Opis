@@ -1,5 +1,11 @@
 package mcp.mobius.opis.commands.server;
 
+import net.minecraft.command.CommandBase;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.ChatComponentText;
+
+import cpw.mods.fml.relauncher.Side;
 import mcp.mobius.mobiuscore.profiler.ProfilerSection;
 import mcp.mobius.opis.commands.IOpisCommand;
 import mcp.mobius.opis.data.holders.basetypes.SerialInt;
@@ -8,13 +14,6 @@ import mcp.mobius.opis.modOpis;
 import mcp.mobius.opis.network.PacketManager;
 import mcp.mobius.opis.network.enums.Message;
 import mcp.mobius.opis.network.packets.server.NetDataValue;
-
-import net.minecraft.command.CommandBase;
-import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.ChatComponentText;
-
-import cpw.mods.fml.relauncher.Side;
 
 public class CommandStart extends CommandBase implements IOpisCommand {
 

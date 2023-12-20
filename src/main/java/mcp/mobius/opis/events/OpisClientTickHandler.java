@@ -4,6 +4,19 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import net.minecraft.entity.Entity;
+import net.minecraft.tileentity.TileEntity;
+
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Table.Cell;
+
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import mcp.mobius.mobiuscore.profiler.ProfilerSection;
 import mcp.mobius.opis.api.TabPanelRegistrar;
 import mcp.mobius.opis.data.holders.basetypes.CoordinatesBlock;
@@ -25,20 +38,6 @@ import mcp.mobius.opis.swing.panels.timingclient.PanelEventClient;
 import mcp.mobius.opis.swing.panels.timingclient.PanelRenderEntities;
 import mcp.mobius.opis.swing.panels.timingclient.PanelRenderHandlers;
 import mcp.mobius.opis.swing.panels.timingclient.PanelRenderTileEnts;
-
-import net.minecraft.entity.Entity;
-import net.minecraft.tileentity.TileEntity;
-
-import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
-
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.Table.Cell;
-
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public enum OpisClientTickHandler {
 

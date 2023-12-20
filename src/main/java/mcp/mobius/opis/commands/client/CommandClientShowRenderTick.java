@@ -1,12 +1,12 @@
 package mcp.mobius.opis.commands.client;
 
-import mcp.mobius.opis.network.PacketManager;
-import mcp.mobius.opis.network.enums.Message;
-import mcp.mobius.opis.network.packets.server.NetDataCommand;
-
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
+
+import mcp.mobius.opis.network.PacketManager;
+import mcp.mobius.opis.network.enums.Message;
+import mcp.mobius.opis.network.packets.server.NetDataCommand;
 
 public class CommandClientShowRenderTick extends CommandBase {
 

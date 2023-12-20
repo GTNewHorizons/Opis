@@ -4,7 +4,6 @@ import java.security.cert.CertificateException;
 
 import javax.net.ssl.SSLException;
 
-import mcp.mobius.opis.modOpis;
 import io.nettyopis.bootstrap.ServerBootstrap;
 import io.nettyopis.channel.ChannelFuture;
 import io.nettyopis.channel.ChannelInitializer;
@@ -16,6 +15,7 @@ import io.nettyopis.channel.socket.nio.NioServerSocketChannel;
 import io.nettyopis.handler.ssl.SslContext;
 import io.nettyopis.handler.ssl.util.SelfSignedCertificate;
 import io.nettyopis.handler.timeout.ReadTimeoutHandler;
+import mcp.mobius.opis.modOpis;
 
 public class RConServer implements Runnable {
 

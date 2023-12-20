@@ -1,12 +1,12 @@
 package mcp.mobius.opis.gui.widgets;
 
-import mcp.mobius.opis.gui.interfaces.CType;
-import mcp.mobius.opis.gui.interfaces.IWidget;
-import mcp.mobius.opis.gui.interfaces.WAlign;
-
 import net.minecraft.util.MathHelper;
 
 import org.lwjgl.util.Point;
+
+import mcp.mobius.opis.gui.interfaces.CType;
+import mcp.mobius.opis.gui.interfaces.IWidget;
+import mcp.mobius.opis.gui.interfaces.WAlign;
 
 // public class WidgetGeometry implements Cloneable{
 public class WidgetGeometry {

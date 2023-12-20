@@ -1,10 +1,10 @@
 package mcp.mobius.opis.gui.events;
 
-import mcp.mobius.opis.gui.interfaces.IWidget;
-
 import net.minecraft.client.Minecraft;
 
 import org.lwjgl.input.Mouse;
+
+import mcp.mobius.opis.gui.interfaces.IWidget;
 
 public class MouseEvent {
 

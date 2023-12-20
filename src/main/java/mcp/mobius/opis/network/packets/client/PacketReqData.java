@@ -1,16 +1,16 @@
 package mcp.mobius.opis.network.packets.client;
 
-import mcp.mobius.opis.data.holders.DataType;
-import mcp.mobius.opis.data.holders.ISerializable;
-import mcp.mobius.opis.network.PacketBase;
-import mcp.mobius.opis.network.ServerMessageHandler;
-import mcp.mobius.opis.network.enums.Message;
-
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
+
+import mcp.mobius.opis.data.holders.DataType;
+import mcp.mobius.opis.data.holders.ISerializable;
+import mcp.mobius.opis.network.PacketBase;
+import mcp.mobius.opis.network.ServerMessageHandler;
+import mcp.mobius.opis.network.enums.Message;
 
 public class PacketReqData extends PacketBase {
 

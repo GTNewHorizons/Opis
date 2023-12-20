@@ -1,10 +1,10 @@
 package mcp.mobius.opis.data.holders.clienttypes;
 
-import mcp.mobius.opis.data.holders.newtypes.DataTiming;
-
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
 import com.google.common.collect.Table.Cell;
+
+import mcp.mobius.opis.data.holders.newtypes.DataTiming;
 
 public class DataRenderEvent implements Comparable {
 

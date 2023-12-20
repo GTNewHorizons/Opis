@@ -1,12 +1,12 @@
 package mcp.mobius.opis.data.holders.newtypes;
 
+import com.google.common.io.ByteArrayDataInput;
+import com.google.common.io.ByteArrayDataOutput;
+
+import cpw.mods.fml.relauncher.Side;
 import mcp.mobius.opis.data.holders.ISerializable;
 import mcp.mobius.opis.data.managers.StringCache;
 import mcp.mobius.opis.helpers.Helpers;
-
-import com.google.common.io.ByteArrayDataInput;
-import com.google.common.io.ByteArrayDataOutput;
-import cpw.mods.fml.relauncher.Side;
 
 public class CachedString implements Comparable, ISerializable {
 

@@ -1,12 +1,12 @@
 package mcp.mobius.opis.data.holders.newtypes;
 
-import mcp.mobius.opis.data.holders.ISerializable;
-
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
 import com.google.common.collect.Table.Cell;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
+
+import mcp.mobius.opis.data.holders.ISerializable;
 
 public class DataEvent implements ISerializable, Comparable {
 

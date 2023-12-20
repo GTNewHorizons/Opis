@@ -6,10 +6,19 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.HashSet;
 
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.ToolTipManager;
+import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiChat;
 
 import mcp.mobius.opis.api.IMessageHandler;
 import mcp.mobius.opis.api.ITabPanel;
@@ -22,9 +31,6 @@ import mcp.mobius.opis.network.enums.AccessLevel;
 import mcp.mobius.opis.network.enums.Message;
 import mcp.mobius.opis.network.packets.client.PacketReqData;
 import mcp.mobius.opis.swing.widgets.JButtonAccess;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiChat;
 
 public class SwingUI extends JFrame implements WindowListener, ChangeListener, IMessageHandler {
 

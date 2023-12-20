@@ -1,9 +1,5 @@
 package mcp.mobius.opis.commands.server;
 
-import mcp.mobius.opis.commands.IOpisCommand;
-import mcp.mobius.opis.data.managers.EntityManager;
-import mcp.mobius.opis.events.PlayerTracker;
-
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -11,6 +7,10 @@ import net.minecraft.server.dedicated.DedicatedServer;
 import net.minecraft.util.ChatComponentText;
 
 import org.apache.commons.lang3.StringUtils;
+
+import mcp.mobius.opis.commands.IOpisCommand;
+import mcp.mobius.opis.data.managers.EntityManager;
+import mcp.mobius.opis.events.PlayerTracker;
 
 public class CommandKillAll extends CommandBase implements IOpisCommand {
 

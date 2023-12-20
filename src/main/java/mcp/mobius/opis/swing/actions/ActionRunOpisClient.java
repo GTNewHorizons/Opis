@@ -3,9 +3,9 @@ package mcp.mobius.opis.swing.actions;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import cpw.mods.fml.relauncher.Side;
 import mcp.mobius.mobiuscore.profiler.ProfilerSection;
 import mcp.mobius.opis.modOpis;
-import cpw.mods.fml.relauncher.Side;
 
 public class ActionRunOpisClient implements ActionListener {
 

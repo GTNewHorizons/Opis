@@ -1,5 +1,7 @@
 package mcp.mobius.opis.gui.widgets.tableview;
 
+import org.lwjgl.util.Point;
+
 import mcp.mobius.opis.gui.helpers.UIException;
 import mcp.mobius.opis.gui.interfaces.CType;
 import mcp.mobius.opis.gui.interfaces.IWidget;
@@ -8,8 +10,6 @@ import mcp.mobius.opis.gui.widgets.LabelTTF;
 import mcp.mobius.opis.gui.widgets.WidgetBase;
 import mcp.mobius.opis.gui.widgets.WidgetGeometry;
 import mcp.mobius.opis.proxy.ProxyClient;
-
-import org.lwjgl.util.Point;
 
 class TableCell extends WidgetBase {
 

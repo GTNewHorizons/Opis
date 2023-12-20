@@ -1,13 +1,13 @@
 package mcp.mobius.opis.gui.widgets.buttons;
 
+import net.minecraft.client.gui.GuiScreen;
+
 import mcp.mobius.opis.gui.events.MouseEvent;
 import mcp.mobius.opis.gui.interfaces.CType;
 import mcp.mobius.opis.gui.interfaces.IWidget;
 import mcp.mobius.opis.gui.interfaces.WAlign;
 import mcp.mobius.opis.gui.widgets.LabelFixedFont;
 import mcp.mobius.opis.gui.widgets.WidgetGeometry;
-
-import net.minecraft.client.gui.GuiScreen;
 
 public class ButtonScreenChange extends ButtonBase {
 

@@ -1,5 +1,10 @@
 package mcp.mobius.opis.proxy;
 
+import net.minecraft.util.ResourceLocation;
+
+import org.apache.logging.log4j.Level;
+
+import cpw.mods.fml.relauncher.Side;
 import mcp.mobius.mobiuscore.profiler.ProfilerSection;
 import mcp.mobius.opis.api.IMessageHandler;
 import mcp.mobius.opis.api.MessageHandlerRegistrar;
@@ -26,17 +31,17 @@ import mcp.mobius.opis.swing.panels.timingclient.PanelEventClient;
 import mcp.mobius.opis.swing.panels.timingclient.PanelRenderEntities;
 import mcp.mobius.opis.swing.panels.timingclient.PanelRenderHandlers;
 import mcp.mobius.opis.swing.panels.timingclient.PanelRenderTileEnts;
-import mcp.mobius.opis.swing.panels.timingserver.*;
+import mcp.mobius.opis.swing.panels.timingserver.PanelTimingChunks;
+import mcp.mobius.opis.swing.panels.timingserver.PanelTimingEntities;
+import mcp.mobius.opis.swing.panels.timingserver.PanelTimingEntitiesPerClass;
+import mcp.mobius.opis.swing.panels.timingserver.PanelTimingEvents;
+import mcp.mobius.opis.swing.panels.timingserver.PanelTimingHandlers;
+import mcp.mobius.opis.swing.panels.timingserver.PanelTimingTileEnts;
+import mcp.mobius.opis.swing.panels.timingserver.PanelTimingTileEntsPerClass;
 import mcp.mobius.opis.swing.panels.tracking.PanelAmountEntities;
 import mcp.mobius.opis.swing.panels.tracking.PanelAmountTileEnts;
 import mcp.mobius.opis.swing.panels.tracking.PanelDimensions;
 import mcp.mobius.opis.swing.panels.tracking.PanelPlayers;
-
-import net.minecraft.util.ResourceLocation;
-
-import org.apache.logging.log4j.Level;
-
-import cpw.mods.fml.relauncher.Side;
 
 public class ProxyClient extends ProxyServer implements IMessageHandler {
 

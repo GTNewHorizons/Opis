@@ -1,9 +1,9 @@
 package mcp.mobius.opis.gui.widgets;
 
+import org.lwjgl.util.Point;
+
 import mcp.mobius.opis.gui.helpers.UIHelper;
 import mcp.mobius.opis.gui.interfaces.IWidget;
-
-import org.lwjgl.util.Point;
 
 public class LayoutBase extends WidgetBase {
 

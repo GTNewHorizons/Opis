@@ -3,6 +3,15 @@ package mcp.mobius.opis.network.rcon.nexus;
 import java.lang.ref.WeakReference;
 import java.util.UUID;
 
+import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.common.util.FakePlayerFactory;
+
+import com.mojang.authlib.GameProfile;
+
+import io.nettyopis.channel.ChannelHandlerContext;
+import io.nettyopis.channel.ChannelInboundHandlerAdapter;
+import io.nettyopis.util.ReferenceCountUtil;
 import mcp.mobius.opis.data.holders.basetypes.SerialInt;
 import mcp.mobius.opis.data.holders.basetypes.SerialLong;
 import mcp.mobius.opis.data.holders.newtypes.ConnectionProperties;
@@ -16,16 +25,6 @@ import mcp.mobius.opis.network.packets.client.PacketReqData;
 import mcp.mobius.opis.network.packets.server.NetDataValue;
 import mcp.mobius.opis.network.rcon.RConHandler;
 import mcp.mobius.opis.swing.SelectedTab;
-
-import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.common.util.FakePlayerFactory;
-
-import com.mojang.authlib.GameProfile;
-
-import io.nettyopis.channel.ChannelHandlerContext;
-import io.nettyopis.channel.ChannelInboundHandlerAdapter;
-import io.nettyopis.util.ReferenceCountUtil;
 
 public class NexusInboundHandler extends ChannelInboundHandlerAdapter {
 

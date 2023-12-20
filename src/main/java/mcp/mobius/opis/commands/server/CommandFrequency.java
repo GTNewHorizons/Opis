@@ -1,14 +1,14 @@
 package mcp.mobius.opis.commands.server;
 
-import mcp.mobius.opis.commands.IOpisCommand;
-import mcp.mobius.opis.events.PlayerTracker;
-import mcp.mobius.opis.modOpis;
-
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.dedicated.DedicatedServer;
 import net.minecraft.util.ChatComponentText;
+
+import mcp.mobius.opis.commands.IOpisCommand;
+import mcp.mobius.opis.events.PlayerTracker;
+import mcp.mobius.opis.modOpis;
 
 public class CommandFrequency extends CommandBase implements IOpisCommand {
 

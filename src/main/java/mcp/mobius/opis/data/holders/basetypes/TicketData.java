@@ -1,13 +1,13 @@
 package mcp.mobius.opis.data.holders.basetypes;
 
-import mcp.mobius.opis.data.holders.ISerializable;
-
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
+
+import mcp.mobius.opis.data.holders.ISerializable;
 
 public final class TicketData implements ISerializable {
 

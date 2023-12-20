@@ -22,6 +22,8 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
 
+import cpw.mods.fml.common.FMLCommonHandler;
+
 /**
  * A TrueType font implementation originally for Slick, modified to use Minecraft's Tessellator and add native floating
  * point colour support
@@ -456,7 +458,7 @@ public class TrueTypeFont {
 
         } catch (Exception e) {
             e.printStackTrace();
-            System.exit(-1);
+            FMLCommonHandler.instance().exitJava(-1, false);
         }
 
         return -1;

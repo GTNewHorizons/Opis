@@ -1,7 +1,5 @@
 package mcp.mobius.opis.network.rcon.nexus;
 
-import mcp.mobius.opis.modOpis;
-import mcp.mobius.opis.network.rcon.RConHandler;
 import io.nettyopis.channel.Channel;
 import io.nettyopis.channel.ChannelHandlerContext;
 import io.nettyopis.channel.ChannelInboundHandlerAdapter;
@@ -11,6 +9,8 @@ import io.nettyopis.handler.ssl.SslHandler;
 import io.nettyopis.util.ReferenceCountUtil;
 import io.nettyopis.util.concurrent.Future;
 import io.nettyopis.util.concurrent.GenericFutureListener;
+import mcp.mobius.opis.modOpis;
+import mcp.mobius.opis.network.rcon.RConHandler;
 
 public class NexusHandshakeHandler extends ChannelInboundHandlerAdapter {
 

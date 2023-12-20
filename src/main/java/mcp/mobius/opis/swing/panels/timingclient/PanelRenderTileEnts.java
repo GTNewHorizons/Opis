@@ -9,6 +9,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import net.miginfocom.swing.MigLayout;
+import net.minecraft.block.Block;
+import net.minecraft.item.ItemStack;
+
 import mcp.mobius.opis.api.IMessageHandler;
 import mcp.mobius.opis.api.ITabPanel;
 import mcp.mobius.opis.data.holders.newtypes.DataTileEntityRender;
@@ -18,10 +22,6 @@ import mcp.mobius.opis.network.enums.Message;
 import mcp.mobius.opis.swing.SelectedTab;
 import mcp.mobius.opis.swing.actions.ActionRunOpisClient;
 import mcp.mobius.opis.swing.widgets.JTableStats;
-
-import net.miginfocom.swing.MigLayout;
-import net.minecraft.block.Block;
-import net.minecraft.item.ItemStack;
 
 public class PanelRenderTileEnts extends JPanel implements ITabPanel, IMessageHandler {
 

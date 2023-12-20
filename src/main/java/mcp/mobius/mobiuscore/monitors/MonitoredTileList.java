@@ -3,14 +3,14 @@ package mcp.mobius.mobiuscore.monitors;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-import mcp.mobius.mobiuscore.asm.CoreDescription;
-
 import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
 
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import com.google.common.collect.Table.Cell;
+
+import mcp.mobius.mobiuscore.asm.CoreDescription;
 
 public class MonitoredTileList<E> extends MonitoredList<E> {
 

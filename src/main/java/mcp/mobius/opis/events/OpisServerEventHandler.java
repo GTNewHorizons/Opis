@@ -1,13 +1,5 @@
 package mcp.mobius.opis.events;
 
-import mcp.mobius.opis.data.holders.newtypes.ChatMsg;
-import mcp.mobius.opis.data.holders.newtypes.PlayerStatus;
-import mcp.mobius.opis.network.PacketManager;
-import mcp.mobius.opis.network.enums.Message;
-import mcp.mobius.opis.network.enums.PlayerEv;
-import mcp.mobius.opis.network.packets.server.NetDataValue;
-import mcp.mobius.opis.network.rcon.RConHandler;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -16,6 +8,13 @@ import net.minecraftforge.event.world.WorldEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import mcp.mobius.opis.data.holders.newtypes.ChatMsg;
+import mcp.mobius.opis.data.holders.newtypes.PlayerStatus;
+import mcp.mobius.opis.network.PacketManager;
+import mcp.mobius.opis.network.enums.Message;
+import mcp.mobius.opis.network.enums.PlayerEv;
+import mcp.mobius.opis.network.packets.server.NetDataValue;
+import mcp.mobius.opis.network.rcon.RConHandler;
 
 public class OpisServerEventHandler {
 
