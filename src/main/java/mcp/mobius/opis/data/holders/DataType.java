@@ -90,18 +90,18 @@ public enum DataType {
     CONNECTIONPROPERTIES(ConnectionProperties.class),
     CHATMSG(ChatMsg.class);
 
-    private Class clazz;
-    private static HashBiMap<DataType, Class> bimap = HashBiMap.create(50);
+    private Class<?> clazz;
+    private static HashBiMap<DataType, Class<?>> bimap = HashBiMap.create(50);
 
     static {
         for (DataType type : DataType.values()) bimap.put(type, type.clazz);
     }
 
-    private DataType(Class clazz) {
+    private DataType(Class<?> clazz) {
         this.clazz = clazz;
     }
 
-    public static DataType getForClass(Class clazz) {
+    public static DataType getForClass(Class<?> clazz) {
         DataType type = bimap.inverse().get(clazz);
         if (type == null) {
             modOpis.log.warn(String.format("Class %s was not registered with the DataType enum", clazz));

@@ -43,7 +43,7 @@ public class PacketReqChunks extends PacketBase {
     @Override
     public void actionServer(World world, EntityPlayerMP player) {
         if (PlayerTracker.INSTANCE.getPlayerAccessLevel(player).ordinal() > AccessLevel.PRIVILEGED.ordinal()) {
-            ArrayList<Chunk> list = new ArrayList();
+            ArrayList<Chunk> list = new ArrayList<>();
 
             if (world != null) {
                 for (CoordinatesChunk chunk : chunks)

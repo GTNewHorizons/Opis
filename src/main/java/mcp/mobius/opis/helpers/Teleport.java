@@ -65,10 +65,10 @@ public class Teleport {
 
         manager.updateTimeAndWeatherForPlayer(player, targetWorld);
         manager.syncPlayerInventory(player);
-        Iterator iterator = player.getActivePotionEffects().iterator();
+        Iterator<PotionEffect> iterator = player.getActivePotionEffects().iterator();
 
         while (iterator.hasNext()) {
-            PotionEffect potioneffect = (PotionEffect) iterator.next();
+            PotionEffect potioneffect = iterator.next();
             // player.playerNetServerHandler.sendPacket(new Packet41EntityEffect(player.entityId, potioneffect));
             player.playerNetServerHandler.sendPacket(new S1DPacketEntityEffect(player.getEntityId(), potioneffect));
         }

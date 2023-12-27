@@ -199,7 +199,7 @@ public enum TileEntityManager {
                 world.loadedTileEntityList = newList;
             }
 
-            Table<Block, Integer, Integer> count = ((MonitoredTileList) world.loadedTileEntityList).getCount();
+            Table<Block, Integer, Integer> count = ((MonitoredTileList<?>) world.loadedTileEntityList).getCount();
             Table<String, String, Integer> reducedCount = HashBasedTable.create();
 
             for (Cell<Block, Integer, Integer> c : count.cellSet()) {

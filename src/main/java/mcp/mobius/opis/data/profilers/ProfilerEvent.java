@@ -10,11 +10,11 @@ import mcp.mobius.opis.data.profilers.Clock.IClock;
 public class ProfilerEvent extends ProfilerAbstract {
 
     private IClock clock = Clock.getNewClock();
-    public HashBasedTable<Class, String, DescriptiveStatistics> data = HashBasedTable.create();
-    public HashBasedTable<Class, String, String> dataMod = HashBasedTable.create();
+    public HashBasedTable<Class<?>, String, DescriptiveStatistics> data = HashBasedTable.create();
+    public HashBasedTable<Class<?>, String, String> dataMod = HashBasedTable.create();
 
-    public HashBasedTable<Class, String, DescriptiveStatistics> dataTick = HashBasedTable.create();
-    public HashBasedTable<Class, String, String> dataModTick = HashBasedTable.create();
+    public HashBasedTable<Class<?>, String, DescriptiveStatistics> dataTick = HashBasedTable.create();
+    public HashBasedTable<Class<?>, String, String> dataModTick = HashBasedTable.create();
 
     @Override
     public void reset() {

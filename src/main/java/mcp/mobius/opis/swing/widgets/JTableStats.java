@@ -19,10 +19,10 @@ public class JTableStats extends JTable {
 
         private static final long serialVersionUID = 993390082962150469L;
         String[] headers;
-        Class[] columnTypes;
+        Class<?>[] columnTypes;
         boolean[] columnEditables;
 
-        public OpisTableModel(String[] headers, Class[] columnTypes, boolean[] columnEditables) {
+        public OpisTableModel(String[] headers, Class<?>[] columnTypes, boolean[] columnEditables) {
             super(new Object[][] {}, headers);
             this.headers = headers;
             this.columnTypes = columnTypes;
@@ -30,7 +30,7 @@ public class JTableStats extends JTable {
         }
 
         @Override
-        public Class getColumnClass(int columnIndex) {
+        public Class<?> getColumnClass(int columnIndex) {
             return columnTypes[columnIndex];
         }
 
@@ -43,7 +43,7 @@ public class JTableStats extends JTable {
     protected ArrayList<ISerializable> statistics;
     protected int[] alignList;
 
-    public JTableStats(String[] headers, Class[] columnTypes) {
+    public JTableStats(String[] headers, Class<?>[] columnTypes) {
         this(
                 headers,
                 columnTypes,
@@ -53,7 +53,7 @@ public class JTableStats extends JTable {
                 new boolean[] { false, false, false, false, false, false, false, false, false, false });
     }
 
-    public JTableStats(String[] headers, Class[] columnTypes, boolean[] editable) {
+    public JTableStats(String[] headers, Class<?>[] columnTypes, boolean[] editable) {
         this(
                 headers,
                 columnTypes,
@@ -63,7 +63,7 @@ public class JTableStats extends JTable {
                 editable);
     }
 
-    public JTableStats(String[] headers, Class[] columnTypes, int[] align) {
+    public JTableStats(String[] headers, Class<?>[] columnTypes, int[] align) {
         this(
                 headers,
                 columnTypes,
@@ -71,7 +71,7 @@ public class JTableStats extends JTable {
                 new boolean[] { false, false, false, false, false, false, false, false, false, false });
     }
 
-    public JTableStats(String[] headers, Class[] columnTypes, int[] align, boolean[] editable) {
+    public JTableStats(String[] headers, Class<?>[] columnTypes, int[] align, boolean[] editable) {
 
         super();
         this.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);

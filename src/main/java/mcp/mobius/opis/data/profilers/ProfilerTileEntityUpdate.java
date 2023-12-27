@@ -13,7 +13,7 @@ public class ProfilerTileEntityUpdate extends ProfilerAbstract {
 
     private IClock clock = Clock.getNewClock();
     public HashMap<CoordinatesBlock, DescriptiveStatistics> data = new HashMap<CoordinatesBlock, DescriptiveStatistics>();
-    public HashMap<CoordinatesBlock, Class> refs = new HashMap<CoordinatesBlock, Class>();
+    public HashMap<CoordinatesBlock, Class<?>> refs = new HashMap<CoordinatesBlock, Class<?>>();
 
     @Override
     public void reset() {

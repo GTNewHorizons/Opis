@@ -8,7 +8,7 @@ import mcp.mobius.opis.data.holders.ISerializable;
 import mcp.mobius.opis.data.managers.StringCache;
 import mcp.mobius.opis.helpers.Helpers;
 
-public class CachedString implements Comparable, ISerializable {
+public class CachedString implements Comparable<CachedString>, ISerializable {
 
     public String str;
     public int index;
@@ -33,8 +33,8 @@ public class CachedString implements Comparable, ISerializable {
     }
 
     @Override
-    public int compareTo(Object o) {
-        return ((CachedString) o).str.compareTo(this.str); // Reverse order ! Put higher values FIRST
+    public int compareTo(CachedString o) {
+        return o.str.compareTo(this.str); // Reverse order ! Put higher values FIRST
     }
 
     public String toString() {

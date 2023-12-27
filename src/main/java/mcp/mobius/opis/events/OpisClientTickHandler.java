@@ -165,11 +165,11 @@ public enum OpisClientTickHandler {
         // ====================================================================================
 
         ArrayList<DataRenderEvent> timingEvents = new ArrayList<DataRenderEvent>();
-        HashBasedTable<Class, String, DescriptiveStatistics> eventData = ((ProfilerEvent) ProfilerSection.EVENT_INVOKE
+        HashBasedTable<Class<?>, String, DescriptiveStatistics> eventData = ((ProfilerEvent) ProfilerSection.EVENT_INVOKE
                 .getProfiler()).data;
-        HashBasedTable<Class, String, String> eventMod = ((ProfilerEvent) ProfilerSection.EVENT_INVOKE
+        HashBasedTable<Class<?>, String, String> eventMod = ((ProfilerEvent) ProfilerSection.EVENT_INVOKE
                 .getProfiler()).dataMod;
-        for (Cell<Class, String, DescriptiveStatistics> cell : eventData.cellSet()) {
+        for (Cell<Class<?>, String, DescriptiveStatistics> cell : eventData.cellSet()) {
             timingEvents.add(new DataRenderEvent().fill(cell, eventMod.get(cell.getRowKey(), cell.getColumnKey())));
         }
         ((PanelEventClient) (TabPanelRegistrar.INSTANCE.getTab(SelectedTab.CLIENTEVENTS))).setTable(timingEvents);
