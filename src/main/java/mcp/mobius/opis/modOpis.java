@@ -19,6 +19,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppedEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
+import mcp.mobius.Tags;
 import mcp.mobius.mobiuscore.profiler.ProfilerSection;
 import mcp.mobius.opis.commands.client.CommandOpis;
 import mcp.mobius.opis.commands.server.CommandAddPrivileged;
@@ -64,9 +65,9 @@ import mcp.mobius.opis.tools.TileDebug;
 import mcp.mobius.opis.tools.TileLag;
 
 @Mod(
-        modid = "GRADLETOKEN_MODID",
-        name = "GRADLETOKEN_MODNAME",
-        version = "GRADLETOKEN_VERSION",
+        modid = "Opis",
+        name = "Opis",
+        version = Tags.VERSION,
         acceptableRemoteVersions = "*")
 public class modOpis {
 
