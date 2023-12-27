@@ -6,7 +6,7 @@ import com.google.common.collect.Table.Cell;
 
 import mcp.mobius.opis.data.holders.newtypes.DataTiming;
 
-public class DataRenderEvent implements Comparable {
+public class DataRenderEvent implements Comparable<DataRenderEvent> {
 
     public String event;
     public String handler;
@@ -15,7 +15,7 @@ public class DataRenderEvent implements Comparable {
     public long nCalls;
     public DataTiming update;
 
-    public DataRenderEvent fill(Cell<Class, String, DescriptiveStatistics> cellData, String modName) {
+    public DataRenderEvent fill(Cell<Class<?>, String, DescriptiveStatistics> cellData, String modName) {
         /*
          * String handlerName = cell.getColumnKey().getSimpleName(); try { String[] splitHandler =
          * handlerName.split("_"); handlerName = splitHandler[2] + "." + splitHandler[3]; } catch (Exception e){}
@@ -39,7 +39,7 @@ public class DataRenderEvent implements Comparable {
     }
 
     @Override
-    public int compareTo(Object o) {
-        return this.update.compareTo(((DataRenderEvent) o).update);
+    public int compareTo(DataRenderEvent o) {
+        return this.update.compareTo(o.update);
     }
 }

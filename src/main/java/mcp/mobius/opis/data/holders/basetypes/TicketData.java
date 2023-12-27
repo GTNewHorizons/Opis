@@ -17,11 +17,10 @@ public final class TicketData implements ISerializable {
     public final Ticket ticket;
 
     public TicketData(Ticket ticket) {
-        ImmutableSet requestedChunks = ticket.getChunkList();
+        ImmutableSet<ChunkCoordIntPair> requestedChunks = ticket.getChunkList();
         int maxChunkX = -999999, minChunkX = 9999999, maxChunkZ = -999999, minChunkZ = 9999999;
 
-        for (Object obj : requestedChunks) {
-            ChunkCoordIntPair chunk = (ChunkCoordIntPair) obj;
+        for (ChunkCoordIntPair chunk : requestedChunks) {
             maxChunkX = Math.max(maxChunkX, chunk.chunkXPos);
             minChunkX = Math.min(minChunkX, chunk.chunkXPos);
             maxChunkZ = Math.max(maxChunkZ, chunk.chunkZPos);

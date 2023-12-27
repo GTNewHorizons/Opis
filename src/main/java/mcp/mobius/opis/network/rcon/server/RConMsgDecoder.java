@@ -27,7 +27,7 @@ public class RConMsgDecoder extends ByteToMessageDecoder {
 
         // Here we should get a list of potential packets and decode for the corresponding byte
 
-        PacketBase packet = (PacketBase) RConHandler.packetTypes.get(packetType).newInstance();
+        PacketBase packet = RConHandler.packetTypes.get(packetType).getConstructor().newInstance();
         packet.decode(ByteStreams.newDataInput(in.readBytes(packetSize).array()));
         out.add(packet);
     }

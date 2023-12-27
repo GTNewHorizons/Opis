@@ -10,7 +10,7 @@ import mcp.mobius.opis.data.holders.basetypes.CoordinatesChunk;
 import mcp.mobius.opis.data.managers.EntityManager;
 import mcp.mobius.opis.data.managers.TileEntityManager;
 
-public class DataChunk implements ISerializable, Comparable {
+public class DataChunk implements ISerializable, Comparable<DataChunk> {
 
     int nentities;
     int ntileents;
@@ -51,7 +51,7 @@ public class DataChunk implements ISerializable, Comparable {
     }
 
     @Override
-    public int compareTo(Object o) {
-        return this.update.compareTo(((DataEntity) o).update);
+    public int compareTo(DataChunk o) {
+        return this.update.compareTo(o.update);
     }
 }

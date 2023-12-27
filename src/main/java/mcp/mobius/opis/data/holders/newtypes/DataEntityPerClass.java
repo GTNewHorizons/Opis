@@ -5,7 +5,7 @@ import com.google.common.io.ByteArrayDataOutput;
 
 import mcp.mobius.opis.data.holders.ISerializable;
 
-public class DataEntityPerClass implements Comparable, ISerializable {
+public class DataEntityPerClass implements Comparable<DataEntityPerClass>, ISerializable {
 
     public int nents;
     public CachedString name;
@@ -42,7 +42,7 @@ public class DataEntityPerClass implements Comparable, ISerializable {
     }
 
     @Override
-    public int compareTo(Object o) {
-        return this.update.compareTo(((DataEntityPerClass) o).update);
+    public int compareTo(DataEntityPerClass o) {
+        return this.update.compareTo(o.update);
     }
 }

@@ -292,20 +292,20 @@ public class PacketManager {
         DataBlockTick totalWorldTick = new DataBlockTick().fill();
 
         ArrayList<DataEvent> timingEvents = new ArrayList<DataEvent>();
-        HashBasedTable<Class, String, DescriptiveStatistics> eventData = ((ProfilerEvent) ProfilerSection.EVENT_INVOKE
+        HashBasedTable<Class<?>, String, DescriptiveStatistics> eventData = ((ProfilerEvent) ProfilerSection.EVENT_INVOKE
                 .getProfiler()).data;
-        HashBasedTable<Class, String, String> eventMod = ((ProfilerEvent) ProfilerSection.EVENT_INVOKE
+        HashBasedTable<Class<?>, String, String> eventMod = ((ProfilerEvent) ProfilerSection.EVENT_INVOKE
                 .getProfiler()).dataMod;
-        for (Cell<Class, String, DescriptiveStatistics> cell : eventData.cellSet()) {
+        for (Cell<Class<?>, String, DescriptiveStatistics> cell : eventData.cellSet()) {
             timingEvents.add(new DataEvent().fill(cell, eventMod.get(cell.getRowKey(), cell.getColumnKey())));
         }
 
         ArrayList<DataEvent> timingTicks = new ArrayList<DataEvent>();
-        HashBasedTable<Class, String, DescriptiveStatistics> eventTickData = ((ProfilerEvent) ProfilerSection.EVENT_INVOKE
+        HashBasedTable<Class<?>, String, DescriptiveStatistics> eventTickData = ((ProfilerEvent) ProfilerSection.EVENT_INVOKE
                 .getProfiler()).dataTick;
-        HashBasedTable<Class, String, String> eventTickMod = ((ProfilerEvent) ProfilerSection.EVENT_INVOKE
+        HashBasedTable<Class<?>, String, String> eventTickMod = ((ProfilerEvent) ProfilerSection.EVENT_INVOKE
                 .getProfiler()).dataModTick;
-        for (Cell<Class, String, DescriptiveStatistics> cell : eventTickData.cellSet()) {
+        for (Cell<Class<?>, String, DescriptiveStatistics> cell : eventTickData.cellSet()) {
             timingTicks.add(new DataEvent().fill(cell, eventTickMod.get(cell.getRowKey(), cell.getColumnKey())));
         }
 

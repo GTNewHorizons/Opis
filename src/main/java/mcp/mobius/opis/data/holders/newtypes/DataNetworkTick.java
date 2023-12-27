@@ -9,7 +9,7 @@ import mcp.mobius.mobiuscore.profiler.ProfilerSection;
 import mcp.mobius.opis.data.holders.ISerializable;
 import mcp.mobius.opis.data.profilers.ProfilerNetworkTick;
 
-public class DataNetworkTick implements ISerializable, Comparable {
+public class DataNetworkTick implements ISerializable, Comparable<DataNetworkTick> {
 
     public DataTiming update;
 
@@ -33,7 +33,7 @@ public class DataNetworkTick implements ISerializable, Comparable {
     }
 
     @Override
-    public int compareTo(Object o) {
-        return this.update.compareTo(((DataNetworkTick) o).update);
+    public int compareTo(DataNetworkTick o) {
+        return this.update.compareTo(o.update);
     }
 }

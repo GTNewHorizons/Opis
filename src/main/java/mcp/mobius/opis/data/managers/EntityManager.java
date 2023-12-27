@@ -152,7 +152,7 @@ public enum EntityManager {
                 world.loadedEntityList = newList;
             }
 
-            Map<String, Integer> count = ((MonitoredEntityList) world.loadedEntityList).getCount();
+            Map<String, Integer> count = ((MonitoredEntityList<?>) world.loadedEntityList).getCount();
             for (String key : count.keySet())
                 if (count.get(key) > 0) cumData.add(new AmountHolder(key, count.get(key), "Plop"));
         }
@@ -275,13 +275,12 @@ public enum EntityManager {
 
     public ArrayList<PlayerStatus> getAllPlayers() {
         // List players = MinecraftServer.getServerConfigurationManager(MinecraftServer.getServer()).playerEntityList;
-        List players = MinecraftServer.getServer().getConfigurationManager().playerEntityList;
+        List<EntityPlayerMP> players = MinecraftServer.getServer().getConfigurationManager().playerEntityList;
 
         ArrayList<PlayerStatus> outList = new ArrayList<PlayerStatus>();
 
-        for (Object o : players) {
+        for (EntityPlayerMP p : players) {
             // outList.add(new DataEntity().fill((EntityPlayer) p));
-            EntityPlayer p = (EntityPlayer) o;
             outList.add(
                     new PlayerStatus(
                             p.getGameProfile().getName(),
@@ -303,13 +302,13 @@ public enum EntityManager {
         return amountEntities;
     }
 
-    public int killAllPerClass(int dim, Class clazz) {
+    public int killAllPerClass(int dim, Class<?> clazz) {
         WorldServer world = DimensionManager.getWorld(dim);
         if (world == null) return -1;
 
         int killedEnts = 0;
 
-        ArrayList copyList = new ArrayList(world.loadedEntityList);
+        ArrayList<Entity> copyList = new ArrayList<>(world.loadedEntityList);
 
         for (Entity entity : (ArrayList<Entity>) copyList) {
             if (clazz.isInstance(entity)) {

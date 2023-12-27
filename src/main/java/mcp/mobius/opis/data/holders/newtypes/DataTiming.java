@@ -5,7 +5,7 @@ import com.google.common.io.ByteArrayDataOutput;
 
 import mcp.mobius.opis.data.holders.ISerializable;
 
-public class DataTiming implements Comparable, ISerializable {
+public class DataTiming implements Comparable<DataTiming>, ISerializable {
 
     public Double timing;
 
@@ -18,8 +18,8 @@ public class DataTiming implements Comparable, ISerializable {
     }
 
     @Override
-    public int compareTo(Object o) {
-        return ((DataTiming) o).timing.compareTo(this.timing); // Reverse order ! Put higher values FIRST
+    public int compareTo(DataTiming o) {
+        return o.timing.compareTo(this.timing); // Reverse order ! Put higher values FIRST
     }
 
     public DataTimingMillisecond asMillisecond() {

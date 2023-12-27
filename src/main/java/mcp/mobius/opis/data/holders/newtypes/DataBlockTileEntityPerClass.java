@@ -6,7 +6,7 @@ import com.google.common.io.ByteArrayDataOutput;
 import mcp.mobius.opis.data.holders.ISerializable;
 import mcp.mobius.opis.helpers.ModIdentification;
 
-public class DataBlockTileEntityPerClass implements ISerializable, Comparable {
+public class DataBlockTileEntityPerClass implements ISerializable, Comparable<DataBlockTileEntityPerClass> {
 
     public int id;
     public int meta;
@@ -67,7 +67,7 @@ public class DataBlockTileEntityPerClass implements ISerializable, Comparable {
     }
 
     @Override
-    public int compareTo(Object o) {
-        return this.update.compareTo(((DataBlockTileEntityPerClass) o).update);
+    public int compareTo(DataBlockTileEntityPerClass o) {
+        return this.update.compareTo(o.update);
     }
 }

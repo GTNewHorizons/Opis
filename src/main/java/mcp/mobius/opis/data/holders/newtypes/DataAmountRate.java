@@ -5,7 +5,7 @@ import com.google.common.io.ByteArrayDataOutput;
 
 import mcp.mobius.opis.data.holders.ISerializable;
 
-public class DataAmountRate implements Comparable, ISerializable {
+public class DataAmountRate implements Comparable<DataAmountRate>, ISerializable {
 
     public Long size; // Size is stored in byte
     public int interval;
@@ -17,8 +17,8 @@ public class DataAmountRate implements Comparable, ISerializable {
     }
 
     @Override
-    public int compareTo(Object o) {
-        return ((DataAmountRate) o).size.compareTo(this.size); // Reverse order ! Put higher values FIRST
+    public int compareTo(DataAmountRate o) {
+        return o.size.compareTo(this.size); // Reverse order ! Put higher values FIRST
     }
 
     public void reset() {

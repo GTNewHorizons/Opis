@@ -28,7 +28,7 @@ import mcp.mobius.opis.network.rcon.nexus.NexusInboundHandler;
 
 public class RConHandler {
 
-    public static BiMap<Byte, Class> packetTypes = HashBiMap.create();
+    public static BiMap<Byte, Class<? extends PacketBase>> packetTypes = HashBiMap.create();
     public static BiMap<FakePlayer, ChannelHandlerContext> fakePlayersRcon = HashBiMap.create();
     public static BiMap<FakePlayer, ChannelHandlerContext> fakePlayersNexus = HashBiMap.create();
 

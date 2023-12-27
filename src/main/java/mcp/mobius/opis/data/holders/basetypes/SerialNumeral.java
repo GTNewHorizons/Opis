@@ -55,7 +55,7 @@ public class SerialNumeral<U> {
         }
     }
 
-    public static SerialNumeral readFromStream(DataInputStream stream) throws IOException {
+    public static SerialNumeral<? extends Number> readFromStream(DataInputStream stream) throws IOException {
         Type datatype = Type.values()[stream.readByte()];
         switch (datatype) {
             case DOUBLE: {

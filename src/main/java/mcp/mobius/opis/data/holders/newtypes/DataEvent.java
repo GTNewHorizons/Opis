@@ -8,7 +8,7 @@ import com.google.common.io.ByteArrayDataOutput;
 
 import mcp.mobius.opis.data.holders.ISerializable;
 
-public class DataEvent implements ISerializable, Comparable {
+public class DataEvent implements ISerializable, Comparable<DataEvent> {
 
     public CachedString event;
     public CachedString handler;
@@ -17,7 +17,7 @@ public class DataEvent implements ISerializable, Comparable {
     public long nCalls;
     public DataTiming update;
 
-    public DataEvent fill(Cell<Class, String, DescriptiveStatistics> cellData, String modName) {
+    public DataEvent fill(Cell<Class<?>, String, DescriptiveStatistics> cellData, String modName) {
         /*
          * String handlerName = cell.getColumnKey().getSimpleName(); try { String[] splitHandler =
          * handlerName.split("_"); handlerName = splitHandler[2] + "." + splitHandler[3]; } catch (Exception e){}
@@ -62,7 +62,7 @@ public class DataEvent implements ISerializable, Comparable {
     }
 
     @Override
-    public int compareTo(Object o) {
-        return this.update.compareTo(((DataEvent) o).update);
+    public int compareTo(DataEvent o) {
+        return this.update.compareTo(o.update);
     }
 }

@@ -25,7 +25,7 @@ public abstract class PacketBase {
     public byte header;
     public Message msg;
     public String clazzStr;
-    public Class clazz;
+    public Class<?> clazz;
     public ArrayList<ISerializable> array = null;
     public ISerializable value = null;
 
