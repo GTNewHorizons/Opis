@@ -64,11 +64,7 @@ import mcp.mobius.opis.tools.BlockLag;
 import mcp.mobius.opis.tools.TileDebug;
 import mcp.mobius.opis.tools.TileLag;
 
-@Mod(
-        modid = "Opis",
-        name = "Opis",
-        version = Tags.VERSION,
-        acceptableRemoteVersions = "*")
+@Mod(modid = "Opis", name = "Opis", version = Tags.VERSION, acceptableRemoteVersions = "*")
 public class modOpis {
 
     @Instance("Opis")
