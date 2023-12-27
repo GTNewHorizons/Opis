@@ -14,6 +14,7 @@ import mcp.mobius.mobiuscore.asm.CoreDescription;
 
 public class MonitoredTileList<E> extends MonitoredList<E> {
 
+    private static final long serialVersionUID = -2243048028307261560L;
     // private Map<String, Integer> count = new HashMap<String, Integer>();
     private Table<Block, Integer, Integer> count = HashBasedTable.create();
     private Map<Object, BlockData> blockdata = new WeakHashMap<>();

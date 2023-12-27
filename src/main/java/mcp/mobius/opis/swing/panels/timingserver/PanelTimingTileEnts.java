@@ -26,6 +26,7 @@ import mcp.mobius.opis.swing.widgets.JTableStats;
 
 public class PanelTimingTileEnts extends JPanelMsgHandler implements ITabPanel {
 
+    private static final long serialVersionUID = 5062513693524867972L;
     private JButtonAccess btnTeleport;
     private JButtonAccess btnReset;
     private JButtonAccess btnRun;

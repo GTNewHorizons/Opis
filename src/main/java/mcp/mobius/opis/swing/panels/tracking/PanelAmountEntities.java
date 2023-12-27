@@ -22,6 +22,7 @@ import mcp.mobius.opis.swing.widgets.JTableStats;
 
 public class PanelAmountEntities extends JPanelMsgHandler implements ITabPanel {
 
+    private static final long serialVersionUID = 3176339193502108176L;
     private JCheckBox chckbxFilter;
     private JButtonAccess btnKillAll;
     private JButtonAccess btnRefresh;

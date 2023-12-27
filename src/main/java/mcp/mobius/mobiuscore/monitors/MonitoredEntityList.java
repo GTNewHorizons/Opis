@@ -9,6 +9,7 @@ import mcp.mobius.mobiuscore.asm.CoreDescription;
 
 public class MonitoredEntityList<E> extends MonitoredList<E> {
 
+    private static final long serialVersionUID = 9184692038032137709L;
     private Map<String, Integer> count = new HashMap<String, Integer>();
 
     @Override
