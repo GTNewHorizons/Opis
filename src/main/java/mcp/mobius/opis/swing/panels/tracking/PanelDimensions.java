@@ -23,6 +23,7 @@ import mcp.mobius.opis.swing.widgets.JTableStats;
 
 public class PanelDimensions extends JPanelMsgHandler implements IMessageHandler, ITabPanel {
 
+    private static final long serialVersionUID = -3506927196530957453L;
     private JButtonAccess btnPurgeAll;
 
     public PanelDimensions() {

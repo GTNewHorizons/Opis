@@ -5,6 +5,8 @@ import java.util.Collection;
 
 public abstract class MonitoredList<E> extends ArrayList<E> {
 
+    private static final long serialVersionUID = 8542841497500505801L;
+
     abstract void addCount(E e);
 
     abstract void removeCount(int index);

@@ -18,6 +18,8 @@ import mcp.mobius.opis.swing.widgets.JTableStats;
 
 public class PanelThreads extends JPanelMsgHandler implements ITabPanel {
 
+    private static final long serialVersionUID = -1780112855406946574L;
+
     public PanelThreads() {
         setLayout(new MigLayout("", "[grow]", "[grow]"));
 

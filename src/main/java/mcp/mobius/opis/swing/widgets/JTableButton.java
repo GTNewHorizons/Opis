@@ -31,6 +31,7 @@ import mcp.mobius.opis.network.enums.AccessLevel;
 public class JTableButton extends AbstractCellEditor
         implements TableCellRenderer, TableCellEditor, ActionListener, MouseListener {
 
+    private static final long serialVersionUID = -1051881661568367969L;
     private JTable table;
     private ActionListener action;
     private int mnemonic;

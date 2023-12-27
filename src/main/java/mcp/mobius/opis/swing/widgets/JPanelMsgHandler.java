@@ -8,6 +8,7 @@ import mcp.mobius.opis.network.enums.Message;
 
 public abstract class JPanelMsgHandler extends JPanel implements IMessageHandler {
 
+    private static final long serialVersionUID = -2746994146968160784L;
     public JTableStats table;
     public Message cachedmsg;
     public PacketBase cachedrawdata;

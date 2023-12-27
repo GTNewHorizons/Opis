@@ -7,6 +7,7 @@ import mcp.mobius.opis.swing.SwingUI;
 
 public class JButtonAccess extends JButton {
 
+    private static final long serialVersionUID = -2609076476128809204L;
     private AccessLevel al = AccessLevel.NONE;
 
     public JButtonAccess(AccessLevel level) {

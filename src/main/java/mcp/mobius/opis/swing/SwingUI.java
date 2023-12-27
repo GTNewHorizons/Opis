@@ -34,6 +34,8 @@ import mcp.mobius.opis.swing.widgets.JButtonAccess;
 
 public class SwingUI extends JFrame implements WindowListener, ChangeListener, IMessageHandler {
 
+    private static final long serialVersionUID = 2511764540016284809L;
+
     public static HashSet<JButtonAccess> registeredButtons = new HashSet<JButtonAccess>();
 
     private static SwingUI _instance = new SwingUI();

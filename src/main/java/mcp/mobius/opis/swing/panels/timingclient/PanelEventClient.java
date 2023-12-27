@@ -25,6 +25,7 @@ import mcp.mobius.opis.swing.widgets.JTableStats;
 
 public class PanelEventClient extends JPanel implements ITabPanel, IMessageHandler {
 
+    private static final long serialVersionUID = -1580335760456742927L;
     private JTableStats table;
     private JButton btnRunRender;
 

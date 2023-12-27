@@ -13,8 +13,11 @@ import mcp.mobius.opis.data.holders.ISerializable;
 
 public class JTableStats extends JTable {
 
+    private static final long serialVersionUID = 9195559362001415233L;
+
     public class OpisTableModel extends DefaultTableModel {
 
+        private static final long serialVersionUID = 993390082962150469L;
         String[] headers;
         Class[] columnTypes;
         boolean[] columnEditables;

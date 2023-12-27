@@ -20,6 +20,8 @@ import mcp.mobius.opis.swing.widgets.JTableStats;
 
 public class PanelInbound extends JPanelMsgHandler implements ITabPanel {
 
+    private static final long serialVersionUID = 8059336351920585340L;
+
     public PanelInbound() {
         setLayout(new MigLayout("", "[grow]", "[grow]"));
 

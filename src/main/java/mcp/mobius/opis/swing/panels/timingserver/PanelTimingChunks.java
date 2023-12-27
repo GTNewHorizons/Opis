@@ -22,6 +22,7 @@ import mcp.mobius.opis.swing.widgets.JTableStats;
 
 public class PanelTimingChunks extends JPanelMsgHandler implements ITabPanel {
 
+    private static final long serialVersionUID = 369552148126824481L;
     private JButtonAccess btnRun;
     private JButtonAccess btnTeleport;
 

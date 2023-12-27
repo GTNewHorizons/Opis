@@ -45,6 +45,7 @@ import mcp.mobius.opis.swing.widgets.JPanelMsgHandler;
 
 public class PanelSummary extends JPanelMsgHandler implements ITabPanel {
 
+    private static final long serialVersionUID = -7829545857856726718L;
     private JLabel lblTimingWorldTick;
     private JLabel lblTimingTileEnts;
     private JLabel lblTimingEntities;
