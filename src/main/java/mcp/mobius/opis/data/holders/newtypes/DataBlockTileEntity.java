@@ -18,17 +18,17 @@ import mcp.mobius.opis.data.profilers.ProfilerTileEntityUpdate;
 
 public class DataBlockTileEntity implements ISerializable, Comparable<DataBlockTileEntity> {
 
-    public short id;
-    public short meta;
+    public int id;
+    public int meta;
     public CoordinatesBlock pos;
     public DataTiming update;
 
     public DataBlockTileEntity fill(CoordinatesBlock coord) {
         this.pos = coord;
         World world = DimensionManager.getWorld(this.pos.dim);
-
-        this.id = (short) Block.getIdFromBlock(world.getBlock(this.pos.x, this.pos.y, this.pos.z));
-        this.meta = (short) world.getBlockMetadata(this.pos.x, this.pos.y, this.pos.z);
+        Block block = world.getBlock(this.pos.x, this.pos.y, this.pos.z);
+        this.id = Block.getIdFromBlock(block);
+        this.meta = block.getDamageValue(world, this.pos.x, this.pos.y, this.pos.z);
 
         HashMap<CoordinatesBlock, DescriptiveStatistics> data = ((ProfilerTileEntityUpdate) (ProfilerSection.TILEENT_UPDATETIME
                 .getProfiler())).data;
@@ -39,16 +39,16 @@ public class DataBlockTileEntity implements ISerializable, Comparable<DataBlockT
 
     @Override
     public void writeToStream(ByteArrayDataOutput stream) {
-        stream.writeShort(this.id);
-        stream.writeShort(this.meta);
+        stream.writeInt(this.id);
+        stream.writeInt(this.meta);
         this.pos.writeToStream(stream);
         this.update.writeToStream(stream);
     }
 
     public static DataBlockTileEntity readFromStream(ByteArrayDataInput stream) {
         DataBlockTileEntity retVal = new DataBlockTileEntity();
-        retVal.id = stream.readShort();
-        retVal.meta = stream.readShort();
+        retVal.id = stream.readInt();
+        retVal.meta = stream.readInt();
         retVal.pos = CoordinatesBlock.readFromStream(stream);
         retVal.update = DataTiming.readFromStream(stream);
         return retVal;
