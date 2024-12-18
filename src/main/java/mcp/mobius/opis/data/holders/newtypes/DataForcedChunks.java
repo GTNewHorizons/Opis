@@ -152,6 +152,8 @@ public class DataForcedChunks implements ISerializable {
             type = "Town: " + raw.getString("townName");
         } else if (raw.hasKey("poppetX", Constants.NBT.TAG_INT)) { // Witchery
             type = "Poppet";
+        } else if (raw.hasKey("OwnerType", Constants.NBT.TAG_STRING)) { // GregTech
+            type = raw.getString("OwnerType");
         }
 
         if (type != null) {
