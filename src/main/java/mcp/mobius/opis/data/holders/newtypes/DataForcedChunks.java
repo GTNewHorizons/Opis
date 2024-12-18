@@ -99,7 +99,7 @@ public class DataForcedChunks implements ISerializable {
             xCoord = raw.getInteger("xCoord");
         } else if (raw.hasKey("OwnerX", Constants.NBT.TAG_INT)) { // GregTech
             xCoord = raw.getInteger("OwnerX");
-        } else if (raw.hasKey("x", Constants.NBT.TAG_INT)) { // Extra Utilities
+        } else if (raw.hasKey("x", Constants.NBT.TAG_INT)) { // Extra Utilities, OpenComputers
             xCoord = raw.getInteger("x");
         } else if (raw.hasKey("poppetX", Constants.NBT.TAG_INT)) { // Witchery
             xCoord = raw.getInteger("poppetX");
@@ -123,7 +123,7 @@ public class DataForcedChunks implements ISerializable {
             zCoord = raw.getInteger("zCoord");
         } else if (raw.hasKey("OwnerZ", Constants.NBT.TAG_INT)) { // GregTech
             zCoord = raw.getInteger("OwnerZ");
-        } else if (raw.hasKey("z", Constants.NBT.TAG_INT)) { // Extra Utilities
+        } else if (raw.hasKey("z", Constants.NBT.TAG_INT)) { // Extra Utilities, OpenComputers
             zCoord = raw.getInteger("z");
         } else if (raw.hasKey("poppetZ", Constants.NBT.TAG_INT)) { // Witchery
             zCoord = raw.getInteger("poppetZ");
