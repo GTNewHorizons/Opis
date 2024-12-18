@@ -99,18 +99,36 @@ public class DataForcedChunks implements ISerializable {
             xCoord = raw.getInteger("xCoord");
         } else if (raw.hasKey("OwnerX", Constants.NBT.TAG_INT)) { // GregTech
             xCoord = raw.getInteger("OwnerX");
+        } else if (raw.hasKey("x", Constants.NBT.TAG_INT)) { // Extra Utilities
+            xCoord = raw.getInteger("x");
+        } else if (raw.hasKey("poppetX", Constants.NBT.TAG_INT)) { // Witchery
+            xCoord = raw.getInteger("poppetX");
+        } else if (raw.hasKey("ChunkLoaderTileX", Constants.NBT.TAG_INT)) { // Galacticraft
+            xCoord = raw.getInteger("ChunkLoaderTileX");
         }
 
         if (raw.hasKey("yCoord", Constants.NBT.TAG_INT)) { // Railcraft
             yCoord = raw.getInteger("yCoord");
         } else if (raw.hasKey("OwnerY", Constants.NBT.TAG_INT)) { // GregTech
             yCoord = raw.getInteger("OwnerY");
+        } else if (raw.hasKey("y", Constants.NBT.TAG_INT)) { // Extra Utilities
+            yCoord = raw.getInteger("y");
+        } else if (raw.hasKey("poppetY", Constants.NBT.TAG_INT)) { // Witchery
+            yCoord = raw.getInteger("poppetY");
+        } else if (raw.hasKey("ChunkLoaderTileY", Constants.NBT.TAG_INT)) { // Galacticraft
+            yCoord = raw.getInteger("ChunkLoaderTileY");
         }
 
         if (raw.hasKey("zCoord", Constants.NBT.TAG_INT)) { // Railcraft
             zCoord = raw.getInteger("zCoord");
         } else if (raw.hasKey("OwnerZ", Constants.NBT.TAG_INT)) { // GregTech
             zCoord = raw.getInteger("OwnerZ");
+        } else if (raw.hasKey("z", Constants.NBT.TAG_INT)) { // Extra Utilities
+            zCoord = raw.getInteger("z");
+        } else if (raw.hasKey("poppetZ", Constants.NBT.TAG_INT)) { // Witchery
+            zCoord = raw.getInteger("poppetZ");
+        } else if (raw.hasKey("ChunkLoaderTileZ", Constants.NBT.TAG_INT)) { // Galacticraft
+            zCoord = raw.getInteger("ChunkLoaderTileZ");
         }
 
         if (xCoord != 0 && yCoord != 0 && zCoord != 0) {
@@ -124,7 +142,12 @@ public class DataForcedChunks implements ISerializable {
         String type = null;
         if (raw.hasKey("type", Constants.NBT.TAG_STRING)) { // Railcraft
             type = raw.getString("type");
+        } else if (raw.hasKey("id", Constants.NBT.TAG_STRING)) { // Extra Utilities
+            type = raw.getString("id");
+        } else if (raw.hasKey("townName", Constants.NBT.TAG_STRING)) { // MyTown2
+            type = "Town: " + raw.getString("townName");
         }
+
         if (type != null) {
             this.type = new CachedString(type);
         } else {
