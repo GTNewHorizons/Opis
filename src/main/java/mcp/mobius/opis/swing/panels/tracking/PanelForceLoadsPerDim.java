@@ -25,10 +25,11 @@ public class PanelForceLoadsPerDim extends JPanelMsgHandler implements ITabPanel
         add(scrollPane, "cell 0 0,grow");
 
         table = new JTableStats(
-                new String[] { "Dim", "Name", "Mod Id", "Player or Entity", "Position", "Type", "Chunks", "Raw Data" },
+                new String[] { "Dim", "Name", "Mod Id", "Player or Entity", "Position", "Type", "Num Chunks", "Chunks",
+                        "Raw Data" },
                 new Class[] { Integer.class, String.class, String.class, String.class, String.class, String.class,
-                        String.class, String.class },
-                new boolean[] { false, false, false, false, false, false, false, false });
+                        Integer.class, String.class, String.class },
+                new boolean[] { false, false, false, false, false, false, false, false, false });
         table.setBackground(this.getBackground());
         table.setAutoCreateRowSorter(true);
         table.setShowGrid(false);
@@ -50,7 +51,7 @@ public class PanelForceLoadsPerDim extends JPanelMsgHandler implements ITabPanel
                         DataForcedChunks data = (DataForcedChunks) o;
                         model.addRow(
                                 new Object[] { data.dim, data.dimName, data.modId, data.playerOrEntityName,
-                                        data.position, data.type, data.chunks, data.rawData });
+                                        data.position, data.type, data.numChunks, data.chunks, data.rawData });
                     }
                     this.getTable().dataUpdated(row);
                 });

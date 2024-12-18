@@ -32,6 +32,7 @@ public class DataForcedChunks implements ISerializable {
     public CachedString playerOrEntityName;
 
     public CachedString rawData;
+    public int numChunks;
     public CachedString chunks;
 
     // Optimistic data we may be able to collect
@@ -79,7 +80,8 @@ public class DataForcedChunks implements ISerializable {
 
             // Chunk positions
             StringBuilder sb = new StringBuilder();
-            Iterator<ChunkCoordIntPair> itr = ticket.getChunkList().iterator();
+            Set<ChunkCoordIntPair> chunkSet = ticket.getChunkList();
+            Iterator<ChunkCoordIntPair> itr = chunkSet.iterator();
             while (itr.hasNext()) {
                 ChunkCoordIntPair coord = itr.next();
                 sb.append("(");
@@ -91,6 +93,7 @@ public class DataForcedChunks implements ISerializable {
                     sb.append(", ");
                 }
             }
+            data.numChunks = chunkSet.size();
             data.chunks = new CachedString(sb.toString());
         }
         return dataList;
@@ -172,6 +175,7 @@ public class DataForcedChunks implements ISerializable {
         position.writeToStream(stream);
         type.writeToStream(stream);
         rawData.writeToStream(stream);
+        stream.writeInt(numChunks);
         chunks.writeToStream(stream);
     }
 
@@ -185,6 +189,7 @@ public class DataForcedChunks implements ISerializable {
         retVal.position = CachedString.readFromStream(stream);
         retVal.type = CachedString.readFromStream(stream);
         retVal.rawData = CachedString.readFromStream(stream);
+        retVal.numChunks = stream.readInt();
         retVal.chunks = CachedString.readFromStream(stream);
 
         return retVal;
