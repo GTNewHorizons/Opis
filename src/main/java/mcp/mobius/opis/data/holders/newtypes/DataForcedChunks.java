@@ -53,7 +53,11 @@ public class DataForcedChunks implements ISerializable {
             // Basic Information
             data.dim = dim;
             data.dimName = dimName;
-            data.modId = new CachedString(ticket.getModId());
+            if (ticket.getModId() != null) {
+                data.modId = new CachedString(ticket.getModId());
+            } else {
+                data.modId = NONE_CACHED;
+            }
 
             // Report the player name, if available. Otherwise, report the associated entity.
             // If neither are available, show "N/A."
