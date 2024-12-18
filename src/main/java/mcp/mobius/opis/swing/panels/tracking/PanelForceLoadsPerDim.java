@@ -16,7 +16,7 @@ import mcp.mobius.opis.swing.widgets.JTableStats;
 
 public class PanelForceLoadsPerDim extends JPanelMsgHandler implements ITabPanel {
 
-    // todo serialVersionUID
+    private static final long serialVersionUID = 3487495895819393L;
 
     public PanelForceLoadsPerDim() {
         setLayout(new MigLayout("", "[grow]", "[grow]"));
