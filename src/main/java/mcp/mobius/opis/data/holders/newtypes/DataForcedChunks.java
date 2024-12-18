@@ -100,13 +100,30 @@ public class DataForcedChunks implements ISerializable {
     }
 
     private void tryParseLocation(NBTTagCompound raw) {
-        int xCoord = 0, yCoord = 0, zCoord = 0;
+        // OpenComputers stores chunk coords (XZ) so we need to approximate them to block pos
+        if (raw.hasKey("address", Constants.NBT.TAG_STRING)) {
+            Integer chunkX = null, chunkZ = null;
+            if (raw.hasKey("x", Constants.NBT.TAG_INT)) {
+                chunkX = raw.getInteger("x");
+            }
+            if (raw.hasKey("z", Constants.NBT.TAG_INT)) {
+                chunkZ = raw.getInteger("z");
+            }
+            if (chunkX != null && chunkZ != null) {
+                ChunkCoordIntPair chunkPos = new ChunkCoordIntPair(chunkX, chunkZ);
+                this.type = new CachedString(
+                        String.format("[ %4d ? %4d ]", chunkPos.getCenterXPos(), chunkPos.getCenterZPosition()));
+                return;
+            }
+        }
+
+        Integer xCoord = null, yCoord = null, zCoord = null;
 
         if (raw.hasKey("xCoord", Constants.NBT.TAG_INT)) { // Railcraft
             xCoord = raw.getInteger("xCoord");
         } else if (raw.hasKey("OwnerX", Constants.NBT.TAG_INT)) { // GregTech
             xCoord = raw.getInteger("OwnerX");
-        } else if (raw.hasKey("x", Constants.NBT.TAG_INT)) { // Extra Utilities, OpenComputers
+        } else if (raw.hasKey("x", Constants.NBT.TAG_INT)) { // Extra Utilities
             xCoord = raw.getInteger("x");
         } else if (raw.hasKey("poppetX", Constants.NBT.TAG_INT)) { // Witchery
             xCoord = raw.getInteger("poppetX");
@@ -130,7 +147,7 @@ public class DataForcedChunks implements ISerializable {
             zCoord = raw.getInteger("zCoord");
         } else if (raw.hasKey("OwnerZ", Constants.NBT.TAG_INT)) { // GregTech
             zCoord = raw.getInteger("OwnerZ");
-        } else if (raw.hasKey("z", Constants.NBT.TAG_INT)) { // Extra Utilities, OpenComputers
+        } else if (raw.hasKey("z", Constants.NBT.TAG_INT)) { // Extra Utilities
             zCoord = raw.getInteger("z");
         } else if (raw.hasKey("poppetZ", Constants.NBT.TAG_INT)) { // Witchery
             zCoord = raw.getInteger("poppetZ");
@@ -138,11 +155,17 @@ public class DataForcedChunks implements ISerializable {
             zCoord = raw.getInteger("ChunkLoaderTileZ");
         }
 
-        if (xCoord != 0 && yCoord != 0 && zCoord != 0) {
-            position = new CachedString(String.format("[ %4d %4d %4d ]", xCoord, yCoord, zCoord));
-        } else {
-            position = NONE_CACHED;
+        if (xCoord == null && yCoord == null && zCoord == null) {
+            this.position = NONE_CACHED;
+            return;
         }
+
+        String position = String.format(
+                "[ %s %s %s ]",
+                xCoord == null ? "?" : String.format("%4d", xCoord),
+                yCoord == null ? "?" : String.format("%4d", yCoord),
+                zCoord == null ? "?" : String.format("%4d", zCoord));
+        this.position = new CachedString(position);
     }
 
     private void tryParseType(NBTTagCompound raw) {
