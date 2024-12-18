@@ -4,6 +4,7 @@ public enum SelectedTab {
     AMOUNTENTS,
     AMOUNTTES,
     DIMENSIONS,
+    FORCELOADS,
     PACKETS,
     PLAYERS,
     RENDERENTITIES,

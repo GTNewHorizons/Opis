@@ -41,6 +41,7 @@ import mcp.mobius.opis.swing.panels.timingserver.PanelTimingTileEntsPerClass;
 import mcp.mobius.opis.swing.panels.tracking.PanelAmountEntities;
 import mcp.mobius.opis.swing.panels.tracking.PanelAmountTileEnts;
 import mcp.mobius.opis.swing.panels.tracking.PanelDimensions;
+import mcp.mobius.opis.swing.panels.tracking.PanelForceLoadsPerDim;
 import mcp.mobius.opis.swing.panels.tracking.PanelPlayers;
 
 public class ProxyClient extends ProxyServer implements IMessageHandler {
@@ -63,6 +64,8 @@ public class ProxyClient extends ProxyServer implements IMessageHandler {
                 .registerTab(new PanelAmountTileEnts(), "Tile Entities", "Tracking");
         IMessageHandler panelDimensions = (IMessageHandler) TabPanelRegistrar.INSTANCE
                 .registerTab(new PanelDimensions(), "Dimensions", "Tracking");
+        IMessageHandler panelForcedChunks = (IMessageHandler) TabPanelRegistrar.INSTANCE
+                .registerTab(new PanelForceLoadsPerDim(), "Forced Chunks", "Tracking");
 
         TabPanelRegistrar.INSTANCE.registerSection("Server timing");
         IMessageHandler panelTimingTileEnts = (IMessageHandler) TabPanelRegistrar.INSTANCE
@@ -168,6 +171,7 @@ public class ProxyClient extends ProxyServer implements IMessageHandler {
         MessageHandlerRegistrar.INSTANCE.registerHandler(Message.STATUS_PING, panelSummary);
 
         MessageHandlerRegistrar.INSTANCE.registerHandler(Message.LIST_DIMENSION_DATA, panelDimensions);
+        MessageHandlerRegistrar.INSTANCE.registerHandler(Message.LIST_FORCE_CHUNK_DATA, panelForcedChunks);
 
         MessageHandlerRegistrar.INSTANCE.registerHandler(Message.LIST_PACKETS_OUTBOUND, panelPacketsOut);
         MessageHandlerRegistrar.INSTANCE.registerHandler(Message.LIST_PACKETS_INBOUND, panelPacketsIn);

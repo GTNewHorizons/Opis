@@ -29,6 +29,7 @@ import mcp.mobius.opis.data.holders.newtypes.DataDimension;
 import mcp.mobius.opis.data.holders.newtypes.DataEntity;
 import mcp.mobius.opis.data.holders.newtypes.DataEntityPerClass;
 import mcp.mobius.opis.data.holders.newtypes.DataEvent;
+import mcp.mobius.opis.data.holders.newtypes.DataForcedChunks;
 import mcp.mobius.opis.data.holders.newtypes.DataNetworkTick;
 import mcp.mobius.opis.data.holders.newtypes.DataPacket;
 import mcp.mobius.opis.data.holders.newtypes.DataPacket250;
@@ -69,6 +70,7 @@ public enum DataType {
     DATACHUNK(DataChunk.class),
     DATACHUNKENTITIES(DataChunkEntities.class),
     DATADIMENSION(DataDimension.class),
+    DATAFORCEDCHUNKS(DataForcedChunks.class),
     DATAENTITY(DataEntity.class),
     DATAENTITYPERCLASS(DataEntityPerClass.class),
     DATAENTITYRENDER(DataEntityRender.class),
