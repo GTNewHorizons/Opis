@@ -15,6 +15,7 @@ import mcp.mobius.mobiuscore.profiler.ProfilerSection;
 import mcp.mobius.opis.data.holders.basetypes.SerialInt;
 import mcp.mobius.opis.data.holders.basetypes.SerialLong;
 import mcp.mobius.opis.data.holders.newtypes.DataDimension;
+import mcp.mobius.opis.data.holders.newtypes.DataForcedChunks;
 import mcp.mobius.opis.data.holders.newtypes.DataPacket;
 import mcp.mobius.opis.data.holders.newtypes.DataPacket250;
 import mcp.mobius.opis.data.holders.newtypes.DataThread;
@@ -111,11 +112,14 @@ public enum OpisServerTickHandler {
             }
 
             // Dimension data update.
-            ArrayList<DataDimension> dimData = new ArrayList<DataDimension>();
+            ArrayList<DataDimension> dimData = new ArrayList<>();
+            ArrayList<DataForcedChunks> forcedChunkData = new ArrayList<>();
             for (int dim : DimensionManager.getIDs()) {
                 dimData.add(new DataDimension().fill(dim));
+                forcedChunkData.addAll(DataForcedChunks.getAll(dim));
             }
             PacketManager.sendPacketToAllSwing(new NetDataList(Message.LIST_DIMENSION_DATA, dimData));
+            PacketManager.sendPacketToAllSwing(new NetDataList(Message.LIST_FORCE_CHUNK_DATA, forcedChunkData));
 
             // Profiler update (if running)
             if (modOpis.profilerRun) {

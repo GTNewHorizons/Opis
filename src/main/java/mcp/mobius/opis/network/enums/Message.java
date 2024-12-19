@@ -24,6 +24,7 @@ public enum Message {
     LIST_AMOUNT_TILEENTS,
     LIST_PLAYERS(EnumSet.of(SelectedTab.PLAYERS)),
     LIST_DIMENSION_DATA(EnumSet.of(SelectedTab.DIMENSIONS)),
+    LIST_FORCE_CHUNK_DATA(EnumSet.of(SelectedTab.FORCELOADS)),
     LIST_PACKETS_OUTBOUND(EnumSet.of(SelectedTab.PACKETOUTBOUND)),
     LIST_PACKETS_INBOUND(EnumSet.of(SelectedTab.PACKETINBOUND)),
     LIST_PACKETS_OUTBOUND_250(EnumSet.of(SelectedTab.PACKETOUTBOUND250)),
@@ -143,6 +144,7 @@ public enum Message {
         Message.LIST_AMOUNT_TILEENTS.setAccessLevel(level);
         Message.LIST_PLAYERS.setAccessLevel(level);
         Message.LIST_DIMENSION_DATA.setAccessLevel(level);
+        Message.LIST_FORCE_CHUNK_DATA.setAccessLevel(level);
         Message.LIST_PACKETS_OUTBOUND.setAccessLevel(level);
         Message.LIST_PACKETS_INBOUND.setAccessLevel(level);
         Message.LIST_PACKETS_OUTBOUND_250.setAccessLevel(level);
