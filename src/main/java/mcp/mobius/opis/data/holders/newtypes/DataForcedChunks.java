@@ -43,7 +43,13 @@ public class DataForcedChunks implements ISerializable {
         WorldServer world = DimensionManager.getWorld(dim);
         List<DataForcedChunks> dataList = new ArrayList<>();
 
-        CachedString dimName = new CachedString(world.provider.getDimensionName());
+        String dimNameStr = world.provider.getDimensionName();
+        CachedString dimName;
+        if (dimNameStr != null) {
+            dimName = new CachedString(dimNameStr);
+        } else {
+            dimName = NONE_CACHED;
+        }
 
         SetMultimap<ChunkCoordIntPair, Ticket> ticketMap = world.getPersistentChunks();
         Set<Ticket> tickets = new HashSet<>(ticketMap.values());
@@ -111,7 +117,7 @@ public class DataForcedChunks implements ISerializable {
             }
             if (chunkX != null && chunkZ != null) {
                 ChunkCoordIntPair chunkPos = new ChunkCoordIntPair(chunkX, chunkZ);
-                this.type = new CachedString(
+                this.position = new CachedString(
                         String.format("[ %4d ? %4d ]", chunkPos.getCenterXPos(), chunkPos.getCenterZPosition()));
                 return;
             }
