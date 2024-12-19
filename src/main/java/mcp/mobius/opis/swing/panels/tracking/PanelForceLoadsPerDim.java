@@ -1,5 +1,8 @@
 package mcp.mobius.opis.swing.panels.tracking;
 
+import java.util.Arrays;
+import java.util.Vector;
+
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
@@ -44,16 +47,27 @@ public class PanelForceLoadsPerDim extends JPanelMsgHandler implements ITabPanel
                 SwingUtilities.invokeLater(() -> {
                     this.getTable().setTableData(rawdata.array);
 
-                    DefaultTableModel model = this.getTable().getModel();
-                    int row = this.getTable().clearTable(DataForcedChunks.class);
+                    final DefaultTableModel model = this.getTable().getModel();
+                    final int lastSelectedRow = this.getTable().clearTable(DataForcedChunks.class);
 
+                    final Vector<Vector> dataVector = model.getDataVector();
+                    dataVector.clear();
                     for (Object o : rawdata.array) {
                         DataForcedChunks data = (DataForcedChunks) o;
-                        model.addRow(
-                                new Object[] { data.dim, data.dimName, data.modId, data.playerOrEntityName,
-                                        data.position, data.type, data.numChunks, data.chunks, data.rawData });
+                        dataVector.add(
+                                new Vector(
+                                        Arrays.asList(
+                                                data.dim,
+                                                data.dimName.toString(),
+                                                data.modId.toString(),
+                                                data.playerOrEntityName.toString(),
+                                                data.position.toString(),
+                                                data.type.toString(),
+                                                data.numChunks,
+                                                data.chunks.toString(),
+                                                data.rawData.toString())));
                     }
-                    this.getTable().dataUpdated(row);
+                    this.getTable().dataUpdated(lastSelectedRow);
                 });
                 break;
             }
