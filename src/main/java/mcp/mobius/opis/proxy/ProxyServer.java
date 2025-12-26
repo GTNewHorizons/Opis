@@ -6,6 +6,10 @@ import mcp.mobius.opis.network.enums.Message;
 
 public class ProxyServer implements IMessageHandler {
 
+    public boolean isClient() {
+        return false;
+    }
+
     public void init() {}
 
     @Override

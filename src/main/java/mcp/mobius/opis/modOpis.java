@@ -12,15 +12,16 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppedEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.FMLLaunchHandler;
 import mcp.mobius.Tags;
 import mcp.mobius.mobiuscore.profiler.ProfilerSection;
+import mcp.mobius.opis.api.MessageHandlerRegistrar;
 import mcp.mobius.opis.commands.client.CommandOpis;
 import mcp.mobius.opis.commands.server.CommandAddPrivileged;
 import mcp.mobius.opis.commands.server.CommandAmountEntities;
@@ -72,7 +73,6 @@ public class modOpis {
 
     public static Logger log = LogManager.getLogger("Opis");
 
-    @SidedProxy(clientSide = "mcp.mobius.opis.proxy.ProxyClient", serverSide = "mcp.mobius.opis.proxy.ProxyServer")
     public static ProxyServer proxy;
 
     public static int profilerDelay = 1;
@@ -92,6 +92,16 @@ public class modOpis {
     public static String commentTables = "Minimum access level to be able to view tables in /opis command. Valid values : NONE, PRIVILEGED, ADMIN";
     public static String commentOpis = "Minimum access level to be open Opis interface. Valid values : NONE, PRIVILEGED, ADMIN";
     public static String commentPrivileged = "List of players with PRIVILEGED access level.";
+
+    public modOpis() throws ReflectiveOperationException {
+        final boolean isHeadless = Boolean.getBoolean("java.awt.headless");
+        if (FMLLaunchHandler.side().isClient() && !isHeadless) {
+            proxy = (ProxyServer) Class.forName("mcp.mobius.opis.proxy.ProxyClient").getConstructor().newInstance();
+        } else {
+            proxy = new ProxyServer();
+        }
+        MessageHandlerRegistrar.INSTANCE.suppressUnhandledMsgLogs = FMLLaunchHandler.side().isClient() && isHeadless;
+    }
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
@@ -123,9 +133,11 @@ public class modOpis {
 
         config.save();
 
-        MinecraftForge.EVENT_BUS.register(new OpisClientEventHandler());
+        if (proxy.isClient()) {
+            MinecraftForge.EVENT_BUS.register(new OpisClientEventHandler());
+            FMLCommonHandler.instance().bus().register(OpisClientTickHandler.INSTANCE);
+        }
         MinecraftForge.EVENT_BUS.register(new OpisServerEventHandler());
-        FMLCommonHandler.instance().bus().register(OpisClientTickHandler.INSTANCE);
         FMLCommonHandler.instance().bus().register(OpisServerTickHandler.INSTANCE);
         FMLCommonHandler.instance().bus().register(PlayerTracker.INSTANCE);
 
