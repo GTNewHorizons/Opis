@@ -49,6 +49,11 @@ public class ProxyClient extends ProxyServer implements IMessageHandler {
     public static TrueTypeFont fontMC8, fontMC12, fontMC16, fontMC18, fontMC24;
 
     @Override
+    public boolean isClient() {
+        return true;
+    }
+
+    @Override
     public void init() {
         fontMC8 = Fonts.createFont(new ResourceLocation("opis", "fonts/LiberationMono-Bold.ttf"), 14, true);
 
