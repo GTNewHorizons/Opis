@@ -96,6 +96,7 @@ public class modOpis {
     public modOpis() throws ReflectiveOperationException {
         final boolean isHeadless = Boolean.getBoolean("java.awt.headless");
         if (FMLLaunchHandler.side().isClient() && !isHeadless) {
+            // Instantiate via reflection to avoid triggering client-only class loading
             proxy = (ProxyServer) Class.forName("mcp.mobius.opis.proxy.ProxyClient").getConstructor().newInstance();
         } else {
             proxy = new ProxyServer();
