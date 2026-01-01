@@ -12,6 +12,7 @@ public enum MessageHandlerRegistrar {
     INSTANCE;
 
     private HashMap<Message, HashSet<IMessageHandler>> msgHandlers = new HashMap<Message, HashSet<IMessageHandler>>();
+    public boolean suppressUnhandledMsgLogs = false;
 
     public void registerHandler(Message msg, IMessageHandler handler) {
         if (!msgHandlers.containsKey(msg)) msgHandlers.put(msg, new HashSet<IMessageHandler>());
@@ -27,7 +28,7 @@ public enum MessageHandlerRegistrar {
                     modOpis.log.warn(String.format("Unhandled msg %s in handler %s", msg, handler));
                 }
             }
-        } else {
+        } else if (!suppressUnhandledMsgLogs) {
             modOpis.log.warn(String.format("Unhandled msg : %s", msg));
         }
     }
