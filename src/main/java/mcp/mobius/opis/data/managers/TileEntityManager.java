@@ -228,8 +228,9 @@ public enum TileEntityManager {
         for (CoordinatesBlock coord : ((ProfilerTileEntityUpdate) ProfilerSection.TILEENT_UPDATETIME.getProfiler()).data
                 .keySet()) {
             World world = DimensionManager.getWorld(coord.dim);
-            int id = Block.getIdFromBlock(world.getBlock(coord.x, coord.y, coord.z));
-            int meta = world.getBlockMetadata(coord.x, coord.y, coord.z);
+            Block block = world.getBlock(coord.x, coord.y, coord.z);
+            int id = Block.getIdFromBlock(block);
+            int meta = block.getDamageValue(world, coord.x, coord.y, coord.z);
 
             if (!data.contains(id, meta)) data.put(id, meta, new DataBlockTileEntityPerClass(id, meta));
 

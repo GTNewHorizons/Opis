@@ -19,9 +19,10 @@ public class DataBlockRender extends DataBlockTileEntity {
     public DataBlockRender fill(CoordinatesBlock coord) {
         this.pos = coord;
         World world = Minecraft.getMinecraft().theWorld; // DimensionManager.getWorld(this.pos.dim);
+        Block block = world.getBlock(this.pos.x, this.pos.y, this.pos.z);
 
-        this.id = (short) Block.getIdFromBlock(world.getBlock(this.pos.x, this.pos.y, this.pos.z));
-        this.meta = (short) world.getBlockMetadata(this.pos.x, this.pos.y, this.pos.z);
+        this.id = Block.getIdFromBlock(block);
+        this.meta = block.getDamageValue(world, this.pos.x, this.pos.y, this.pos.z);
 
         HashMap<CoordinatesBlock, DescriptiveStatistics> data = ((ProfilerRenderBlock) (ProfilerSection.RENDER_BLOCK
                 .getProfiler())).data;
