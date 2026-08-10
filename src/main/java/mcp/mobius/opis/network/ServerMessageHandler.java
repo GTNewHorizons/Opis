@@ -30,6 +30,7 @@ import mcp.mobius.opis.data.managers.EntityManager;
 import mcp.mobius.opis.data.managers.MetaManager;
 import mcp.mobius.opis.data.managers.StringCache;
 import mcp.mobius.opis.data.managers.TileEntityManager;
+import mcp.mobius.opis.events.OpisServerTickHandler;
 import mcp.mobius.opis.events.PlayerTracker;
 import mcp.mobius.opis.modOpis;
 import mcp.mobius.opis.network.enums.Message;
@@ -77,8 +78,12 @@ public class ServerMessageHandler {
             // OpisPacketHandler_OLD.validateAndSend(NetDataValue_OLD.create(Message.VALUE_TIMING_HANDLERS, totalTime),
             // player);
         } else if (maintype == Message.LIST_TIMING_CHUNK) {
-            ArrayList<StatsChunk> timingChunks = ChunkManager.INSTANCE.getTopChunks(100);
-            PacketManager.validateAndSend(new NetDataList(Message.LIST_TIMING_CHUNK, timingChunks), player);
+            // Walks profiler maps the server thread mutates every tick, and this runs on the netty thread.
+            // The map overlay polls this once a second, so it cannot be left racing.
+            OpisServerTickHandler.INSTANCE.scheduleOnServerThread(() -> {
+                ArrayList<StatsChunk> timingChunks = ChunkManager.INSTANCE.getTopChunks(100);
+                PacketManager.validateAndSend(new NetDataList(Message.LIST_TIMING_CHUNK, timingChunks), player);
+            });
         } else if (maintype == Message.VALUE_TIMING_WORLDTICK) {
             PacketManager.validateAndSend(
                     new NetDataValue(Message.VALUE_TIMING_WORLDTICK, new DataBlockTick().fill()),
