@@ -6,15 +6,19 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.Nullable;
+import javax.swing.SwingUtilities;
 
 import com.gtnewhorizons.navigator.api.model.SupportedMods;
 import com.gtnewhorizons.navigator.api.model.layers.InteractableLayerManager;
 import com.gtnewhorizons.navigator.api.model.layers.LayerRenderer;
 import com.gtnewhorizons.navigator.api.model.layers.UniversalInteractableRenderer;
+import com.gtnewhorizons.navigator.api.model.steps.LocationInteractableStep;
+import com.gtnewhorizons.navigator.api.util.ClickPos;
 import com.gtnewhorizons.navigator.api.util.Util;
 
 import mcp.mobius.opis.api.IMessageHandler;
 import mcp.mobius.opis.api.MessageHandlerRegistrar;
+import mcp.mobius.opis.api.TabPanelRegistrar;
 import mcp.mobius.opis.data.holders.ISerializable;
 import mcp.mobius.opis.data.holders.basetypes.CoordinatesChunk;
 import mcp.mobius.opis.data.holders.stats.StatsChunk;
@@ -22,6 +26,10 @@ import mcp.mobius.opis.network.PacketBase;
 import mcp.mobius.opis.network.PacketManager;
 import mcp.mobius.opis.network.enums.Message;
 import mcp.mobius.opis.network.packets.client.PacketReqData;
+import mcp.mobius.opis.swing.SelectedTab;
+import mcp.mobius.opis.swing.SwingUI;
+import mcp.mobius.opis.swing.panels.timingserver.PanelTimingChunks;
+import mcp.mobius.opis.swing.widgets.JTableStats;
 
 /**
  * Navigator layer showing per-chunk server update time as a heatmap. Replaces the MapWriter overlay Opis used to ship.
@@ -49,7 +57,8 @@ public class ChunkTimeLayerManager extends InteractableLayerManager implements I
 
     @Override
     protected @Nullable LayerRenderer addLayerRenderer(InteractableLayerManager manager, SupportedMods mod) {
-        UniversalInteractableRenderer renderer = new UniversalInteractableRenderer(manager);
+        UniversalInteractableRenderer renderer = new UniversalInteractableRenderer(manager)
+                .withClickAction(this::onClick);
         renderer.withRenderStep(location -> new ChunkTimeRenderStep((ChunkTimeLocation) location));
 
         if (mod == SupportedMods.JourneyMap && Util.isJourneyMapV6Installed()) {
@@ -101,6 +110,41 @@ public class ChunkTimeLayerManager extends InteractableLayerManager implements I
             locations.add(new ChunkTimeLocation(stat, stat.getDataSum() / maxTime));
         }
         return locations;
+    }
+
+    /** Double-clicking a chunk opens the Swing control panel on its row in the chunk timing table. */
+    private boolean onClick(ClickPos click) {
+        if (!click.isDoubleClick()) return false;
+
+        LocationInteractableStep step = click.getLocationRenderStep();
+        if (step == null || !(step.getLocation() instanceof ChunkTimeLocation)) return false;
+
+        CoordinatesChunk chunk = ((ChunkTimeLocation) step.getLocation()).getStats().getChunk();
+        SwingUI.instance().showTab(SelectedTab.TIMINGCHUNKS);
+        selectChunkRow(chunk);
+        return true;
+    }
+
+    /** Highlights the clicked chunk in the timing table. It is only there if the server reported it this run. */
+    private static void selectChunkRow(CoordinatesChunk chunk) {
+        SwingUtilities.invokeLater(() -> {
+            PanelTimingChunks panel = (PanelTimingChunks) TabPanelRegistrar.INSTANCE.getTab(SelectedTab.TIMINGCHUNKS);
+            if (panel == null || panel.getTable() == null) return;
+
+            JTableStats table = panel.getTable();
+            List<ISerializable> rows = table.getTableData();
+            if (rows == null) return;
+
+            for (int i = 0; i < rows.size(); i++) {
+                if (!chunk.equals(((StatsChunk) rows.get(i)).getChunk())) continue;
+
+                int view = table.convertRowIndexToView(i);
+                if (view < 0) return;
+                table.setRowSelectionInterval(view, view);
+                table.scrollRectToVisible(table.getCellRect(view, 0, true));
+                return;
+            }
+        });
     }
 
     @Override

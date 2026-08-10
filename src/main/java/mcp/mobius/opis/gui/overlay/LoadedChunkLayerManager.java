@@ -13,6 +13,8 @@ import com.gtnewhorizons.navigator.api.model.SupportedMods;
 import com.gtnewhorizons.navigator.api.model.layers.InteractableLayerManager;
 import com.gtnewhorizons.navigator.api.model.layers.LayerRenderer;
 import com.gtnewhorizons.navigator.api.model.layers.UniversalInteractableRenderer;
+import com.gtnewhorizons.navigator.api.model.steps.LocationInteractableStep;
+import com.gtnewhorizons.navigator.api.util.ClickPos;
 import com.gtnewhorizons.navigator.api.util.Util;
 
 import mcp.mobius.opis.api.IMessageHandler;
@@ -24,6 +26,8 @@ import mcp.mobius.opis.network.PacketBase;
 import mcp.mobius.opis.network.PacketManager;
 import mcp.mobius.opis.network.enums.Message;
 import mcp.mobius.opis.network.packets.client.PacketReqData;
+import mcp.mobius.opis.swing.SelectedTab;
+import mcp.mobius.opis.swing.SwingUI;
 
 /**
  * Navigator layer showing which chunks the server currently has loaded, and which of those are held by a ticket.
@@ -53,7 +57,8 @@ public class LoadedChunkLayerManager extends InteractableLayerManager implements
 
     @Override
     protected @Nullable LayerRenderer addLayerRenderer(InteractableLayerManager manager, SupportedMods mod) {
-        UniversalInteractableRenderer renderer = new UniversalInteractableRenderer(manager);
+        UniversalInteractableRenderer renderer = new UniversalInteractableRenderer(manager)
+                .withClickAction(this::onClick);
         renderer.withRenderStep(location -> new LoadedChunkRenderStep((LoadedChunkLocation) location));
 
         if (mod == SupportedMods.JourneyMap && Util.isJourneyMapV6Installed()) {
@@ -109,6 +114,21 @@ public class LoadedChunkLayerManager extends InteractableLayerManager implements
             locations.add(new LoadedChunkLocation(chunk));
         }
         return locations;
+    }
+
+    /**
+     * Double-clicking a force-loaded chunk opens the Swing control panel on the forced chunk table, which names the mod
+     * holding the ticket. A plain loaded chunk has no table to show, so the click is left unconsumed.
+     */
+    private boolean onClick(ClickPos click) {
+        if (!click.isDoubleClick()) return false;
+
+        LocationInteractableStep step = click.getLocationRenderStep();
+        if (step == null || !(step.getLocation() instanceof LoadedChunkLocation)) return false;
+        if (!((LoadedChunkLocation) step.getLocation()).isForced()) return false;
+
+        SwingUI.instance().showTab(SelectedTab.FORCELOADS);
+        return true;
     }
 
     @Override

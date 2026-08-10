@@ -2,6 +2,7 @@ package mcp.mobius.opis.swing;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.HashSet;
@@ -22,6 +23,7 @@ import net.minecraft.client.gui.GuiChat;
 
 import mcp.mobius.opis.api.IMessageHandler;
 import mcp.mobius.opis.api.ITabPanel;
+import mcp.mobius.opis.api.TabPanelRegistrar;
 import mcp.mobius.opis.data.holders.basetypes.SerialInt;
 import mcp.mobius.opis.events.OpisClientTickHandler;
 import mcp.mobius.opis.modOpis;
@@ -109,6 +111,28 @@ public class SwingUI extends JFrame implements WindowListener, ChangeListener, I
 
     public JTabbedPane getTabbedPane() {
         return tabbedPane;
+    }
+
+    /**
+     * Shows the control panel with one tab selected. Tabs registered under a section live in a nested pane, so every
+     * enclosing tabbed pane on the way up has to be switched too.
+     */
+    public void showTab(SelectedTab tab) {
+        SwingUtilities.invokeLater(() -> {
+            Component child = TabPanelRegistrar.INSTANCE.getTabAsPanel(tab);
+
+            for (Container parent = child == null ? null : child.getParent(); parent
+                    != null; parent = parent.getParent()) {
+                if (parent instanceof JTabbedPane) {
+                    ((JTabbedPane) parent).setSelectedComponent(child);
+                }
+                child = parent;
+            }
+
+            modOpis.swingOpen = true;
+            setVisible(true);
+            toFront();
+        });
     }
 
     @Override
