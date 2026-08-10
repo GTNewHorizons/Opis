@@ -32,7 +32,7 @@ public class NetDataValue extends PacketBase {
 
     @Override
     public void decode(ByteArrayDataInput input) {
-        this.msg = Message.values()[input.readInt()];
+        this.msg = Message.VALUES[input.readInt()];
         this.clazz = DataType.getForOrdinal(input.readInt());
         this.value = dataRead(this.clazz, input);
     }

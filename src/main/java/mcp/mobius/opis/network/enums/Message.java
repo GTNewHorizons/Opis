@@ -87,6 +87,8 @@ public enum Message {
 
     CHAT_MSG;
 
+    public static final Message[] VALUES = values();
+
     private AccessLevel accessLevel = AccessLevel.NONE;
     private EnumSet<SelectedTab> tabEnum;
 
