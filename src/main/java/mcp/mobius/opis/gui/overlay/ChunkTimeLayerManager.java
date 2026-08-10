@@ -22,6 +22,7 @@ import mcp.mobius.opis.api.TabPanelRegistrar;
 import mcp.mobius.opis.data.holders.ISerializable;
 import mcp.mobius.opis.data.holders.basetypes.CoordinatesChunk;
 import mcp.mobius.opis.data.holders.stats.StatsChunk;
+import mcp.mobius.opis.modOpis;
 import mcp.mobius.opis.network.PacketBase;
 import mcp.mobius.opis.network.PacketManager;
 import mcp.mobius.opis.network.enums.Message;
@@ -35,8 +36,6 @@ import mcp.mobius.opis.swing.widgets.JTableStats;
  * Navigator layer showing per-chunk server update time as a heatmap. Replaces the MapWriter overlay Opis used to ship.
  */
 public class ChunkTimeLayerManager extends InteractableLayerManager implements IMessageHandler {
-
-    private static final long REQUEST_INTERVAL_MS = 1000;
 
     public static final ChunkTimeLayerManager INSTANCE = new ChunkTimeLayerManager();
 
@@ -67,7 +66,7 @@ public class ChunkTimeLayerManager extends InteractableLayerManager implements I
                     location -> ChunkPolygonJM6.create(
                             location,
                             ((ChunkTimeLocation) location).getColor(),
-                            ChunkTimeRenderStep.FILL_ALPHA / 255f),
+                            modOpis.overlayAlphaTiming / 255f),
                     true);
         }
         return renderer;
@@ -85,7 +84,7 @@ public class ChunkTimeLayerManager extends InteractableLayerManager implements I
         }
 
         long now = System.currentTimeMillis();
-        if (now - lastRequest < REQUEST_INTERVAL_MS) return;
+        if (now - lastRequest < modOpis.overlayRefreshInterval) return;
 
         lastRequest = now;
         PacketManager.sendToServer(new PacketReqData(Message.LIST_TIMING_CHUNK));

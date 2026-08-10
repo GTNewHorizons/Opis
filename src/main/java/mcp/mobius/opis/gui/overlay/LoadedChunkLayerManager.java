@@ -22,6 +22,7 @@ import mcp.mobius.opis.api.MessageHandlerRegistrar;
 import mcp.mobius.opis.data.holders.basetypes.CoordinatesChunk;
 import mcp.mobius.opis.data.holders.basetypes.SerialInt;
 import mcp.mobius.opis.data.managers.ChunkManager;
+import mcp.mobius.opis.modOpis;
 import mcp.mobius.opis.network.PacketBase;
 import mcp.mobius.opis.network.PacketManager;
 import mcp.mobius.opis.network.enums.Message;
@@ -34,8 +35,6 @@ import mcp.mobius.opis.swing.SwingUI;
  * Replaces the MapWriter loaded-chunk overlay Opis used to ship.
  */
 public class LoadedChunkLayerManager extends InteractableLayerManager implements IMessageHandler {
-
-    private static final long REQUEST_INTERVAL_MS = 1000;
 
     public static final LoadedChunkLayerManager INSTANCE = new LoadedChunkLayerManager();
 
@@ -66,7 +65,7 @@ public class LoadedChunkLayerManager extends InteractableLayerManager implements
                     location -> ChunkPolygonJM6.create(
                             location,
                             ((LoadedChunkLocation) location).getColor(),
-                            LoadedChunkRenderStep.FILL_ALPHA / 255f),
+                            modOpis.overlayAlphaLoaded / 255f),
                     true);
         }
         return renderer;
@@ -92,7 +91,7 @@ public class LoadedChunkLayerManager extends InteractableLayerManager implements
         }
 
         long now = System.currentTimeMillis();
-        if (now - lastRequest < REQUEST_INTERVAL_MS) return;
+        if (now - lastRequest < modOpis.overlayRefreshInterval) return;
 
         lastRequest = now;
         PacketManager.sendToServer(

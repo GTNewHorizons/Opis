@@ -83,6 +83,9 @@ public class modOpis {
     public static boolean rconactive = false;
     public static String rconpass = "";
     public static boolean microseconds = true;
+    public static int overlayRefreshInterval = 1000;
+    public static int overlayAlphaTiming = 200;
+    public static int overlayAlphaLoaded = 80;
     private static int lagGenID = -1;
     public static volatile CoordinatesBlock selectedBlock = null;
     public static boolean swingOpen = false;
@@ -92,6 +95,8 @@ public class modOpis {
     public static String commentTables = "Minimum access level to be able to view tables in /opis command. Valid values : NONE, PRIVILEGED, ADMIN";
     public static String commentOpis = "Minimum access level to be open Opis interface. Valid values : NONE, PRIVILEGED, ADMIN";
     public static String commentPrivileged = "List of players with PRIVILEGED access level.";
+    public static String commentOverlayRefresh = "How often the map overlays ask the server for fresh data, in milliseconds. Raise it to cut bandwidth; the loaded chunk overlay sends 13 bytes per loaded chunk each time.";
+    public static String commentOverlayAlpha = "Opacity of the map overlay chunk fill. 0 is invisible, 255 is opaque.";
 
     public modOpis() throws ReflectiveOperationException {
         final boolean isHeadless = Boolean.getBoolean("java.awt.headless");
@@ -113,6 +118,13 @@ public class modOpis {
         lagGenID = config.get(Configuration.CATEGORY_GENERAL, "laggenerator_id", -1).getInt();
         profilerMaxTicks = config.get(Configuration.CATEGORY_GENERAL, "profiler.maxpts", 250).getInt();
         microseconds = config.get(Configuration.CATEGORY_GENERAL, "display.microseconds", true).getBoolean(true);
+        overlayRefreshInterval = config
+                .get(Configuration.CATEGORY_GENERAL, "overlay.refresh_ms", 1000, commentOverlayRefresh, 250, 60000)
+                .getInt();
+        overlayAlphaTiming = config
+                .get(Configuration.CATEGORY_GENERAL, "overlay.alpha.timing", 200, commentOverlayAlpha, 0, 255).getInt();
+        overlayAlphaLoaded = config
+                .get(Configuration.CATEGORY_GENERAL, "overlay.alpha.loaded", 80, commentOverlayAlpha, 0, 255).getInt();
         rconport = config.get("REMOTE_CONSOLE", "opisrcon.port", 25566).getInt();
         rconactive = config.get("REMOTE_CONSOLE", "opisrcon.active", false).getBoolean(false);
         rconpass = config.get("REMOTE_CONSOLE", "opisrcon.password", "").getString();

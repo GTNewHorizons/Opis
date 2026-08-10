@@ -2,15 +2,19 @@ package mcp.mobius.opis.gui.overlay;
 
 import java.util.List;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.util.EnumChatFormatting;
+
 import com.gtnewhorizons.navigator.api.model.steps.UniversalLocationInteractableStep;
 import com.gtnewhorizons.navigator.api.util.DrawUtils;
 
 import mcp.mobius.opis.data.holders.basetypes.CoordinatesChunk;
+import mcp.mobius.opis.modOpis;
+import mcp.mobius.opis.network.PacketManager;
+import mcp.mobius.opis.network.enums.Message;
+import mcp.mobius.opis.network.packets.client.PacketReqData;
 
 public class LoadedChunkRenderStep extends UniversalLocationInteractableStep<LoadedChunkLocation> {
-
-    /** Low, because this layer covers large areas and the map underneath still has to be readable. */
-    static final int FILL_ALPHA = 80;
 
     public LoadedChunkRenderStep(LoadedChunkLocation location) {
         super(location);
@@ -18,7 +22,13 @@ public class LoadedChunkRenderStep extends UniversalLocationInteractableStep<Loa
 
     @Override
     public void draw(double x, double y, float drawScale, double zoom) {
-        DrawUtils.drawRect(x, y, getAdjustedWidth(), getAdjustedHeight(), location.getColor(), FILL_ALPHA);
+        DrawUtils.drawRect(
+                x,
+                y,
+                getAdjustedWidth(),
+                getAdjustedHeight(),
+                location.getColor(),
+                modOpis.overlayAlphaLoaded);
         DrawUtils.drawHollowRect(x, y, getAdjustedWidth(), getAdjustedHeight(), 0x000000, 255);
     }
 
@@ -28,5 +38,13 @@ public class LoadedChunkRenderStep extends UniversalLocationInteractableStep<Loa
 
         list.add(String.format("Chunk [%d, %d]", chunk.chunkX, chunk.chunkZ));
         list.add(location.isForced() ? "Force loaded" : "Game loaded");
+        list.add(EnumChatFormatting.GRAY + ChunkTimeRenderStep.teleportHint());
+    }
+
+    /** Server side this is PRIVILEGED, so it is silently ignored for players without access. */
+    @Override
+    public void onActionKeyPressed() {
+        PacketManager.sendToServer(new PacketReqData(Message.COMMAND_TELEPORT_CHUNK, location.getChunk()));
+        Minecraft.getMinecraft().setIngameFocus();
     }
 }
