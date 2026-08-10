@@ -40,7 +40,7 @@ public class NetDataList extends PacketBase {
 
     @Override
     public void decode(ByteArrayDataInput input) {
-        this.msg = Message.values()[input.readInt()];
+        this.msg = Message.VALUES[input.readInt()];
         int ndata = input.readInt();
         this.clazzStr = "";
         if (ndata > 0) {

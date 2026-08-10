@@ -57,7 +57,7 @@ public class PacketReqData extends PacketBase {
 
     @Override
     public void decode(ByteArrayDataInput input) {
-        this.dataReq = Message.values()[input.readInt()];
+        this.dataReq = Message.VALUES[input.readInt()];
 
         if (input.readBoolean()) {
             Class<?> datatype = DataType.getForOrdinal(input.readInt());

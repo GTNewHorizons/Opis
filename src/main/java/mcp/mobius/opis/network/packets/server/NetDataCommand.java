@@ -27,7 +27,7 @@ public class NetDataCommand extends PacketBase {
 
     @Override
     public void decode(ByteArrayDataInput input) {
-        this.msg = Message.values()[input.readInt()];
+        this.msg = Message.VALUES[input.readInt()];
     }
 
     @Override
