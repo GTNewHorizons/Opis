@@ -6,14 +6,13 @@ import com.gtnewhorizons.navigator.api.model.steps.UniversalLocationInteractable
 import com.gtnewhorizons.navigator.api.util.DrawUtils;
 
 import mcp.mobius.opis.data.holders.basetypes.CoordinatesChunk;
-import mcp.mobius.opis.data.holders.stats.StatsChunk;
-import mcp.mobius.opis.modOpis;
 
-public class ChunkTimeRenderStep extends UniversalLocationInteractableStep<ChunkTimeLocation> {
+public class LoadedChunkRenderStep extends UniversalLocationInteractableStep<LoadedChunkLocation> {
 
-    static final int FILL_ALPHA = 200;
+    /** Low, because this layer covers large areas and the map underneath still has to be readable. */
+    static final int FILL_ALPHA = 80;
 
-    public ChunkTimeRenderStep(ChunkTimeLocation location) {
+    public LoadedChunkRenderStep(LoadedChunkLocation location) {
         super(location);
     }
 
@@ -25,13 +24,9 @@ public class ChunkTimeRenderStep extends UniversalLocationInteractableStep<Chunk
 
     @Override
     public void getTooltip(List<String> list) {
-        StatsChunk stats = location.getStats();
-        CoordinatesChunk chunk = stats.getChunk();
+        CoordinatesChunk chunk = location.getChunk();
 
         list.add(String.format("Chunk [%d, %d]", chunk.chunkX, chunk.chunkZ));
-        list.add(
-                modOpis.microseconds ? String.format("%.3f µs", stats.getDataSum() / 1000.0)
-                        : String.format("%.5f ms", stats.getDataSum() / 1000.0 / 1000.0));
-        list.add(String.format("%d tile entities, %d entities", stats.tileEntities, stats.entities));
+        list.add(location.isForced() ? "Force loaded" : "Game loaded");
     }
 }

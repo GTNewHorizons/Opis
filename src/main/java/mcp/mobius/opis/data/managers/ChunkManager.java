@@ -30,6 +30,7 @@ public enum ChunkManager implements IMessageHandler {
     INSTANCE;
 
     private ArrayList<CoordinatesChunk> chunksLoad = new ArrayList<CoordinatesChunk>();
+    private ArrayList<CoordinatesChunk> chunksLoadComplete = new ArrayList<CoordinatesChunk>();
     private HashMap<CoordinatesChunk, StatsChunk> chunkMeanTime = new HashMap<CoordinatesChunk, StatsChunk>();
 
     public synchronized void addLoadedChunks(ArrayList<ISerializable> data) {
@@ -37,6 +38,23 @@ public enum ChunkManager implements IMessageHandler {
         for (ISerializable chunk : data) {
             chunksLoad.add((CoordinatesChunk) chunk);
         }
+    }
+
+    /**
+     * The server sends a clear before each fresh batch, so a clear also means the previous batch is complete. Swapping
+     * instead of clearing keeps readers from ever seeing a half-delivered list.
+     */
+    public synchronized void swapLoadedChunks() {
+        chunksLoadComplete = chunksLoad;
+        chunksLoad = new ArrayList<CoordinatesChunk>();
+    }
+
+    /**
+     * Last complete set of loaded chunks the server reported to this client. Distinct from
+     * {@link #getLoadedChunks(int)}, which collects them server-side.
+     */
+    public synchronized ArrayList<CoordinatesChunk> getClientLoadedChunks() {
+        return new ArrayList<>(chunksLoadComplete);
     }
 
     public synchronized void setChunkMeanTime(ArrayList<ISerializable> data) {
@@ -145,9 +163,7 @@ public enum ChunkManager implements IMessageHandler {
                 break;
             }
             case LIST_CHUNK_LOADED_CLEAR: {
-                synchronized (this) {
-                    chunksLoad.clear();
-                }
+                this.swapLoadedChunks();
                 break;
             }
             default:

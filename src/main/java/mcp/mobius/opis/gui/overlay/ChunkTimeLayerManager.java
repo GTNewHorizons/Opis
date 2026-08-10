@@ -7,7 +7,6 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import com.gtnewhorizons.navigator.api.NavigatorApi;
 import com.gtnewhorizons.navigator.api.model.SupportedMods;
 import com.gtnewhorizons.navigator.api.model.layers.InteractableLayerManager;
 import com.gtnewhorizons.navigator.api.model.layers.LayerRenderer;
@@ -38,7 +37,6 @@ public class ChunkTimeLayerManager extends InteractableLayerManager implements I
     private volatile boolean dirty = false;
     private volatile long lastFingerprint = 0;
     private long lastRequest = 0;
-    private static boolean shown = false;
 
     private ChunkTimeLayerManager() {
         super(ChunkTimeButtonManager.INSTANCE);
@@ -49,17 +47,6 @@ public class ChunkTimeLayerManager extends InteractableLayerManager implements I
         MessageHandlerRegistrar.INSTANCE.registerHandler(Message.LIST_TIMING_CHUNK, INSTANCE);
     }
 
-    /**
-     * Makes the layer visible to the installed map mods. Deferred until the player actually uses Opis so the button
-     * does not clutter everyone's map. Idempotent, and must run on the client thread because Navigator's layer list is
-     * iterated while rendering.
-     */
-    public static void show() {
-        if (shown) return;
-        shown = true;
-        NavigatorApi.registerLayerManager(INSTANCE);
-    }
-
     @Override
     protected @Nullable LayerRenderer addLayerRenderer(InteractableLayerManager manager, SupportedMods mod) {
         UniversalInteractableRenderer renderer = new UniversalInteractableRenderer(manager);
@@ -68,7 +55,10 @@ public class ChunkTimeLayerManager extends InteractableLayerManager implements I
         if (mod == SupportedMods.JourneyMap && Util.isJourneyMapV6Installed()) {
             // Native overlays are the only route onto the JM6 minimap, and they replace the fullscreen render step.
             renderer.withJourneyMapV6Overlays(
-                    location -> ChunkTimeOverlayJM6.create((ChunkTimeLocation) location),
+                    location -> ChunkPolygonJM6.create(
+                            location,
+                            ((ChunkTimeLocation) location).getColor(),
+                            ChunkTimeRenderStep.FILL_ALPHA / 255f),
                     true);
         }
         return renderer;

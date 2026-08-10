@@ -119,24 +119,8 @@ public class PacketManager {
             ByteArrayDataInput input = ByteStreams.newDataInput(source.array());
             input.skipBytes(1); // skip the packet identifier byte
             packet.decode(input);
-
-            if (FMLCommonHandler.instance().getEffectiveSide().isClient()) {
-                actionClient(packet);
-            } else {
-                actionServer(ctx, packet);
-            }
-        }
-
-        @SideOnly(Side.CLIENT)
-        private void actionClient(PacketBase packet) {
-            Minecraft mc = Minecraft.getMinecraft();
-            packet.actionClient(mc.theWorld, mc.thePlayer);
-        }
-
-        private void actionServer(ChannelHandlerContext ctx, PacketBase packet) {
-            EntityPlayerMP player = ((NetHandlerPlayServer) ctx.channel().attr(NetworkRegistry.NET_HANDLER)
-                    .get()).playerEntity;
-            packet.actionServer(player.worldObj, player);
+            // Dispatch belongs to HandlerClient/HandlerServer further down the pipeline. Acting on the packet here
+            // too ran every packet twice on both sides.
         }
 
         @Override

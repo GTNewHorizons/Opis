@@ -17,7 +17,7 @@ import mcp.mobius.opis.data.managers.StringCache;
 import mcp.mobius.opis.events.OpisClientTickHandler;
 import mcp.mobius.opis.gui.font.Fonts;
 import mcp.mobius.opis.gui.font.TrueTypeFont;
-import mcp.mobius.opis.gui.overlay.ChunkTimeLayerManager;
+import mcp.mobius.opis.gui.overlay.OpisLayers;
 import mcp.mobius.opis.modOpis;
 import mcp.mobius.opis.network.PacketBase;
 import mcp.mobius.opis.network.enums.Message;
@@ -205,7 +205,7 @@ public class ProxyClient extends ProxyServer implements IMessageHandler {
 
         // Keep every Navigator class behind this branch so Opis still loads without it.
         if (Loader.isModLoaded("navigator")) {
-            ChunkTimeLayerManager.init();
+            OpisLayers.init();
         }
     }
 
@@ -228,7 +228,7 @@ public class ProxyClient extends ProxyServer implements IMessageHandler {
             case CLIENT_SHOW_SWING: {
                 // First /opis is what puts the map layer button in front of the player.
                 if (Loader.isModLoaded("navigator")) {
-                    OpisClientTickHandler.INSTANCE.scheduleOnClientThread(ChunkTimeLayerManager::show);
+                    OpisClientTickHandler.INSTANCE.scheduleOnClientThread(OpisLayers::show);
                 }
                 break;
             }

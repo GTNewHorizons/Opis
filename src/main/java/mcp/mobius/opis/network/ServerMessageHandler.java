@@ -54,12 +54,14 @@ public class ServerMessageHandler {
         String name = player.getGameProfile().getName();
 
         if (maintype == Message.LIST_CHUNK_LOADED) {
-            PlayerTracker.INSTANCE.playerDimension.put(player, ((SerialInt) param1).value);
-            PacketManager.validateAndSend(new NetDataCommand(Message.LIST_CHUNK_LOADED_CLEAR), player);
-            PacketManager.splitAndSend(
-                    Message.LIST_CHUNK_LOADED,
-                    ChunkManager.INSTANCE.getLoadedChunks(((SerialInt) param1).value),
-                    player);
+            int dim = ((SerialInt) param1).value;
+            PlayerTracker.INSTANCE.playerDimension.put(player, dim);
+            // Walks the chunk provider's live collections, and this runs on the netty thread.
+            OpisServerTickHandler.INSTANCE.scheduleOnServerThread(() -> {
+                PacketManager.validateAndSend(new NetDataCommand(Message.LIST_CHUNK_LOADED_CLEAR), player);
+                PacketManager
+                        .splitAndSend(Message.LIST_CHUNK_LOADED, ChunkManager.INSTANCE.getLoadedChunks(dim), player);
+            });
         } else if (maintype == Message.LIST_TIMING_TILEENTS) {
             ArrayList<DataBlockTileEntity> timingTileEnts = TileEntityManager.INSTANCE.getWorses(100);
             DataTiming totalTime = TileEntityManager.INSTANCE.getTotalUpdateTime();
