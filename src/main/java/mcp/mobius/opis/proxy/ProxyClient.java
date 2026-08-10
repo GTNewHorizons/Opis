@@ -4,6 +4,7 @@ import net.minecraft.util.ResourceLocation;
 
 import org.apache.logging.log4j.Level;
 
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.relauncher.Side;
 import mcp.mobius.mobiuscore.profiler.ProfilerSection;
 import mcp.mobius.opis.api.IMessageHandler;
@@ -16,6 +17,7 @@ import mcp.mobius.opis.data.managers.StringCache;
 import mcp.mobius.opis.events.OpisClientTickHandler;
 import mcp.mobius.opis.gui.font.Fonts;
 import mcp.mobius.opis.gui.font.TrueTypeFont;
+import mcp.mobius.opis.gui.overlay.ChunkTimeLayerManager;
 import mcp.mobius.opis.modOpis;
 import mcp.mobius.opis.network.PacketBase;
 import mcp.mobius.opis.network.enums.Message;
@@ -198,6 +200,13 @@ public class ProxyClient extends ProxyServer implements IMessageHandler {
 
         MessageHandlerRegistrar.INSTANCE.registerHandler(Message.STATUS_STRINGUPD, StringCache.INSTANCE);
         MessageHandlerRegistrar.INSTANCE.registerHandler(Message.STATUS_STRINGUPD_FULL, StringCache.INSTANCE);
+
+        MessageHandlerRegistrar.INSTANCE.registerHandler(Message.CLIENT_SHOW_SWING, modOpis.proxy);
+
+        // Keep every Navigator class behind this branch so Opis still loads without it.
+        if (Loader.isModLoaded("navigator")) {
+            ChunkTimeLayerManager.init();
+        }
     }
 
     @Override
@@ -214,6 +223,13 @@ public class ProxyClient extends ProxyServer implements IMessageHandler {
                     modOpis.profilerRun = true;
                     ProfilerSection.activateAll(Side.CLIENT);
                 });
+                break;
+            }
+            case CLIENT_SHOW_SWING: {
+                // First /opis is what puts the map layer button in front of the player.
+                if (Loader.isModLoaded("navigator")) {
+                    OpisClientTickHandler.INSTANCE.scheduleOnClientThread(ChunkTimeLayerManager::show);
+                }
                 break;
             }
             case CLIENT_SHOW_RENDER_TICK: {

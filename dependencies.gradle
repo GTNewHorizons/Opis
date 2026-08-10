@@ -1,6 +1,9 @@
 // Add your dependencies here
 
 dependencies {
+    devOnlyNonPublishable('com.github.GTNewHorizons:Navigator:1.1.8:dev')
+    compileOnly('info.journeymap:journeymap-api-forge:1.7.10-2.0.0')
+
     shadowCompile 'io.netty-opis:Netty-opis:4.0.23'
     shadowCompile 'org.apache.commons:commons-math3:3.2'
     shadowCompile 'org.jfree:jfreechart:1.0.17'
