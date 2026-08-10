@@ -53,14 +53,30 @@ public enum PlayerTracker {
 
     public AccessLevel getPlayerAccessLevel(String name) {
 
-        EntityPlayerMP player = MinecraftServer.getServer().getConfigurationManager().func_152612_a(name);
+        MinecraftServer server = MinecraftServer.getServer();
+        if (server == null) return AccessLevel.NONE;
+
+        // Null while a player is disconnecting or has not finished joining yet, which is exactly when stale
+        // entries elsewhere get looked up. Every access check routes through here, so guard it here.
+        EntityPlayerMP player = server.getConfigurationManager().func_152612_a(name);
+        if (player == null) return playerPrivileged.contains(name) ? AccessLevel.PRIVILEGED : AccessLevel.NONE;
+
         GameProfile profile = player.getGameProfile();
 
-        if (MinecraftServer.getServer().getConfigurationManager().func_152596_g(profile)
-                || MinecraftServer.getServer().isSinglePlayer())
+        if (server.getConfigurationManager().func_152596_g(profile) || server.isSinglePlayer())
             return AccessLevel.ADMIN;
         else if (playerPrivileged.contains(name)) return AccessLevel.PRIVILEGED;
         else return AccessLevel.NONE;
+    }
+
+    /**
+     * Drops per-session state. These maps key on {@link EntityPlayerMP} instances that must not outlive the server they
+     * came from, or the next world starts up holding players that will never exist again.
+     */
+    public void clearSessionState() {
+        this.playersSwing.clear();
+        this.playerDimension.clear();
+        this.playerTab.clear();
     }
 
     public void addPrivilegedPlayer(String name, boolean save) {

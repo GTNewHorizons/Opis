@@ -227,5 +227,7 @@ public class modOpis {
     @EventHandler
     public void serverStopped(FMLServerStoppedEvent event) {
         OpisServerTickHandler.INSTANCE.purgeScheduledCallQueue();
+        OpisServerTickHandler.INSTANCE.cachedAccess.clear();
+        PlayerTracker.INSTANCE.clearSessionState();
     }
 }
