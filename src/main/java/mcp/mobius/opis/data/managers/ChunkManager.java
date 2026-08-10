@@ -31,7 +31,6 @@ public enum ChunkManager implements IMessageHandler {
 
     private ArrayList<CoordinatesChunk> chunksLoad = new ArrayList<CoordinatesChunk>();
     private ArrayList<CoordinatesChunk> chunksLoadComplete = new ArrayList<CoordinatesChunk>();
-    private HashMap<CoordinatesChunk, StatsChunk> chunkMeanTime = new HashMap<CoordinatesChunk, StatsChunk>();
 
     public synchronized void addLoadedChunks(ArrayList<ISerializable> data) {
         // chunksLoad.clear();
@@ -55,11 +54,6 @@ public enum ChunkManager implements IMessageHandler {
      */
     public synchronized ArrayList<CoordinatesChunk> getClientLoadedChunks() {
         return new ArrayList<>(chunksLoadComplete);
-    }
-
-    public synchronized void setChunkMeanTime(ArrayList<ISerializable> data) {
-        chunkMeanTime.clear();
-        for (ISerializable stat : data) chunkMeanTime.put(((StatsChunk) stat).getChunk(), (StatsChunk) stat);
     }
 
     public synchronized ArrayList<CoordinatesChunk> getLoadedChunks(int dimension) {
@@ -154,10 +148,6 @@ public enum ChunkManager implements IMessageHandler {
     @Override
     public boolean handleMessage(Message msg, PacketBase rawdata) {
         switch (msg) {
-            case LIST_TIMING_CHUNK: {
-                this.setChunkMeanTime(rawdata.array);
-                break;
-            }
             case LIST_CHUNK_LOADED: {
                 this.addLoadedChunks(rawdata.array);
                 break;
