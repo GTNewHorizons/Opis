@@ -93,7 +93,7 @@ public enum DataType {
     CHATMSG(ChatMsg.class);
 
     public static final DataType[] VALUES = values();
-    
+
     private Class<?> clazz;
     private static HashBiMap<DataType, Class<?>> bimap = HashBiMap.create(50);
 

@@ -29,6 +29,7 @@ public enum ProfilerSection implements IProfilerBase {
     RENDER_BLOCK(RunType.ONREQUEST, Side.CLIENT); // Profiler for Block rendering
 
     public static final ProfilerSection[] VALUES = values();
+
     public enum RunType {
         REALTIME,
         ONREQUEST;
@@ -80,8 +81,7 @@ public enum ProfilerSection implements IProfilerBase {
     }
 
     public static void activateAll(Side trgside) {
-        for (ProfilerSection section : ProfilerSection.VALUES)
-            if (section.sides.contains(trgside)) section.activate();
+        for (ProfilerSection section : ProfilerSection.VALUES) if (section.sides.contains(trgside)) section.activate();
     }
 
     public static void desactivateAll(Side trgside) {
