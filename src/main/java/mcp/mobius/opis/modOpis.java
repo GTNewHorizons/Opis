@@ -133,10 +133,11 @@ public class modOpis {
         AccessLevel minTables = AccessLevel.PRIVILEGED;
         AccessLevel openOpis = AccessLevel.PRIVILEGED;
         try {
-            openOpis = AccessLevel.valueOf(config.get("ACCESS_RIGHTS", "opis", "NONE", commentTables).getString());
+            openOpis = AccessLevel.valueOf(config.get("ACCESS_RIGHTS", "opis", "PRIVILEGED", commentOpis).getString());
         } catch (IllegalArgumentException e) {}
         try {
-            minTables = AccessLevel.valueOf(config.get("ACCESS_RIGHTS", "tables", "NONE", commentTables).getString());
+            minTables = AccessLevel
+                    .valueOf(config.get("ACCESS_RIGHTS", "tables", "PRIVILEGED", commentTables).getString());
         } catch (IllegalArgumentException e) {}
 
         Message.setTablesMinimumLevel(minTables);

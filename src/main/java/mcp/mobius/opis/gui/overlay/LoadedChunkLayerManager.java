@@ -30,15 +30,12 @@ import mcp.mobius.opis.network.packets.client.PacketReqData;
 import mcp.mobius.opis.swing.SelectedTab;
 import mcp.mobius.opis.swing.SwingUI;
 
-/**
- * Navigator layer showing which chunks the server currently has loaded, and which of those are held by a ticket.
- * Replaces the MapWriter loaded-chunk overlay Opis used to ship.
- */
+/** Navigator layer showing which chunks the server has loaded, and which are held by a ticket. */
 public class LoadedChunkLayerManager extends InteractableLayerManager implements IMessageHandler {
 
     public static final LoadedChunkLayerManager INSTANCE = new LoadedChunkLayerManager();
 
-    /** Set from the network thread; the snapshot itself is only read on the client thread. */
+    /** Set from the network thread; the snapshot is read on the client thread. */
     private volatile boolean dirty = false;
     private List<CoordinatesChunk> chunks = Collections.emptyList();
     private long lastRequest = 0;
@@ -48,7 +45,7 @@ public class LoadedChunkLayerManager extends InteractableLayerManager implements
         super(LoadedChunkButtonManager.INSTANCE);
     }
 
-    /** Starts listening for chunk data without putting a button on any map yet. */
+    /** Listens for data without showing a button yet. */
     public static void init() {
         MessageHandlerRegistrar.INSTANCE.registerHandler(Message.LIST_CHUNK_LOADED, INSTANCE);
         MessageHandlerRegistrar.INSTANCE.registerHandler(Message.LIST_CHUNK_LOADED_CLEAR, INSTANCE);
@@ -73,7 +70,7 @@ public class LoadedChunkLayerManager extends InteractableLayerManager implements
 
     @Override
     public void onUpdatePre(int minX, int maxX, int minZ, int maxZ) {
-        // Fullscreen integrations recache enabled layers whether or not they are toggled on.
+        // Fullscreen integrations recache enabled layers even when toggled off.
         if (!isLayerActive()) return;
 
         if (dirty) {
@@ -81,8 +78,7 @@ public class LoadedChunkLayerManager extends InteractableLayerManager implements
             List<CoordinatesChunk> updated = ChunkManager.INSTANCE.getClientLoadedChunks();
             long fingerprint = fingerprint(updated);
 
-            // The set is resent every second whether or not it moved; rebuilding an identical one would churn
-            // every JourneyMap 6 overlay for nothing.
+            // Resent every second even when unchanged; rebuilding identical data churns the JM6 overlays.
             if (fingerprint != lastFingerprint) {
                 lastFingerprint = fingerprint;
                 chunks = updated;
@@ -115,10 +111,7 @@ public class LoadedChunkLayerManager extends InteractableLayerManager implements
         return locations;
     }
 
-    /**
-     * Double-clicking a force-loaded chunk opens the Swing control panel on the forced chunk table, which names the mod
-     * holding the ticket. A plain loaded chunk has no table to show, so the click is left unconsumed.
-     */
+    /** Only forced chunks have a table to open, so other clicks are left unconsumed. */
     private boolean onClick(ClickPos click) {
         if (!click.isDoubleClick()) return false;
 
@@ -133,14 +126,14 @@ public class LoadedChunkLayerManager extends InteractableLayerManager implements
     @Override
     public void onLayerToggled(boolean toEnable) {
         super.onLayerToggled(toEnable);
-        // Keep the last snapshot so re-enabling redraws immediately.
-        if (toEnable) lastRequest = 0; // request on the next recache
+        // Snapshot is kept so re-enabling redraws immediately.
+        if (toEnable) lastRequest = 0;
     }
 
-    /** Order-independent, because the server builds the list from a HashSet. Metadata matters: it is the colour. */
+    /** Order-independent, and metadata scales with the hash so swapping forced status cannot cancel out. */
     private static long fingerprint(List<CoordinatesChunk> chunks) {
         long hash = chunks.size();
-        for (CoordinatesChunk chunk : chunks) hash += 31L * chunk.hashCode() + chunk.metadata;
+        for (CoordinatesChunk chunk : chunks) hash += chunk.hashCode() * (31L + chunk.metadata);
         return hash;
     }
 
@@ -148,8 +141,7 @@ public class LoadedChunkLayerManager extends InteractableLayerManager implements
     public boolean handleMessage(Message msg, PacketBase rawdata) {
         if (msg != Message.LIST_CHUNK_LOADED && msg != Message.LIST_CHUNK_LOADED_CLEAR) return false;
 
-        // ChunkManager accumulates the batches. A clear means the previous batch finished arriving, so that is the
-        // only point where a complete set is available to read.
+        // ChunkManager accumulates the batches; the clear marks the set complete.
         if (msg == Message.LIST_CHUNK_LOADED_CLEAR) dirty = true;
         return true;
     }

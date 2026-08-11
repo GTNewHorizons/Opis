@@ -49,14 +49,13 @@ public class ChunkTimeRenderStep extends UniversalLocationInteractableStep<Chunk
         list.add(EnumChatFormatting.GRAY + teleportHint());
     }
 
-    /** Server side this is PRIVILEGED, so it is silently ignored for players without access. */
     @Override
     public void onActionKeyPressed() {
         PacketManager.sendToServer(new PacketReqData(Message.COMMAND_TELEPORT_CHUNK, location.getStats().getChunk()));
         Minecraft.getMinecraft().setIngameFocus();
     }
 
-    /** The action key is rebindable, so read the current binding rather than hardcoding a name. */
+    /** The action key is rebindable, so read the current binding. */
     static String teleportHint() {
         return "[" + Keyboard.getKeyName(NavigatorApi.ACTION_KEY.getKeyCode()) + "] Teleport here";
     }

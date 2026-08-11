@@ -8,13 +8,12 @@ import cpw.mods.fml.common.ModContainer;
 import mcp.mobius.opis.data.profilers.Clock.IClock;
 
 /**
- * Times Forge event invocations. This profiler runs on both sides, so a single instance is shared by the client and
- * server threads: the tables are only safe under the instance lock, and readers must synchronize on the profiler while
- * iterating them.
+ * Times Forge event invocations. One instance is shared by the client and server threads, so the tables are only safe
+ * under the instance lock, which readers must also hold while iterating.
  */
 public class ProfilerEvent extends ProfilerAbstract {
 
-    /** One clock per thread; a shared clock would interleave start/stop between sides and yield junk deltas. */
+    /** One per thread; a shared clock would interleave start/stop between sides. */
     private final ThreadLocal<IClock> clock = ThreadLocal.withInitial(Clock::getNewClock);
 
     public HashBasedTable<Class<?>, String, DescriptiveStatistics> data = HashBasedTable.create();

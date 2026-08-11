@@ -26,9 +26,13 @@ public class DataBlockTileEntity implements ISerializable, Comparable<DataBlockT
     public DataBlockTileEntity fill(CoordinatesBlock coord) {
         this.pos = coord;
         World world = DimensionManager.getWorld(this.pos.dim);
-        Block block = world.getBlock(this.pos.x, this.pos.y, this.pos.z);
-        this.id = Block.getIdFromBlock(block);
-        this.meta = block.getDamageValue(world, this.pos.x, this.pos.y, this.pos.z);
+
+        // The profiler keeps coordinates from dimensions that have since unloaded.
+        if (world != null) {
+            Block block = world.getBlock(this.pos.x, this.pos.y, this.pos.z);
+            this.id = Block.getIdFromBlock(block);
+            this.meta = block.getDamageValue(world, this.pos.x, this.pos.y, this.pos.z);
+        }
 
         HashMap<CoordinatesBlock, DescriptiveStatistics> data = ((ProfilerTileEntityUpdate) (ProfilerSection.TILEENT_UPDATETIME
                 .getProfiler())).data;

@@ -32,9 +32,7 @@ import mcp.mobius.opis.swing.SwingUI;
 import mcp.mobius.opis.swing.panels.timingserver.PanelTimingChunks;
 import mcp.mobius.opis.swing.widgets.JTableStats;
 
-/**
- * Navigator layer showing per-chunk server update time as a heatmap. Replaces the MapWriter overlay Opis used to ship.
- */
+/** Navigator layer showing per-chunk server update time as a heatmap. */
 public class ChunkTimeLayerManager extends InteractableLayerManager implements IMessageHandler {
 
     public static final ChunkTimeLayerManager INSTANCE = new ChunkTimeLayerManager();
@@ -49,7 +47,7 @@ public class ChunkTimeLayerManager extends InteractableLayerManager implements I
         super(ChunkTimeButtonManager.INSTANCE);
     }
 
-    /** Starts listening for timing data without putting a button on any map yet. */
+    /** Listens for data without showing a button yet. */
     public static void init() {
         MessageHandlerRegistrar.INSTANCE.registerHandler(Message.LIST_TIMING_CHUNK, INSTANCE);
     }
@@ -61,7 +59,7 @@ public class ChunkTimeLayerManager extends InteractableLayerManager implements I
         renderer.withRenderStep(location -> new ChunkTimeRenderStep((ChunkTimeLocation) location));
 
         if (mod == SupportedMods.JourneyMap && Util.isJourneyMapV6Installed()) {
-            // Native overlays are the only route onto the JM6 minimap, and they replace the fullscreen render step.
+            // Native overlays are the only route onto the JM6 minimap.
             renderer.withJourneyMapV6Overlays(
                     location -> ChunkPolygonJM6.create(
                             location,
@@ -74,12 +72,12 @@ public class ChunkTimeLayerManager extends InteractableLayerManager implements I
 
     @Override
     public void onUpdatePre(int minX, int maxX, int minZ, int maxZ) {
-        // Fullscreen integrations recache enabled layers whether or not they are toggled on.
+        // Fullscreen integrations recache enabled layers even when toggled off.
         if (!isLayerActive()) return;
 
         if (dirty) {
             dirty = false;
-            // Timings are replaced wholesale and chunks drop out of the top-100 list, so rebuild every location.
+            // Chunks drop out of the top-100 list, so rebuild every location.
             clearFullCache();
         }
 
@@ -95,8 +93,11 @@ public class ChunkTimeLayerManager extends InteractableLayerManager implements I
             int maxBlockZ, int dimension) {
         List<StatsChunk> stats = chunkStats;
 
+        // Per dimension: the server's top 100 is global, so a hotter dimension would wash this one out.
         double maxTime = 0;
-        for (StatsChunk stat : stats) maxTime = Math.max(maxTime, stat.getDataSum());
+        for (StatsChunk stat : stats) {
+            if (stat.getChunk().dim == dimension) maxTime = Math.max(maxTime, stat.getDataSum());
+        }
         if (maxTime <= 0) return Collections.emptyList();
 
         List<ChunkTimeLocation> locations = new ArrayList<>();
@@ -111,7 +112,6 @@ public class ChunkTimeLayerManager extends InteractableLayerManager implements I
         return locations;
     }
 
-    /** Double-clicking a chunk opens the Swing control panel on its row in the chunk timing table. */
     private boolean onClick(ClickPos click) {
         if (!click.isDoubleClick()) return false;
 
@@ -124,7 +124,7 @@ public class ChunkTimeLayerManager extends InteractableLayerManager implements I
         return true;
     }
 
-    /** Highlights the clicked chunk in the timing table. It is only there if the server reported it this run. */
+    /** The chunk is only in the table if the server reported it this run. */
     private static void selectChunkRow(CoordinatesChunk chunk) {
         SwingUtilities.invokeLater(() -> {
             PanelTimingChunks panel = (PanelTimingChunks) TabPanelRegistrar.INSTANCE.getTab(SelectedTab.TIMINGCHUNKS);
@@ -149,8 +149,8 @@ public class ChunkTimeLayerManager extends InteractableLayerManager implements I
     @Override
     public void onLayerToggled(boolean toEnable) {
         super.onLayerToggled(toEnable);
-        // Keep the last snapshot so re-enabling redraws immediately.
-        if (toEnable) lastRequest = 0; // request on the next recache
+        // Snapshot is kept so re-enabling redraws immediately.
+        if (toEnable) lastRequest = 0;
     }
 
     @Override
@@ -166,8 +166,7 @@ public class ChunkTimeLayerManager extends InteractableLayerManager implements I
             fingerprint = fingerprint * 31 + Double.doubleToLongBits(stat.getDataSum());
         }
 
-        // Timings only change when a profiler run finishes, but we poll every second. Rebuilding on an
-        // identical snapshot would churn every JourneyMap 6 overlay once a second for nothing.
+        // Polled every second but only changes per profiler run; rebuilding identical data churns the JM6 overlays.
         if (fingerprint == lastFingerprint) return true;
 
         lastFingerprint = fingerprint;

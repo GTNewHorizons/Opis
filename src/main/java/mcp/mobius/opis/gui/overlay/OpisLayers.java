@@ -2,26 +2,22 @@ package mcp.mobius.opis.gui.overlay;
 
 import com.gtnewhorizons.navigator.api.NavigatorApi;
 
-/**
- * Entry point for Opis' Navigator layers. Every class here touches Navigator, so it must only be reached once
- * {@code Loader.isModLoaded("navigator")} has been checked.
- */
+/** Entry point for the Navigator layers. Only reachable once Navigator is confirmed present and new enough. */
 public final class OpisLayers {
 
     private static boolean shown = false;
 
     private OpisLayers() {}
 
-    /** Starts listening for layer data without putting any button on a map. */
+    /** Listens for data without showing any button yet. */
     public static void init() {
         ChunkTimeLayerManager.init();
         LoadedChunkLayerManager.init();
     }
 
     /**
-     * Makes the layers visible to the installed map mods. Deferred until the player actually uses Opis so the buttons
-     * do not clutter everyone's map. Idempotent, and must run on the client thread because Navigator's layer list is
-     * iterated while rendering.
+     * Deferred until first use of Opis so the buttons do not clutter every map. Must run on the client thread, as
+     * Navigator's layer list is iterated while rendering.
      */
     public static void show() {
         if (shown) return;

@@ -31,7 +31,7 @@ public class LoadedChunkLocation implements ILocationProvider {
         return chunk;
     }
 
-    /** Chunk held by a ticket rather than by normal gameplay loading. */
+    /** Held by a ticket rather than normal gameplay loading. */
     public boolean isForced() {
         return chunk.metadata != 0;
     }

@@ -1,6 +1,10 @@
 package mcp.mobius.opis.network;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.EnumSet;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityMob;
@@ -50,17 +54,50 @@ public class ServerMessageHandler {
         return _instance;
     }
 
+    /** Requests that walk chunk or profiler collections and queue work onto the server tick. */
+    private static final EnumSet<Message> THROTTLED = EnumSet.of(
+            Message.LIST_CHUNK_LOADED,
+            Message.LIST_TIMING_CHUNK,
+            Message.LIST_TIMING_TILEENTS,
+            Message.LIST_TIMING_ENTITIES,
+            Message.LIST_AMOUNT_ENTITIES,
+            Message.LIST_AMOUNT_TILEENTS);
+
+    /** Below the map overlay's 250ms floor, leaving headroom for jitter. */
+    private static final long MIN_REQUEST_INTERVAL_MS = 200;
+
+    /** Weak so entries drop with the player; guarded as each connection has its own thread. */
+    private final Map<EntityPlayerMP, EnumMap<Message, Long>> lastRequest = new WeakHashMap<>();
+
+    private synchronized boolean isThrottled(Message msg, EntityPlayerMP player) {
+        if (!THROTTLED.contains(msg)) return false;
+
+        long now = System.currentTimeMillis();
+        EnumMap<Message, Long> perMessage = lastRequest
+                .computeIfAbsent(player, ignored -> new EnumMap<>(Message.class));
+        Long last = perMessage.get(msg);
+
+        if (last != null && now - last < MIN_REQUEST_INTERVAL_MS) return true;
+
+        perMessage.put(msg, now);
+        return false;
+    }
+
     public void handle(Message maintype, ISerializable param1, ISerializable param2, EntityPlayerMP player) {
         String name = player.getGameProfile().getName();
+
+        // Dropped rather than punished: access can be revoked while a client is still polling.
+        if (isThrottled(maintype, player)) return;
 
         if (maintype == Message.LIST_CHUNK_LOADED) {
             int dim = ((SerialInt) param1).value;
             PlayerTracker.INSTANCE.playerDimension.put(player, dim);
-            // Walks the chunk provider's live collections, and this runs on the netty thread.
+            // Walks the chunk provider's live collections; this runs on the netty thread.
             OpisServerTickHandler.INSTANCE.scheduleOnServerThread(() -> {
-                PacketManager.validateAndSend(new NetDataCommand(Message.LIST_CHUNK_LOADED_CLEAR), player);
                 PacketManager
                         .splitAndSend(Message.LIST_CHUNK_LOADED, ChunkManager.INSTANCE.getLoadedChunks(dim), player);
+                // Sent last: the client treats it as "batch complete" and only then shows it.
+                PacketManager.validateAndSend(new NetDataCommand(Message.LIST_CHUNK_LOADED_CLEAR), player);
             });
         } else if (maintype == Message.LIST_TIMING_TILEENTS) {
             ArrayList<DataBlockTileEntity> timingTileEnts = TileEntityManager.INSTANCE.getWorses(100);
@@ -80,8 +117,7 @@ public class ServerMessageHandler {
             // OpisPacketHandler_OLD.validateAndSend(NetDataValue_OLD.create(Message.VALUE_TIMING_HANDLERS, totalTime),
             // player);
         } else if (maintype == Message.LIST_TIMING_CHUNK) {
-            // Walks profiler maps the server thread mutates every tick, and this runs on the netty thread.
-            // The map overlay polls this once a second, so it cannot be left racing.
+            // Walks profiler maps the server thread mutates every tick; this runs on the netty thread.
             OpisServerTickHandler.INSTANCE.scheduleOnServerThread(() -> {
                 ArrayList<StatsChunk> timingChunks = ChunkManager.INSTANCE.getTopChunks(100);
                 PacketManager.validateAndSend(new NetDataList(Message.LIST_TIMING_CHUNK, timingChunks), player);

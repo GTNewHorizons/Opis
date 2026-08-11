@@ -11,10 +11,7 @@ import journeymap.api.v2.client.model.ShapeProperties;
 import journeymap.api.v2.common.Context;
 import journeymap.api.v2.common.util.BlockPos;
 
-/**
- * Builds a chunk-sized native JourneyMap 6 overlay. Universal render steps only reach the JourneyMap 6 fullscreen map,
- * so the minimap needs one of these. Loads only when JourneyMap 6 is installed.
- */
+/** Chunk-sized native JourneyMap 6 overlay, the only way onto its minimap. Loaded only when JM6 is present. */
 public final class ChunkPolygonJM6 {
 
     private static final int CHUNK_SIZE = 16;
@@ -25,7 +22,6 @@ public final class ChunkPolygonJM6 {
         int x = (int) Math.floor(location.getBlockX());
         int z = (int) Math.floor(location.getBlockZ());
 
-        // Matches the universal render step: heat/status fill with a solid black chunk border.
         ShapeProperties shape = new ShapeProperties().setFillColor(fillColor).setFillOpacity(fillOpacity)
                 .setStrokeColor(0x000000).setStrokeOpacity(1f).setStrokeWidth(1f);
 

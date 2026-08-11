@@ -119,8 +119,7 @@ public class PacketManager {
             ByteArrayDataInput input = ByteStreams.newDataInput(source.array());
             input.skipBytes(1); // skip the packet identifier byte
             packet.decode(input);
-            // Dispatch belongs to HandlerClient/HandlerServer further down the pipeline. Acting on the packet here
-            // too ran every packet twice on both sides.
+            // Dispatch belongs to HandlerClient/HandlerServer; doing it here too ran every packet twice.
         }
 
         @Override

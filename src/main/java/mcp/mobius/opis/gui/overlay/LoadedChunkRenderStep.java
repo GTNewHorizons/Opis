@@ -41,7 +41,6 @@ public class LoadedChunkRenderStep extends UniversalLocationInteractableStep<Loa
         list.add(EnumChatFormatting.GRAY + ChunkTimeRenderStep.teleportHint());
     }
 
-    /** Server side this is PRIVILEGED, so it is silently ignored for players without access. */
     @Override
     public void onActionKeyPressed() {
         PacketManager.sendToServer(new PacketReqData(Message.COMMAND_TELEPORT_CHUNK, location.getChunk()));

@@ -113,10 +113,7 @@ public class SwingUI extends JFrame implements WindowListener, ChangeListener, I
         return tabbedPane;
     }
 
-    /**
-     * Shows the control panel with one tab selected. Tabs registered under a section live in a nested pane, so every
-     * enclosing tabbed pane on the way up has to be switched too.
-     */
+    /** Tabs under a section live in a nested pane, so every enclosing pane has to be switched too. */
     public void showTab(SelectedTab tab) {
         SwingUtilities.invokeLater(() -> {
             Component child = TabPanelRegistrar.INSTANCE.getTabAsPanel(tab);

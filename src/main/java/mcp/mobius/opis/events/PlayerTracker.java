@@ -7,8 +7,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.util.FakePlayer;
 
-import com.mojang.authlib.GameProfile;
-
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
 import mcp.mobius.opis.data.holders.basetypes.SerialLong;
@@ -40,6 +38,8 @@ public enum PlayerTracker {
     public HashMap<EntityPlayerMP, SelectedTab> playerTab = new HashMap<EntityPlayerMP, SelectedTab>();
     private HashSet<String> playerPrivileged = new HashSet<String>();
 
+    private static final int ADMIN_OP_LEVEL = 2;
+
     public SelectedTab getPlayerSelectedTab(EntityPlayerMP player) {
         return this.playerTab.get(player);
     }
@@ -56,23 +56,17 @@ public enum PlayerTracker {
         MinecraftServer server = MinecraftServer.getServer();
         if (server == null) return AccessLevel.NONE;
 
-        // Null while a player is disconnecting or has not finished joining yet, which is exactly when stale
-        // entries elsewhere get looked up. Every access check routes through here, so guard it here.
+        // Null while a player is disconnecting or has not finished joining.
         EntityPlayerMP player = server.getConfigurationManager().func_152612_a(name);
         if (player == null) return playerPrivileged.contains(name) ? AccessLevel.PRIVILEGED : AccessLevel.NONE;
 
-        GameProfile profile = player.getGameProfile();
-
-        if (server.getConfigurationManager().func_152596_g(profile) || server.isSinglePlayer())
-            return AccessLevel.ADMIN;
+        // Vanilla check: op level, or the singleplayer owner with cheats on.
+        if (player.canCommandSenderUseCommand(ADMIN_OP_LEVEL, "opis")) return AccessLevel.ADMIN;
         else if (playerPrivileged.contains(name)) return AccessLevel.PRIVILEGED;
         else return AccessLevel.NONE;
     }
 
-    /**
-     * Drops per-session state. These maps key on {@link EntityPlayerMP} instances that must not outlive the server they
-     * came from, or the next world starts up holding players that will never exist again.
-     */
+    /** These key on players that must not outlive the server they came from. */
     public void clearSessionState() {
         this.playersSwing.clear();
         this.playerDimension.clear();

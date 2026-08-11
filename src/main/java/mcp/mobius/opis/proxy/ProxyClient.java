@@ -5,6 +5,8 @@ import net.minecraft.util.ResourceLocation;
 import org.apache.logging.log4j.Level;
 
 import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.ModContainer;
+import cpw.mods.fml.common.versioning.VersionParser;
 import cpw.mods.fml.relauncher.Side;
 import mcp.mobius.mobiuscore.profiler.ProfilerSection;
 import mcp.mobius.opis.api.IMessageHandler;
@@ -202,10 +204,25 @@ public class ProxyClient extends ProxyServer implements IMessageHandler {
 
         MessageHandlerRegistrar.INSTANCE.registerHandler(Message.CLIENT_SHOW_SWING, modOpis.proxy);
 
-        // Keep every Navigator class behind this branch so Opis still loads without it.
-        if (Loader.isModLoaded("navigator")) {
+        // Keeps every Navigator class behind this branch so Opis still loads without it.
+        if (isNavigatorSupported()) {
             OpisLayers.init();
         }
+    }
+
+    /** The layers use APIs added in Navigator 1.1.7, and nothing pins the version for an optional dependency. */
+    private static boolean isNavigatorSupported() {
+        ModContainer navigator = Loader.instance().getIndexedModList().get("navigator");
+        if (navigator == null) return false;
+
+        if (VersionParser.parseRange("[1.1.7,)").containsVersion(navigator.getProcessedVersion())) {
+            return true;
+        }
+
+        modOpis.log.warn(
+                "Navigator {} is too old for the Opis map overlays, which need 1.1.7 or newer. Overlays disabled.",
+                navigator.getVersion());
+        return false;
     }
 
     @Override
@@ -225,7 +242,7 @@ public class ProxyClient extends ProxyServer implements IMessageHandler {
                 break;
             }
             case CLIENT_SHOW_SWING: {
-                // First /opis is what puts the map layer button in front of the player.
+                // First /opis is what puts the layer buttons on the map.
                 if (Loader.isModLoaded("navigator")) {
                     OpisClientTickHandler.INSTANCE.scheduleOnClientThread(OpisLayers::show);
                 }
