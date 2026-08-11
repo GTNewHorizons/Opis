@@ -3,7 +3,9 @@ package mcp.mobius.opis.gui.overlay;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Nullable;
 
@@ -42,7 +44,6 @@ public class LoadedChunkLayerManager extends InteractableLayerManager implements
 
     private List<CoordinatesChunk> chunks = Collections.emptyList();
     private long lastRequest = 0;
-    private long lastFingerprint = 0;
 
     private LoadedChunkLayerManager() {
         super(LoadedChunkButtonManager.INSTANCE);
@@ -79,11 +80,9 @@ public class LoadedChunkLayerManager extends InteractableLayerManager implements
         if (dirty) {
             dirty = false;
             List<CoordinatesChunk> updated = committed;
-            long fingerprint = fingerprint(updated);
 
             // Resent every second even when unchanged; rebuilding identical data churns the JM6 overlays.
-            if (fingerprint != lastFingerprint) {
-                lastFingerprint = fingerprint;
+            if (!sameChunks(chunks, updated)) {
                 chunks = updated;
                 clearFullCache();
             }
@@ -133,14 +132,19 @@ public class LoadedChunkLayerManager extends InteractableLayerManager implements
         if (toEnable) lastRequest = 0;
     }
 
-    /**
-     * Order-independent, as the server builds the list from a HashSet. The offset keeps chunk 0,0 of dimension 0 from
-     * hashing to zero, which would swallow its metadata.
-     */
-    private static long fingerprint(List<CoordinatesChunk> chunks) {
-        long hash = chunks.size();
-        for (CoordinatesChunk chunk : chunks) hash += (chunk.hashCode() + 0x9E3779B9L) * (31L + chunk.metadata);
-        return hash;
+    /** Exact rather than hashed, and order-independent because the server builds the list from a HashSet. */
+    private static boolean sameChunks(List<CoordinatesChunk> a, List<CoordinatesChunk> b) {
+        if (a.size() != b.size()) return false;
+
+        // CoordinatesChunk.equals ignores metadata, which is the colour, so compare it explicitly.
+        Map<CoordinatesChunk, Byte> previous = new HashMap<>(a.size());
+        for (CoordinatesChunk chunk : a) previous.put(chunk, chunk.metadata);
+
+        for (CoordinatesChunk chunk : b) {
+            Byte metadata = previous.get(chunk);
+            if (metadata == null || metadata != chunk.metadata) return false;
+        }
+        return true;
     }
 
     /** Wipes everything tied to one server, so a later session cannot show its chunks. */
@@ -149,7 +153,7 @@ public class LoadedChunkLayerManager extends InteractableLayerManager implements
         committed = Collections.emptyList();
         dirty = false;
         chunks = Collections.emptyList();
-        lastFingerprint = 0;
+        lastRequest = 0;
         clearFullCache();
     }
 

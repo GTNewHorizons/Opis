@@ -85,7 +85,10 @@ public enum Message {
     PLAYER_STATUS_UPDATE, // Update for the players (name, position, offline/online, etc)
     CONNECTION_STATUS,
 
-    CHAT_MSG;
+    CHAT_MSG,
+
+    /** Dimension-scoped copy of LIST_TIMING_CHUNK, so overlay polling cannot overwrite the Swing table. */
+    LIST_TIMING_CHUNK_DIM;
 
     public static final Message[] VALUES = values();
 
@@ -138,6 +141,7 @@ public enum Message {
         Message.LIST_TIMING_ENTITIES.setAccessLevel(level);
         Message.LIST_TIMING_HANDLERS.setAccessLevel(level);
         Message.LIST_TIMING_CHUNK.setAccessLevel(level);
+        Message.LIST_TIMING_CHUNK_DIM.setAccessLevel(level);
         Message.LIST_TIMING_TILEENTS_PER_CLASS.setAccessLevel(level);
         Message.LIST_TIMING_ENTITIES_PER_CLASS.setAccessLevel(level);
         Message.LIST_TIMING_HANDLERS.setAccessLevel(level);

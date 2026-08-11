@@ -43,7 +43,6 @@ public class ChunkTimeLayerManager extends InteractableLayerManager implements I
     /** Written from the network thread, read during recache. Replaced wholesale, never mutated. */
     private volatile List<StatsChunk> chunkStats = Collections.emptyList();
     private volatile boolean dirty = false;
-    private volatile long lastFingerprint = 0;
     private long lastRequest = 0;
 
     private ChunkTimeLayerManager() {
@@ -52,7 +51,7 @@ public class ChunkTimeLayerManager extends InteractableLayerManager implements I
 
     /** Listens for data without showing a button yet. */
     public static void init() {
-        MessageHandlerRegistrar.INSTANCE.registerHandler(Message.LIST_TIMING_CHUNK, INSTANCE);
+        MessageHandlerRegistrar.INSTANCE.registerHandler(Message.LIST_TIMING_CHUNK_DIM, INSTANCE);
     }
 
     @Override
@@ -90,7 +89,7 @@ public class ChunkTimeLayerManager extends InteractableLayerManager implements I
         lastRequest = now;
         PacketManager.sendToServer(
                 new PacketReqData(
-                        Message.LIST_TIMING_CHUNK,
+                        Message.LIST_TIMING_CHUNK_DIM,
                         new SerialInt(Minecraft.getMinecraft().thePlayer.dimension)));
     }
 
@@ -162,30 +161,34 @@ public class ChunkTimeLayerManager extends InteractableLayerManager implements I
     /** Cached data belongs to one server; keeping it would show its chunks in the next session. */
     public void clearState() {
         chunkStats = Collections.emptyList();
-        lastFingerprint = 0;
         dirty = false;
+        lastRequest = 0;
         clearFullCache();
+    }
+
+    /** Exact, because the server always sends this ranked, so equal content arrives in equal order. */
+    private static boolean sameData(List<StatsChunk> a, List<StatsChunk> b) {
+        if (a.size() != b.size()) return false;
+
+        for (int i = 0; i < a.size(); i++) {
+            StatsChunk x = a.get(i), y = b.get(i);
+            if (!x.getChunk().equals(y.getChunk())) return false;
+            if (x.tileEntities != y.tileEntities || x.entities != y.entities) return false;
+            if (Double.compare(x.getDataSum(), y.getDataSum()) != 0) return false;
+        }
+        return true;
     }
 
     @Override
     public boolean handleMessage(Message msg, PacketBase rawdata) {
-        if (msg != Message.LIST_TIMING_CHUNK) return false;
+        if (msg != Message.LIST_TIMING_CHUNK_DIM) return false;
 
         List<StatsChunk> stats = new ArrayList<>(rawdata.array.size());
-        long fingerprint = 1;
-        for (ISerializable data : rawdata.array) {
-            StatsChunk stat = (StatsChunk) data;
-            stats.add(stat);
-            fingerprint = fingerprint * 31 + stat.getChunk().hashCode();
-            fingerprint = fingerprint * 31 + Double.doubleToLongBits(stat.getDataSum());
-            fingerprint = fingerprint * 31 + stat.tileEntities;
-            fingerprint = fingerprint * 31 + stat.entities;
-        }
+        for (ISerializable data : rawdata.array) stats.add((StatsChunk) data);
 
         // Polled every second but only changes per profiler run; rebuilding identical data churns the JM6 overlays.
-        if (fingerprint == lastFingerprint) return true;
+        if (sameData(chunkStats, stats)) return true;
 
-        lastFingerprint = fingerprint;
         chunkStats = stats;
         dirty = true;
         return true;

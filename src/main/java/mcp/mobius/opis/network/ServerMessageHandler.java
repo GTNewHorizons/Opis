@@ -58,6 +58,7 @@ public class ServerMessageHandler {
     private static final EnumSet<Message> THROTTLED = EnumSet.of(
             Message.LIST_CHUNK_LOADED,
             Message.LIST_TIMING_CHUNK,
+            Message.LIST_TIMING_CHUNK_DIM,
             Message.LIST_TIMING_TILEENTS,
             Message.LIST_TIMING_ENTITIES,
             Message.LIST_AMOUNT_ENTITIES,
@@ -68,6 +69,30 @@ public class ServerMessageHandler {
 
     /** Weak so entries drop with the player; guarded as each connection has its own thread. */
     private final Map<EntityPlayerMP, EnumMap<Message, Long>> lastRequest = new WeakHashMap<>();
+
+    /** One queued job per player and message: a stalled tick would otherwise drain a whole backlog of scans. */
+    private final Map<EntityPlayerMP, EnumSet<Message>> queued = new WeakHashMap<>();
+
+    private synchronized boolean beginJob(Message msg, EntityPlayerMP player) {
+        return queued.computeIfAbsent(player, ignored -> EnumSet.noneOf(Message.class)).add(msg);
+    }
+
+    private synchronized void endJob(Message msg, EntityPlayerMP player) {
+        EnumSet<Message> jobs = queued.get(player);
+        if (jobs != null) jobs.remove(msg);
+    }
+
+    /** Runs server-owned collections off the netty thread, at most one job in flight per player and message. */
+    private void schedule(Message msg, EntityPlayerMP player, Runnable job) {
+        if (!beginJob(msg, player)) return;
+        OpisServerTickHandler.INSTANCE.scheduleOnServerThread(() -> {
+            try {
+                job.run();
+            } finally {
+                endJob(msg, player);
+            }
+        });
+    }
 
     private synchronized boolean isThrottled(Message msg, EntityPlayerMP player) {
         if (!THROTTLED.contains(msg)) return false;
@@ -92,8 +117,7 @@ public class ServerMessageHandler {
         if (maintype == Message.LIST_CHUNK_LOADED) {
             int dim = ((SerialInt) param1).value;
             PlayerTracker.INSTANCE.playerDimension.put(player, dim);
-            // Walks the chunk provider's live collections; this runs on the netty thread.
-            OpisServerTickHandler.INSTANCE.scheduleOnServerThread(() -> {
+            schedule(maintype, player, () -> {
                 PacketManager
                         .splitAndSend(Message.LIST_CHUNK_LOADED, ChunkManager.INSTANCE.getLoadedChunks(dim), player);
                 // Sent last: the client treats it as "batch complete" and only then shows it.
@@ -117,12 +141,16 @@ public class ServerMessageHandler {
             // OpisPacketHandler_OLD.validateAndSend(NetDataValue_OLD.create(Message.VALUE_TIMING_HANDLERS, totalTime),
             // player);
         } else if (maintype == Message.LIST_TIMING_CHUNK) {
-            // A dimension narrows the top 100 to that world; the Swing table sends none and keeps the global list.
-            Integer dim = param1 instanceof SerialInt ? ((SerialInt) param1).value : null;
-            // Walks profiler maps the server thread mutates every tick; this runs on the netty thread.
-            OpisServerTickHandler.INSTANCE.scheduleOnServerThread(() -> {
-                ArrayList<StatsChunk> timingChunks = ChunkManager.INSTANCE.getTopChunks(100, dim);
+            schedule(maintype, player, () -> {
+                ArrayList<StatsChunk> timingChunks = ChunkManager.INSTANCE.getTopChunks(100);
                 PacketManager.validateAndSend(new NetDataList(Message.LIST_TIMING_CHUNK, timingChunks), player);
+            });
+        } else if (maintype == Message.LIST_TIMING_CHUNK_DIM) {
+            // Ranked within one dimension, and answered on its own message so the Swing table keeps the global list.
+            int dim = ((SerialInt) param1).value;
+            schedule(maintype, player, () -> {
+                ArrayList<StatsChunk> timingChunks = ChunkManager.INSTANCE.getTopChunks(100, dim);
+                PacketManager.validateAndSend(new NetDataList(Message.LIST_TIMING_CHUNK_DIM, timingChunks), player);
             });
         } else if (maintype == Message.VALUE_TIMING_WORLDTICK) {
             PacketManager.validateAndSend(
@@ -147,7 +175,8 @@ public class ServerMessageHandler {
             PlayerTracker.INSTANCE.filteredAmount.put(name, false);
         } else if (maintype == Message.COMMAND_OPEN_SWING) {
             PlayerTracker.INSTANCE.playersSwing.add(player);
-            PacketManager.sendFullUpdate(player);
+            // sendFullUpdate walks profiler and world collections the server thread owns.
+            schedule(maintype, player, () -> PacketManager.sendFullUpdate(player));
         } else if (maintype == Message.COMMAND_UNREGISTER) {
             PlayerTracker.INSTANCE.playerDimension.remove(player);
         } else if (maintype == Message.COMMAND_START) {
