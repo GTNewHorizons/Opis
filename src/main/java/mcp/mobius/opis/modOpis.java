@@ -219,7 +219,7 @@ public class modOpis {
 
         // DeadManSwitch.startDeadManSwitch(MinecraftServer.getServer());
         /*
-         * for (ProfilerSection sec : ProfilerSection.values()){ System.out.printf("%s : %s\n", sec,
+         * for (ProfilerSection sec : ProfilerSection.VALUES){ System.out.printf("%s : %s\n", sec,
          * sec.getProfiler().getClass().getSimpleName()); }
          */
     }

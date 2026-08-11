@@ -92,11 +92,13 @@ public enum DataType {
     CONNECTIONPROPERTIES(ConnectionProperties.class),
     CHATMSG(ChatMsg.class);
 
+    public static final DataType[] VALUES = values();
+
     private Class<?> clazz;
     private static HashBiMap<DataType, Class<?>> bimap = HashBiMap.create(50);
 
     static {
-        for (DataType type : DataType.values()) bimap.put(type, type.clazz);
+        for (DataType type : DataType.VALUES) bimap.put(type, type.clazz);
     }
 
     private DataType(Class<?> clazz) {
@@ -114,7 +116,7 @@ public enum DataType {
     public static Class<?> getForOrdinal(int ordinal) {
         Class<?> retVal;
         try {
-            DataType type = DataType.values()[ordinal];
+            DataType type = DataType.VALUES[ordinal];
             retVal = bimap.get(type);
             if (retVal == null) {
                 modOpis.log.warn(String.format("DataType doesn't have a class registered for %s", type));
