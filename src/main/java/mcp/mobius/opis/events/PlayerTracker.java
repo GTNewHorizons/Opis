@@ -1,7 +1,10 @@
 package mcp.mobius.opis.events;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
@@ -28,8 +31,8 @@ public enum PlayerTracker {
 
     private PlayerTracker() {}
 
-    public HashSet<EntityPlayerMP> playersSwing = new HashSet<EntityPlayerMP>(); // This is the list of players who have
-                                                                                 // opened the UI
+    public Set<EntityPlayerMP> playersSwing = Collections
+            .newSetFromMap(new ConcurrentHashMap<EntityPlayerMP, Boolean>()); // Players who opened the UI
     // public HashSet<Player> playersOpis = new HashSet<Player>(); //This is the list of players who have opened the
     // UI or used the command line
     public HashMap<String, Boolean> filteredAmount = new HashMap<String, Boolean>(); // Should the entity amount be

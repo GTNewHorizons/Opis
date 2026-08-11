@@ -70,28 +70,29 @@ public class ServerMessageHandler {
     /** Weak so entries drop with the player; guarded as each connection has its own thread. */
     private final Map<EntityPlayerMP, EnumMap<Message, Long>> lastRequest = new WeakHashMap<>();
 
-    /** One queued job per player and message: a stalled tick would otherwise drain a whole backlog of scans. */
-    private final Map<EntityPlayerMP, EnumSet<Message>> queued = new WeakHashMap<>();
+    /** Latest queued job per player and message: a stalled tick cannot build a backlog of stale scans. */
+    private final Map<EntityPlayerMP, EnumMap<Message, Runnable>> queued = new WeakHashMap<>();
 
-    private synchronized boolean beginJob(Message msg, EntityPlayerMP player) {
-        return queued.computeIfAbsent(player, ignored -> EnumSet.noneOf(Message.class)).add(msg);
-    }
-
-    private synchronized void endJob(Message msg, EntityPlayerMP player) {
-        EnumSet<Message> jobs = queued.get(player);
-        if (jobs != null) jobs.remove(msg);
-    }
-
-    /** Runs server-owned collections off the netty thread, at most one job in flight per player and message. */
     private void schedule(Message msg, EntityPlayerMP player, Runnable job) {
-        if (!beginJob(msg, player)) return;
+        synchronized (this) {
+            EnumMap<Message, Runnable> jobs = queued.computeIfAbsent(player, ignored -> new EnumMap<>(Message.class));
+            if (jobs.put(msg, job) != null) return;
+        }
+
         OpisServerTickHandler.INSTANCE.scheduleOnServerThread(() -> {
-            try {
-                job.run();
-            } finally {
-                endJob(msg, player);
+            Runnable latest;
+            synchronized (this) {
+                EnumMap<Message, Runnable> jobs = queued.get(player);
+                latest = jobs.remove(msg);
+                if (jobs.isEmpty()) queued.remove(player);
             }
+            latest.run();
         });
+    }
+
+    public synchronized void clearSessionState() {
+        lastRequest.clear();
+        queued.clear();
     }
 
     private synchronized boolean isThrottled(Message msg, EntityPlayerMP player) {
@@ -116,8 +117,8 @@ public class ServerMessageHandler {
 
         if (maintype == Message.LIST_CHUNK_LOADED) {
             int dim = ((SerialInt) param1).value;
-            PlayerTracker.INSTANCE.playerDimension.put(player, dim);
             schedule(maintype, player, () -> {
+                PlayerTracker.INSTANCE.playerDimension.put(player, dim);
                 PacketManager
                         .splitAndSend(Message.LIST_CHUNK_LOADED, ChunkManager.INSTANCE.getLoadedChunks(dim), player);
                 // Sent last: the client treats it as "batch complete" and only then shows it.
@@ -174,11 +175,13 @@ public class ServerMessageHandler {
         } else if (maintype == Message.COMMAND_FILTERING_FALSE) {
             PlayerTracker.INSTANCE.filteredAmount.put(name, false);
         } else if (maintype == Message.COMMAND_OPEN_SWING) {
-            PlayerTracker.INSTANCE.playersSwing.add(player);
-            // sendFullUpdate walks profiler and world collections the server thread owns.
-            schedule(maintype, player, () -> PacketManager.sendFullUpdate(player));
+            SelectedTab tab = SelectedTab.values()[((SerialInt) param1).value];
+            schedule(maintype, player, () -> {
+                PlayerTracker.INSTANCE.playerTab.put(player, tab);
+                if (PlayerTracker.INSTANCE.playersSwing.add(player)) PacketManager.sendFullUpdate(player);
+            });
         } else if (maintype == Message.COMMAND_UNREGISTER) {
-            PlayerTracker.INSTANCE.playerDimension.remove(player);
+            schedule(maintype, player, () -> PlayerTracker.INSTANCE.playerDimension.remove(player));
         } else if (maintype == Message.COMMAND_START) {
             MetaManager.reset();
             modOpis.profilerRun = true;
@@ -217,7 +220,7 @@ public class ServerMessageHandler {
             String entname = StringCache.INSTANCE.getString(((SerialInt) param1).value);
             EntityManager.INSTANCE.killAll(entname);
         } else if (maintype == Message.COMMAND_UNREGISTER_SWING) {
-            PlayerTracker.INSTANCE.playersSwing.remove(player);
+            schedule(maintype, player, () -> PlayerTracker.INSTANCE.playersSwing.remove(player));
         } else if (maintype == Message.STATUS_TIME_LAST_RUN) {
             PacketManager.validateAndSend(
                     new NetDataValue(Message.STATUS_TIME_LAST_RUN, new SerialLong(ProfilerSection.timeStampLastRun)),
@@ -238,7 +241,7 @@ public class ServerMessageHandler {
             PacketManager.validateAndSend(new NetDataValue(Message.STATUS_PING, param1), player);
         } else if (maintype == Message.SWING_TAB_CHANGED) {
             SelectedTab tab = SelectedTab.values()[((SerialInt) param1).value];
-            PlayerTracker.INSTANCE.playerTab.put(player, tab);
+            schedule(maintype, player, () -> PlayerTracker.INSTANCE.playerTab.put(player, tab));
         } else if (maintype == Message.LIST_ORPHAN_TILEENTS) {
             PacketManager.validateAndSend(new NetDataCommand(Message.LIST_ORPHAN_TILEENTS_CLEAR), player);
             PacketManager.splitAndSend(Message.LIST_ORPHAN_TILEENTS, TileEntityManager.INSTANCE.getOrphans(), player);

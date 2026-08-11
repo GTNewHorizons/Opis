@@ -25,6 +25,7 @@ import mcp.mobius.opis.data.holders.ISerializable;
 import mcp.mobius.opis.data.holders.basetypes.CoordinatesChunk;
 import mcp.mobius.opis.data.holders.basetypes.SerialInt;
 import mcp.mobius.opis.data.holders.stats.StatsChunk;
+import mcp.mobius.opis.events.OpisClientTickHandler;
 import mcp.mobius.opis.modOpis;
 import mcp.mobius.opis.network.PacketBase;
 import mcp.mobius.opis.network.PacketManager;
@@ -40,9 +41,7 @@ public class ChunkTimeLayerManager extends InteractableLayerManager implements I
 
     public static final ChunkTimeLayerManager INSTANCE = new ChunkTimeLayerManager();
 
-    /** Written from the network thread, read during recache. Replaced wholesale, never mutated. */
-    private volatile List<StatsChunk> chunkStats = Collections.emptyList();
-    private volatile boolean dirty = false;
+    private List<StatsChunk> chunkStats = Collections.emptyList();
     private long lastRequest = 0;
 
     private ChunkTimeLayerManager() {
@@ -76,12 +75,6 @@ public class ChunkTimeLayerManager extends InteractableLayerManager implements I
     public void onUpdatePre(int minX, int maxX, int minZ, int maxZ) {
         // Fullscreen integrations recache enabled layers even when toggled off.
         if (!isLayerActive()) return;
-
-        if (dirty) {
-            dirty = false;
-            // Chunks drop out of the top-100 list, so rebuild every location.
-            clearFullCache();
-        }
 
         long now = System.currentTimeMillis();
         if (now - lastRequest < modOpis.overlayRefreshInterval) return;
@@ -161,7 +154,6 @@ public class ChunkTimeLayerManager extends InteractableLayerManager implements I
     /** Cached data belongs to one server; keeping it would show its chunks in the next session. */
     public void clearState() {
         chunkStats = Collections.emptyList();
-        dirty = false;
         lastRequest = 0;
         clearFullCache();
     }
@@ -186,11 +178,12 @@ public class ChunkTimeLayerManager extends InteractableLayerManager implements I
         List<StatsChunk> stats = new ArrayList<>(rawdata.array.size());
         for (ISerializable data : rawdata.array) stats.add((StatsChunk) data);
 
-        // Polled every second but only changes per profiler run; rebuilding identical data churns the JM6 overlays.
-        if (sameData(chunkStats, stats)) return true;
-
-        chunkStats = stats;
-        dirty = true;
+        OpisClientTickHandler.INSTANCE.scheduleOnClientThread(() -> {
+            // Polled every second but only changes per profiler run; rebuilding identical data churns JM6 overlays.
+            if (sameData(chunkStats, stats)) return;
+            chunkStats = stats;
+            clearFullCache();
+        });
         return true;
     }
 }

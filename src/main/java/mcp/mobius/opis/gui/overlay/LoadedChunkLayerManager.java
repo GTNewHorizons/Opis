@@ -24,6 +24,7 @@ import mcp.mobius.opis.api.MessageHandlerRegistrar;
 import mcp.mobius.opis.data.holders.ISerializable;
 import mcp.mobius.opis.data.holders.basetypes.CoordinatesChunk;
 import mcp.mobius.opis.data.holders.basetypes.SerialInt;
+import mcp.mobius.opis.events.OpisClientTickHandler;
 import mcp.mobius.opis.modOpis;
 import mcp.mobius.opis.network.PacketBase;
 import mcp.mobius.opis.network.PacketManager;
@@ -37,11 +38,8 @@ public class LoadedChunkLayerManager extends InteractableLayerManager implements
 
     public static final LoadedChunkLayerManager INSTANCE = new LoadedChunkLayerManager();
 
-    /** Network thread only: the server splits a set across several packets and ends it with a clear. */
+    /** The server splits a set across several packets and ends it with a clear. */
     private final List<CoordinatesChunk> pending = new ArrayList<>();
-    private volatile List<CoordinatesChunk> committed = Collections.emptyList();
-    private volatile boolean dirty = false;
-
     private List<CoordinatesChunk> chunks = Collections.emptyList();
     private long lastRequest = 0;
 
@@ -76,17 +74,6 @@ public class LoadedChunkLayerManager extends InteractableLayerManager implements
     public void onUpdatePre(int minX, int maxX, int minZ, int maxZ) {
         // Fullscreen integrations recache enabled layers even when toggled off.
         if (!isLayerActive()) return;
-
-        if (dirty) {
-            dirty = false;
-            List<CoordinatesChunk> updated = committed;
-
-            // Resent every second even when unchanged; rebuilding identical data churns the JM6 overlays.
-            if (!sameChunks(chunks, updated)) {
-                chunks = updated;
-                clearFullCache();
-            }
-        }
 
         long now = System.currentTimeMillis();
         if (now - lastRequest < modOpis.overlayRefreshInterval) return;
@@ -150,8 +137,6 @@ public class LoadedChunkLayerManager extends InteractableLayerManager implements
     /** Wipes everything tied to one server, so a later session cannot show its chunks. */
     public void clearState() {
         pending.clear();
-        committed = Collections.emptyList();
-        dirty = false;
         chunks = Collections.emptyList();
         lastRequest = 0;
         clearFullCache();
@@ -165,11 +150,15 @@ public class LoadedChunkLayerManager extends InteractableLayerManager implements
         }
         if (msg != Message.LIST_CHUNK_LOADED_CLEAR) return false;
 
-        // Sent after a batch, so it marks the set complete. Accumulating here rather than in ChunkManager keeps
-        // commit and dirty in one handler, where message dispatch order cannot split them.
-        committed = new ArrayList<>(pending);
+        // Sent after a batch, so it marks the set complete.
+        List<CoordinatesChunk> updated = new ArrayList<>(pending);
         pending.clear();
-        dirty = true;
+        OpisClientTickHandler.INSTANCE.scheduleOnClientThread(() -> {
+            // Resent every second even when unchanged; rebuilding identical data churns the JM6 overlays.
+            if (sameChunks(chunks, updated)) return;
+            chunks = updated;
+            clearFullCache();
+        });
         return true;
     }
 }

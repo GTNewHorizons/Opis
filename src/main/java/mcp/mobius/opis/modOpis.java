@@ -1,5 +1,7 @@
 package mcp.mobius.opis;
 
+import java.util.Map;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraftforge.common.MinecraftForge;
@@ -17,8 +19,11 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppedEvent;
+import cpw.mods.fml.common.network.NetworkCheckHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.common.versioning.ComparableVersion;
 import cpw.mods.fml.relauncher.FMLLaunchHandler;
+import cpw.mods.fml.relauncher.Side;
 import mcp.mobius.Tags;
 import mcp.mobius.mobiuscore.profiler.ProfilerSection;
 import mcp.mobius.opis.api.MessageHandlerRegistrar;
@@ -57,6 +62,7 @@ import mcp.mobius.opis.events.OpisServerTickHandler;
 import mcp.mobius.opis.events.PlayerTracker;
 import mcp.mobius.opis.helpers.ModIdentification;
 import mcp.mobius.opis.network.PacketManager;
+import mcp.mobius.opis.network.ServerMessageHandler;
 import mcp.mobius.opis.network.enums.AccessLevel;
 import mcp.mobius.opis.network.enums.Message;
 import mcp.mobius.opis.proxy.ProxyServer;
@@ -67,6 +73,8 @@ import mcp.mobius.opis.tools.TileLag;
 
 @Mod(modid = "Opis", name = "Opis", version = Tags.VERSION, acceptableRemoteVersions = "*")
 public class modOpis {
+
+    private static final ComparableVersion NAVIGATOR_PROTOCOL_VERSION = new ComparableVersion("1.4.12-mapless");
 
     @Instance("Opis")
     public static modOpis instance;
@@ -107,6 +115,13 @@ public class modOpis {
             proxy = new ProxyServer();
         }
         MessageHandlerRegistrar.INSTANCE.suppressUnhandledMsgLogs = FMLLaunchHandler.side().isClient() && isHeadless;
+    }
+
+    /** Opis remains optional remotely, but peers with the Navigator packet additions must speak the same protocol. */
+    @NetworkCheckHandler
+    public boolean checkRemoteVersion(Map<String, String> remoteVersions, Side remoteSide) {
+        String remoteVersion = remoteVersions.get("Opis");
+        return remoteVersion == null || new ComparableVersion(remoteVersion).compareTo(NAVIGATOR_PROTOCOL_VERSION) >= 0;
     }
 
     @EventHandler
@@ -229,6 +244,7 @@ public class modOpis {
     public void serverStopped(FMLServerStoppedEvent event) {
         OpisServerTickHandler.INSTANCE.purgeScheduledCallQueue();
         OpisServerTickHandler.INSTANCE.cachedAccess.clear();
+        ServerMessageHandler.instance().clearSessionState();
         PlayerTracker.INSTANCE.clearSessionState();
     }
 }

@@ -130,7 +130,7 @@ public class SwingUI extends JFrame implements WindowListener, ChangeListener, I
             setVisible(true);
             toFront();
             // Closing the window unregistered us, so pushed table data would otherwise stay frozen.
-            PacketManager.sendToServer(new PacketReqData(Message.COMMAND_OPEN_SWING));
+            PacketManager.sendToServer(new PacketReqData(Message.COMMAND_OPEN_SWING, new SerialInt(tab.ordinal())));
         });
     }
 
