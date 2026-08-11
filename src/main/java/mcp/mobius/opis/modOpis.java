@@ -121,7 +121,8 @@ public class modOpis {
     @NetworkCheckHandler
     public boolean checkRemoteVersion(Map<String, String> remoteVersions, Side remoteSide) {
         String remoteVersion = remoteVersions.get("Opis");
-        return remoteVersion == null || new ComparableVersion(remoteVersion).compareTo(NAVIGATOR_PROTOCOL_VERSION) >= 0;
+        return remoteVersion == null || Tags.VERSION.equals(remoteVersion)
+                || new ComparableVersion(remoteVersion).compareTo(NAVIGATOR_PROTOCOL_VERSION) >= 0;
     }
 
     @EventHandler
