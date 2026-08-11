@@ -8,6 +8,8 @@ import java.util.List;
 import javax.annotation.Nullable;
 import javax.swing.SwingUtilities;
 
+import net.minecraft.client.Minecraft;
+
 import com.gtnewhorizons.navigator.api.model.SupportedMods;
 import com.gtnewhorizons.navigator.api.model.layers.InteractableLayerManager;
 import com.gtnewhorizons.navigator.api.model.layers.LayerRenderer;
@@ -21,6 +23,7 @@ import mcp.mobius.opis.api.MessageHandlerRegistrar;
 import mcp.mobius.opis.api.TabPanelRegistrar;
 import mcp.mobius.opis.data.holders.ISerializable;
 import mcp.mobius.opis.data.holders.basetypes.CoordinatesChunk;
+import mcp.mobius.opis.data.holders.basetypes.SerialInt;
 import mcp.mobius.opis.data.holders.stats.StatsChunk;
 import mcp.mobius.opis.modOpis;
 import mcp.mobius.opis.network.PacketBase;
@@ -85,7 +88,10 @@ public class ChunkTimeLayerManager extends InteractableLayerManager implements I
         if (now - lastRequest < modOpis.overlayRefreshInterval) return;
 
         lastRequest = now;
-        PacketManager.sendToServer(new PacketReqData(Message.LIST_TIMING_CHUNK));
+        PacketManager.sendToServer(
+                new PacketReqData(
+                        Message.LIST_TIMING_CHUNK,
+                        new SerialInt(Minecraft.getMinecraft().thePlayer.dimension)));
     }
 
     @Override
@@ -153,6 +159,14 @@ public class ChunkTimeLayerManager extends InteractableLayerManager implements I
         if (toEnable) lastRequest = 0;
     }
 
+    /** Cached data belongs to one server; keeping it would show its chunks in the next session. */
+    public void clearState() {
+        chunkStats = Collections.emptyList();
+        lastFingerprint = 0;
+        dirty = false;
+        clearFullCache();
+    }
+
     @Override
     public boolean handleMessage(Message msg, PacketBase rawdata) {
         if (msg != Message.LIST_TIMING_CHUNK) return false;
@@ -164,6 +178,8 @@ public class ChunkTimeLayerManager extends InteractableLayerManager implements I
             stats.add(stat);
             fingerprint = fingerprint * 31 + stat.getChunk().hashCode();
             fingerprint = fingerprint * 31 + Double.doubleToLongBits(stat.getDataSum());
+            fingerprint = fingerprint * 31 + stat.tileEntities;
+            fingerprint = fingerprint * 31 + stat.entities;
         }
 
         // Polled every second but only changes per profiler run; rebuilding identical data churns the JM6 overlays.

@@ -117,9 +117,11 @@ public class ServerMessageHandler {
             // OpisPacketHandler_OLD.validateAndSend(NetDataValue_OLD.create(Message.VALUE_TIMING_HANDLERS, totalTime),
             // player);
         } else if (maintype == Message.LIST_TIMING_CHUNK) {
+            // A dimension narrows the top 100 to that world; the Swing table sends none and keeps the global list.
+            Integer dim = param1 instanceof SerialInt ? ((SerialInt) param1).value : null;
             // Walks profiler maps the server thread mutates every tick; this runs on the netty thread.
             OpisServerTickHandler.INSTANCE.scheduleOnServerThread(() -> {
-                ArrayList<StatsChunk> timingChunks = ChunkManager.INSTANCE.getTopChunks(100);
+                ArrayList<StatsChunk> timingChunks = ChunkManager.INSTANCE.getTopChunks(100, dim);
                 PacketManager.validateAndSend(new NetDataList(Message.LIST_TIMING_CHUNK, timingChunks), player);
             });
         } else if (maintype == Message.VALUE_TIMING_WORLDTICK) {
@@ -143,6 +145,9 @@ public class ServerMessageHandler {
             PlayerTracker.INSTANCE.filteredAmount.put(name, true);
         } else if (maintype == Message.COMMAND_FILTERING_FALSE) {
             PlayerTracker.INSTANCE.filteredAmount.put(name, false);
+        } else if (maintype == Message.COMMAND_OPEN_SWING) {
+            PlayerTracker.INSTANCE.playersSwing.add(player);
+            PacketManager.sendFullUpdate(player);
         } else if (maintype == Message.COMMAND_UNREGISTER) {
             PlayerTracker.INSTANCE.playerDimension.remove(player);
         } else if (maintype == Message.COMMAND_START) {

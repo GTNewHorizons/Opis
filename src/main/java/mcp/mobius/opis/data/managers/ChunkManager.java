@@ -16,40 +16,15 @@ import net.minecraftforge.common.DimensionManager;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
 import mcp.mobius.mobiuscore.profiler.ProfilerSection;
-import mcp.mobius.opis.api.IMessageHandler;
-import mcp.mobius.opis.data.holders.ISerializable;
 import mcp.mobius.opis.data.holders.basetypes.CoordinatesBlock;
 import mcp.mobius.opis.data.holders.basetypes.CoordinatesChunk;
 import mcp.mobius.opis.data.holders.stats.StatsChunk;
 import mcp.mobius.opis.data.profilers.ProfilerEntityUpdate;
 import mcp.mobius.opis.data.profilers.ProfilerTileEntityUpdate;
-import mcp.mobius.opis.network.PacketBase;
-import mcp.mobius.opis.network.enums.Message;
 
-public enum ChunkManager implements IMessageHandler {
+public enum ChunkManager {
 
     INSTANCE;
-
-    private ArrayList<CoordinatesChunk> chunksLoad = new ArrayList<CoordinatesChunk>();
-    private ArrayList<CoordinatesChunk> chunksLoadComplete = new ArrayList<CoordinatesChunk>();
-
-    public synchronized void addLoadedChunks(ArrayList<ISerializable> data) {
-        // chunksLoad.clear();
-        for (ISerializable chunk : data) {
-            chunksLoad.add((CoordinatesChunk) chunk);
-        }
-    }
-
-    /** The clear arrives after a batch, so it commits it. Readers never see a half-delivered set. */
-    public synchronized void swapLoadedChunks() {
-        chunksLoadComplete = chunksLoad;
-        chunksLoad = new ArrayList<CoordinatesChunk>();
-    }
-
-    /** Last complete set reported to this client, unlike {@link #getLoadedChunks(int)} which collects server-side. */
-    public synchronized ArrayList<CoordinatesChunk> getClientLoadedChunks() {
-        return new ArrayList<>(chunksLoadComplete);
-    }
 
     public synchronized ArrayList<CoordinatesChunk> getLoadedChunks(int dimension) {
         HashSet<CoordinatesChunk> chunkStatus = new HashSet<CoordinatesChunk>();
@@ -99,7 +74,14 @@ public enum ChunkManager implements IMessageHandler {
     }
 
     public ArrayList<StatsChunk> getTopChunks(int quantity) {
+        return getTopChunks(quantity, null);
+    }
+
+    /** @param dimension restricts the ranking to one world, so a busier one cannot crowd it out entirely */
+    public ArrayList<StatsChunk> getTopChunks(int quantity, Integer dimension) {
         ArrayList<StatsChunk> chunks = this.getChunksUpdateTime();
+        if (dimension != null) chunks.removeIf(stat -> stat.getChunk().dim != dimension);
+
         ArrayList<StatsChunk> outList = new ArrayList<>(quantity);
         Collections.sort(chunks);
 
@@ -142,20 +124,4 @@ public enum ChunkManager implements IMessageHandler {
         }
     }
 
-    @Override
-    public boolean handleMessage(Message msg, PacketBase rawdata) {
-        switch (msg) {
-            case LIST_CHUNK_LOADED: {
-                this.addLoadedChunks(rawdata.array);
-                break;
-            }
-            case LIST_CHUNK_LOADED_CLEAR: {
-                this.swapLoadedChunks();
-                break;
-            }
-            default:
-                return false;
-        }
-        return true;
-    }
 }

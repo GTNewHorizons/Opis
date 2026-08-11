@@ -19,9 +19,9 @@ import com.gtnewhorizons.navigator.api.util.Util;
 
 import mcp.mobius.opis.api.IMessageHandler;
 import mcp.mobius.opis.api.MessageHandlerRegistrar;
+import mcp.mobius.opis.data.holders.ISerializable;
 import mcp.mobius.opis.data.holders.basetypes.CoordinatesChunk;
 import mcp.mobius.opis.data.holders.basetypes.SerialInt;
-import mcp.mobius.opis.data.managers.ChunkManager;
 import mcp.mobius.opis.modOpis;
 import mcp.mobius.opis.network.PacketBase;
 import mcp.mobius.opis.network.PacketManager;
@@ -35,8 +35,11 @@ public class LoadedChunkLayerManager extends InteractableLayerManager implements
 
     public static final LoadedChunkLayerManager INSTANCE = new LoadedChunkLayerManager();
 
-    /** Set from the network thread; the snapshot is read on the client thread. */
+    /** Network thread only: the server splits a set across several packets and ends it with a clear. */
+    private final List<CoordinatesChunk> pending = new ArrayList<>();
+    private volatile List<CoordinatesChunk> committed = Collections.emptyList();
     private volatile boolean dirty = false;
+
     private List<CoordinatesChunk> chunks = Collections.emptyList();
     private long lastRequest = 0;
     private long lastFingerprint = 0;
@@ -75,7 +78,7 @@ public class LoadedChunkLayerManager extends InteractableLayerManager implements
 
         if (dirty) {
             dirty = false;
-            List<CoordinatesChunk> updated = ChunkManager.INSTANCE.getClientLoadedChunks();
+            List<CoordinatesChunk> updated = committed;
             long fingerprint = fingerprint(updated);
 
             // Resent every second even when unchanged; rebuilding identical data churns the JM6 overlays.
@@ -130,19 +133,39 @@ public class LoadedChunkLayerManager extends InteractableLayerManager implements
         if (toEnable) lastRequest = 0;
     }
 
-    /** Order-independent, and metadata scales with the hash so swapping forced status cannot cancel out. */
+    /**
+     * Order-independent, as the server builds the list from a HashSet. The offset keeps chunk 0,0 of dimension 0 from
+     * hashing to zero, which would swallow its metadata.
+     */
     private static long fingerprint(List<CoordinatesChunk> chunks) {
         long hash = chunks.size();
-        for (CoordinatesChunk chunk : chunks) hash += chunk.hashCode() * (31L + chunk.metadata);
+        for (CoordinatesChunk chunk : chunks) hash += (chunk.hashCode() + 0x9E3779B9L) * (31L + chunk.metadata);
         return hash;
+    }
+
+    /** Wipes everything tied to one server, so a later session cannot show its chunks. */
+    public void clearState() {
+        pending.clear();
+        committed = Collections.emptyList();
+        dirty = false;
+        chunks = Collections.emptyList();
+        lastFingerprint = 0;
+        clearFullCache();
     }
 
     @Override
     public boolean handleMessage(Message msg, PacketBase rawdata) {
-        if (msg != Message.LIST_CHUNK_LOADED && msg != Message.LIST_CHUNK_LOADED_CLEAR) return false;
+        if (msg == Message.LIST_CHUNK_LOADED) {
+            for (ISerializable chunk : rawdata.array) pending.add((CoordinatesChunk) chunk);
+            return true;
+        }
+        if (msg != Message.LIST_CHUNK_LOADED_CLEAR) return false;
 
-        // ChunkManager accumulates the batches; the clear marks the set complete.
-        if (msg == Message.LIST_CHUNK_LOADED_CLEAR) dirty = true;
+        // Sent after a batch, so it marks the set complete. Accumulating here rather than in ChunkManager keeps
+        // commit and dirty in one handler, where message dispatch order cannot split them.
+        committed = new ArrayList<>(pending);
+        pending.clear();
+        dirty = true;
         return true;
     }
 }

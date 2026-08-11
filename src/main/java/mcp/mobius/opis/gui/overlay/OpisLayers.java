@@ -2,17 +2,27 @@ package mcp.mobius.opis.gui.overlay;
 
 import com.gtnewhorizons.navigator.api.NavigatorApi;
 
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.network.FMLNetworkEvent;
+
 /** Entry point for the Navigator layers. Only reachable once Navigator is confirmed present and new enough. */
-public final class OpisLayers {
+public class OpisLayers {
 
     private static boolean shown = false;
-
-    private OpisLayers() {}
 
     /** Listens for data without showing any button yet. */
     public static void init() {
         ChunkTimeLayerManager.init();
         LoadedChunkLayerManager.init();
+        FMLCommonHandler.instance().bus().register(new OpisLayers());
+    }
+
+    /** Cached data belongs to one server; keeping it would show its chunks in the next session. */
+    @SubscribeEvent
+    public void onDisconnect(FMLNetworkEvent.ClientDisconnectionFromServerEvent event) {
+        ChunkTimeLayerManager.INSTANCE.clearState();
+        LoadedChunkLayerManager.INSTANCE.clearState();
     }
 
     /**

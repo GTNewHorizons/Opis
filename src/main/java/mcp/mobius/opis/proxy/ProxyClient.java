@@ -13,7 +13,6 @@ import mcp.mobius.opis.api.IMessageHandler;
 import mcp.mobius.opis.api.MessageHandlerRegistrar;
 import mcp.mobius.opis.api.TabPanelRegistrar;
 import mcp.mobius.opis.data.client.DataCache;
-import mcp.mobius.opis.data.managers.ChunkManager;
 import mcp.mobius.opis.data.managers.MetaManager;
 import mcp.mobius.opis.data.managers.StringCache;
 import mcp.mobius.opis.events.OpisClientTickHandler;
@@ -196,9 +195,6 @@ public class ProxyClient extends ProxyServer implements IMessageHandler {
         MessageHandlerRegistrar.INSTANCE.registerHandler(Message.CLIENT_START_PROFILING, modOpis.proxy);
         MessageHandlerRegistrar.INSTANCE.registerHandler(Message.CLIENT_SHOW_RENDER_TICK, modOpis.proxy);
 
-        MessageHandlerRegistrar.INSTANCE.registerHandler(Message.LIST_CHUNK_LOADED, ChunkManager.INSTANCE);
-        MessageHandlerRegistrar.INSTANCE.registerHandler(Message.LIST_CHUNK_LOADED_CLEAR, ChunkManager.INSTANCE);
-
         MessageHandlerRegistrar.INSTANCE.registerHandler(Message.STATUS_STRINGUPD, StringCache.INSTANCE);
         MessageHandlerRegistrar.INSTANCE.registerHandler(Message.STATUS_STRINGUPD_FULL, StringCache.INSTANCE);
 
@@ -243,7 +239,7 @@ public class ProxyClient extends ProxyServer implements IMessageHandler {
             }
             case CLIENT_SHOW_SWING: {
                 // First /opis is what puts the layer buttons on the map.
-                if (Loader.isModLoaded("navigator")) {
+                if (isNavigatorSupported()) {
                     OpisClientTickHandler.INSTANCE.scheduleOnClientThread(OpisLayers::show);
                 }
                 break;
