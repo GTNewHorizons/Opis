@@ -1,13 +1,14 @@
 package mcp.mobius.opis.events;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.util.FakePlayer;
-
-import com.mojang.authlib.GameProfile;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent;
@@ -30,8 +31,8 @@ public enum PlayerTracker {
 
     private PlayerTracker() {}
 
-    public HashSet<EntityPlayerMP> playersSwing = new HashSet<EntityPlayerMP>(); // This is the list of players who have
-                                                                                 // opened the UI
+    public Set<EntityPlayerMP> playersSwing = Collections
+            .newSetFromMap(new ConcurrentHashMap<EntityPlayerMP, Boolean>()); // Players who opened the UI
     // public HashSet<Player> playersOpis = new HashSet<Player>(); //This is the list of players who have opened the
     // UI or used the command line
     public HashMap<String, Boolean> filteredAmount = new HashMap<String, Boolean>(); // Should the entity amount be
@@ -39,6 +40,8 @@ public enum PlayerTracker {
     public HashMap<EntityPlayerMP, Integer> playerDimension = new HashMap<EntityPlayerMP, Integer>();
     public HashMap<EntityPlayerMP, SelectedTab> playerTab = new HashMap<EntityPlayerMP, SelectedTab>();
     private HashSet<String> playerPrivileged = new HashSet<String>();
+
+    private static final int ADMIN_OP_LEVEL = 2;
 
     public SelectedTab getPlayerSelectedTab(EntityPlayerMP player) {
         return this.playerTab.get(player);
@@ -53,14 +56,24 @@ public enum PlayerTracker {
 
     public AccessLevel getPlayerAccessLevel(String name) {
 
-        EntityPlayerMP player = MinecraftServer.getServer().getConfigurationManager().func_152612_a(name);
-        GameProfile profile = player.getGameProfile();
+        MinecraftServer server = MinecraftServer.getServer();
+        if (server == null) return AccessLevel.NONE;
 
-        if (MinecraftServer.getServer().getConfigurationManager().func_152596_g(profile)
-                || MinecraftServer.getServer().isSinglePlayer())
-            return AccessLevel.ADMIN;
+        // Null while a player is disconnecting or has not finished joining.
+        EntityPlayerMP player = server.getConfigurationManager().func_152612_a(name);
+        if (player == null) return playerPrivileged.contains(name) ? AccessLevel.PRIVILEGED : AccessLevel.NONE;
+
+        // Vanilla check: op level, or the singleplayer owner with cheats on.
+        if (player.canCommandSenderUseCommand(ADMIN_OP_LEVEL, "opis")) return AccessLevel.ADMIN;
         else if (playerPrivileged.contains(name)) return AccessLevel.PRIVILEGED;
         else return AccessLevel.NONE;
+    }
+
+    /** These key on players that must not outlive the server they came from. */
+    public void clearSessionState() {
+        this.playersSwing.clear();
+        this.playerDimension.clear();
+        this.playerTab.clear();
     }
 
     public void addPrivilegedPlayer(String name, boolean save) {

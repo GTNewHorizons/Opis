@@ -20,7 +20,6 @@ import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 
-import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Table.Cell;
 import com.google.common.io.ByteArrayDataInput;
@@ -120,24 +119,7 @@ public class PacketManager {
             ByteArrayDataInput input = ByteStreams.newDataInput(source.array());
             input.skipBytes(1); // skip the packet identifier byte
             packet.decode(input);
-
-            if (FMLCommonHandler.instance().getEffectiveSide().isClient()) {
-                actionClient(packet);
-            } else {
-                actionServer(ctx, packet);
-            }
-        }
-
-        @SideOnly(Side.CLIENT)
-        private void actionClient(PacketBase packet) {
-            Minecraft mc = Minecraft.getMinecraft();
-            packet.actionClient(mc.theWorld, mc.thePlayer);
-        }
-
-        private void actionServer(ChannelHandlerContext ctx, PacketBase packet) {
-            EntityPlayerMP player = ((NetHandlerPlayServer) ctx.channel().attr(NetworkRegistry.NET_HANDLER)
-                    .get()).playerEntity;
-            packet.actionServer(player.worldObj, player);
+            // Dispatch belongs to HandlerClient/HandlerServer; doing it here too ran every packet twice.
         }
 
         @Override
@@ -292,21 +274,20 @@ public class PacketManager {
         DataBlockTick totalWorldTick = new DataBlockTick().fill();
 
         ArrayList<DataEvent> timingEvents = new ArrayList<DataEvent>();
-        HashBasedTable<Class<?>, String, DescriptiveStatistics> eventData = ((ProfilerEvent) ProfilerSection.EVENT_INVOKE
-                .getProfiler()).data;
-        HashBasedTable<Class<?>, String, String> eventMod = ((ProfilerEvent) ProfilerSection.EVENT_INVOKE
-                .getProfiler()).dataMod;
-        for (Cell<Class<?>, String, DescriptiveStatistics> cell : eventData.cellSet()) {
-            timingEvents.add(new DataEvent().fill(cell, eventMod.get(cell.getRowKey(), cell.getColumnKey())));
-        }
-
         ArrayList<DataEvent> timingTicks = new ArrayList<DataEvent>();
-        HashBasedTable<Class<?>, String, DescriptiveStatistics> eventTickData = ((ProfilerEvent) ProfilerSection.EVENT_INVOKE
-                .getProfiler()).dataTick;
-        HashBasedTable<Class<?>, String, String> eventTickMod = ((ProfilerEvent) ProfilerSection.EVENT_INVOKE
-                .getProfiler()).dataModTick;
-        for (Cell<Class<?>, String, DescriptiveStatistics> cell : eventTickData.cellSet()) {
-            timingTicks.add(new DataEvent().fill(cell, eventTickMod.get(cell.getRowKey(), cell.getColumnKey())));
+        ProfilerEvent eventProfiler = (ProfilerEvent) ProfilerSection.EVENT_INVOKE.getProfiler();
+
+        // The event profiler is shared with the client thread; its tables are only safe under its own lock.
+        synchronized (eventProfiler) {
+            for (Cell<Class<?>, String, DescriptiveStatistics> cell : eventProfiler.data.cellSet()) {
+                timingEvents.add(
+                        new DataEvent().fill(cell, eventProfiler.dataMod.get(cell.getRowKey(), cell.getColumnKey())));
+            }
+            for (Cell<Class<?>, String, DescriptiveStatistics> cell : eventProfiler.dataTick.cellSet()) {
+                timingTicks.add(
+                        new DataEvent()
+                                .fill(cell, eventProfiler.dataModTick.get(cell.getRowKey(), cell.getColumnKey())));
+            }
         }
 
         PacketManager.validateAndSend(new NetDataList(Message.LIST_TIMING_HANDLERS, timingTicks), player);

@@ -9,7 +9,6 @@ import net.minecraft.tileentity.TileEntity;
 
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
-import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table.Cell;
 
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -165,12 +164,15 @@ public enum OpisClientTickHandler {
         // ====================================================================================
 
         ArrayList<DataRenderEvent> timingEvents = new ArrayList<DataRenderEvent>();
-        HashBasedTable<Class<?>, String, DescriptiveStatistics> eventData = ((ProfilerEvent) ProfilerSection.EVENT_INVOKE
-                .getProfiler()).data;
-        HashBasedTable<Class<?>, String, String> eventMod = ((ProfilerEvent) ProfilerSection.EVENT_INVOKE
-                .getProfiler()).dataMod;
-        for (Cell<Class<?>, String, DescriptiveStatistics> cell : eventData.cellSet()) {
-            timingEvents.add(new DataRenderEvent().fill(cell, eventMod.get(cell.getRowKey(), cell.getColumnKey())));
+        ProfilerEvent eventProfiler = (ProfilerEvent) ProfilerSection.EVENT_INVOKE.getProfiler();
+
+        // The event profiler is shared with the server thread; its tables are only safe under its own lock.
+        synchronized (eventProfiler) {
+            for (Cell<Class<?>, String, DescriptiveStatistics> cell : eventProfiler.data.cellSet()) {
+                timingEvents.add(
+                        new DataRenderEvent()
+                                .fill(cell, eventProfiler.dataMod.get(cell.getRowKey(), cell.getColumnKey())));
+            }
         }
         ((PanelEventClient) (TabPanelRegistrar.INSTANCE.getTab(SelectedTab.CLIENTEVENTS))).setTable(timingEvents);
 

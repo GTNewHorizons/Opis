@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.world.ChunkCoordIntPair;
@@ -12,37 +13,18 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.ChunkProviderServer;
 import net.minecraftforge.common.DimensionManager;
 
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+
 import mcp.mobius.mobiuscore.profiler.ProfilerSection;
-import mcp.mobius.opis.api.IMessageHandler;
-import mcp.mobius.opis.data.holders.ISerializable;
 import mcp.mobius.opis.data.holders.basetypes.CoordinatesBlock;
 import mcp.mobius.opis.data.holders.basetypes.CoordinatesChunk;
-import mcp.mobius.opis.data.holders.newtypes.DataBlockTileEntity;
-import mcp.mobius.opis.data.holders.newtypes.DataEntity;
 import mcp.mobius.opis.data.holders.stats.StatsChunk;
 import mcp.mobius.opis.data.profilers.ProfilerEntityUpdate;
 import mcp.mobius.opis.data.profilers.ProfilerTileEntityUpdate;
-import mcp.mobius.opis.network.PacketBase;
-import mcp.mobius.opis.network.enums.Message;
 
-public enum ChunkManager implements IMessageHandler {
+public enum ChunkManager {
 
     INSTANCE;
-
-    private ArrayList<CoordinatesChunk> chunksLoad = new ArrayList<CoordinatesChunk>();
-    private HashMap<CoordinatesChunk, StatsChunk> chunkMeanTime = new HashMap<CoordinatesChunk, StatsChunk>();
-
-    public synchronized void addLoadedChunks(ArrayList<ISerializable> data) {
-        // chunksLoad.clear();
-        for (ISerializable chunk : data) {
-            chunksLoad.add((CoordinatesChunk) chunk);
-        }
-    }
-
-    public synchronized void setChunkMeanTime(ArrayList<ISerializable> data) {
-        chunkMeanTime.clear();
-        for (ISerializable stat : data) chunkMeanTime.put(((StatsChunk) stat).getChunk(), (StatsChunk) stat);
-    }
 
     public synchronized ArrayList<CoordinatesChunk> getLoadedChunks(int dimension) {
         HashSet<CoordinatesChunk> chunkStatus = new HashSet<CoordinatesChunk>();
@@ -62,35 +44,44 @@ public enum ChunkManager implements IMessageHandler {
         return new ArrayList<>(chunkStatus);
     }
 
+    /**
+     * Reads the profiler maps directly: the Data*.fill() holders do per-element world and name lookups this ignores.
+     */
     public synchronized ArrayList<StatsChunk> getChunksUpdateTime() {
         HashMap<CoordinatesChunk, StatsChunk> chunks = new HashMap<CoordinatesChunk, StatsChunk>();
 
-        for (CoordinatesBlock coords : ((ProfilerTileEntityUpdate) ProfilerSection.TILEENT_UPDATETIME
-                .getProfiler()).data.keySet()) {
-            DataBlockTileEntity data = new DataBlockTileEntity().fill(coords);
-            CoordinatesChunk chunk = data.pos.asCoordinatesChunk();
+        for (Map.Entry<CoordinatesBlock, DescriptiveStatistics> entry : ((ProfilerTileEntityUpdate) ProfilerSection.TILEENT_UPDATETIME
+                .getProfiler()).data.entrySet()) {
+            CoordinatesChunk chunk = entry.getKey().asCoordinatesChunk();
 
             if (!chunks.containsKey(chunk)) chunks.put(chunk, new StatsChunk(chunk));
 
             chunks.get(chunk).addTileEntity();
-            chunks.get(chunk).addMeasure(data.update.timing);
+            chunks.get(chunk).addMeasure(entry.getValue().getGeometricMean());
         }
 
-        for (Entity entity : ((ProfilerEntityUpdate) ProfilerSection.ENTITY_UPDATETIME.getProfiler()).data.keySet()) {
-            DataEntity data = new DataEntity().fill(entity);
-            CoordinatesChunk chunk = data.pos.asCoordinatesChunk();
+        for (Map.Entry<Entity, DescriptiveStatistics> entry : ((ProfilerEntityUpdate) ProfilerSection.ENTITY_UPDATETIME
+                .getProfiler()).data.entrySet()) {
+            CoordinatesChunk chunk = new CoordinatesBlock(entry.getKey()).asCoordinatesChunk();
 
             if (!chunks.containsKey(chunk)) chunks.put(chunk, new StatsChunk(chunk));
 
             chunks.get(chunk).addEntity();
-            chunks.get(chunk).addMeasure(data.update.timing);
+            chunks.get(chunk).addMeasure(entry.getValue().getGeometricMean());
         }
 
         return new ArrayList<>(chunks.values());
     }
 
     public ArrayList<StatsChunk> getTopChunks(int quantity) {
+        return getTopChunks(quantity, null);
+    }
+
+    /** @param dimension restricts the ranking to one world, so a busier one cannot crowd it out entirely */
+    public ArrayList<StatsChunk> getTopChunks(int quantity, Integer dimension) {
         ArrayList<StatsChunk> chunks = this.getChunksUpdateTime();
+        if (dimension != null) chunks.removeIf(stat -> stat.getChunk().dim != dimension);
+
         ArrayList<StatsChunk> outList = new ArrayList<>(quantity);
         Collections.sort(chunks);
 
@@ -133,26 +124,4 @@ public enum ChunkManager implements IMessageHandler {
         }
     }
 
-    @Override
-    public boolean handleMessage(Message msg, PacketBase rawdata) {
-        switch (msg) {
-            case LIST_TIMING_CHUNK: {
-                this.setChunkMeanTime(rawdata.array);
-                break;
-            }
-            case LIST_CHUNK_LOADED: {
-                this.addLoadedChunks(rawdata.array);
-                break;
-            }
-            case LIST_CHUNK_LOADED_CLEAR: {
-                synchronized (this) {
-                    chunksLoad.clear();
-                }
-                break;
-            }
-            default:
-                return false;
-        }
-        return true;
-    }
 }

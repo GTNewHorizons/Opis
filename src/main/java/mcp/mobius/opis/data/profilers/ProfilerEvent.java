@@ -7,9 +7,15 @@ import com.google.common.collect.HashBasedTable;
 import cpw.mods.fml.common.ModContainer;
 import mcp.mobius.opis.data.profilers.Clock.IClock;
 
+/**
+ * Times Forge event invocations. One instance is shared by the client and server threads, so the tables are only safe
+ * under the instance lock, which readers must also hold while iterating.
+ */
 public class ProfilerEvent extends ProfilerAbstract {
 
-    private IClock clock = Clock.getNewClock();
+    /** One per thread; a shared clock would interleave start/stop between sides. */
+    private final ThreadLocal<IClock> clock = ThreadLocal.withInitial(Clock::getNewClock);
+
     public HashBasedTable<Class<?>, String, DescriptiveStatistics> data = HashBasedTable.create();
     public HashBasedTable<Class<?>, String, String> dataMod = HashBasedTable.create();
 
@@ -17,45 +23,35 @@ public class ProfilerEvent extends ProfilerAbstract {
     public HashBasedTable<Class<?>, String, String> dataModTick = HashBasedTable.create();
 
     @Override
-    public void reset() {
+    public synchronized void reset() {
         data.clear();
     }
 
     @Override
     public void start() {
-        clock.start();
+        clock.get().start();
     }
 
     @Override
     public void stop(Object event, Object pkg, Object handler, Object mod) {
-        clock.stop();
+        clock.get().stop();
+        long delta = clock.get().getDelta();
 
-        String eventName = event.getClass().getSimpleName();
-        if (eventName.contains("TickEvent")) {
+        Class<?> type = event.getClass();
+        String name = pkg + "|" + handler.getClass().getSimpleName();
+        boolean isTick = type.getSimpleName().contains("TickEvent");
 
-            try {
-                String name = (String) pkg + "|" + handler.getClass().getSimpleName();
-                dataTick.get(event.getClass(), name).addValue(clock.getDelta());
-            } catch (Exception e) {
-                String name = (String) pkg + "|" + handler.getClass().getSimpleName();
-                dataTick.put(event.getClass(), name, new DescriptiveStatistics(250));
-                dataModTick.put(event.getClass(), name, ((ModContainer) mod).getName());
-                dataTick.get(event.getClass(), name).addValue(clock.getDelta());
+        synchronized (this) {
+            HashBasedTable<Class<?>, String, DescriptiveStatistics> stats = isTick ? dataTick : data;
+            DescriptiveStatistics measures = stats.get(type, name);
+
+            if (measures == null) {
+                measures = new DescriptiveStatistics(250);
+                stats.put(type, name, measures);
+                (isTick ? dataModTick : dataMod)
+                        .put(type, name, mod instanceof ModContainer ? ((ModContainer) mod).getName() : "unknown");
             }
-
-        } else {
-
-            try {
-                String name = (String) pkg + "|" + handler.getClass().getSimpleName();
-                data.get(event.getClass(), name).addValue(clock.getDelta());
-            } catch (Exception e) {
-                try {
-                    String name = (String) pkg + "|" + handler.getClass().getSimpleName();
-                    data.put(event.getClass(), name, new DescriptiveStatistics(250));
-                    dataMod.put(event.getClass(), name, ((ModContainer) mod).getName());
-                    data.get(event.getClass(), name).addValue(clock.getDelta());
-                } catch (Exception f) {}
-            }
+            measures.addValue(delta);
         }
     }
 }

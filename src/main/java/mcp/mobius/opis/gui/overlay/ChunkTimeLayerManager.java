@@ -1,0 +1,189 @@
+package mcp.mobius.opis.gui.overlay;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
+import javax.annotation.Nullable;
+import javax.swing.SwingUtilities;
+
+import net.minecraft.client.Minecraft;
+
+import com.gtnewhorizons.navigator.api.model.SupportedMods;
+import com.gtnewhorizons.navigator.api.model.layers.InteractableLayerManager;
+import com.gtnewhorizons.navigator.api.model.layers.LayerRenderer;
+import com.gtnewhorizons.navigator.api.model.layers.UniversalInteractableRenderer;
+import com.gtnewhorizons.navigator.api.model.steps.LocationInteractableStep;
+import com.gtnewhorizons.navigator.api.util.ClickPos;
+import com.gtnewhorizons.navigator.api.util.Util;
+
+import mcp.mobius.opis.api.IMessageHandler;
+import mcp.mobius.opis.api.MessageHandlerRegistrar;
+import mcp.mobius.opis.api.TabPanelRegistrar;
+import mcp.mobius.opis.data.holders.ISerializable;
+import mcp.mobius.opis.data.holders.basetypes.CoordinatesChunk;
+import mcp.mobius.opis.data.holders.basetypes.SerialInt;
+import mcp.mobius.opis.data.holders.stats.StatsChunk;
+import mcp.mobius.opis.events.OpisClientTickHandler;
+import mcp.mobius.opis.modOpis;
+import mcp.mobius.opis.network.PacketBase;
+import mcp.mobius.opis.network.PacketManager;
+import mcp.mobius.opis.network.enums.Message;
+import mcp.mobius.opis.network.packets.client.PacketReqData;
+import mcp.mobius.opis.swing.SelectedTab;
+import mcp.mobius.opis.swing.SwingUI;
+import mcp.mobius.opis.swing.panels.timingserver.PanelTimingChunks;
+import mcp.mobius.opis.swing.widgets.JTableStats;
+
+/** Navigator layer showing per-chunk server update time as a heatmap. */
+public class ChunkTimeLayerManager extends InteractableLayerManager implements IMessageHandler {
+
+    public static final ChunkTimeLayerManager INSTANCE = new ChunkTimeLayerManager();
+
+    private List<StatsChunk> chunkStats = Collections.emptyList();
+    private long lastRequest = 0;
+
+    private ChunkTimeLayerManager() {
+        super(ChunkTimeButtonManager.INSTANCE);
+    }
+
+    /** Listens for data without showing a button yet. */
+    public static void init() {
+        MessageHandlerRegistrar.INSTANCE.registerHandler(Message.LIST_TIMING_CHUNK_DIM, INSTANCE);
+    }
+
+    @Override
+    protected @Nullable LayerRenderer addLayerRenderer(InteractableLayerManager manager, SupportedMods mod) {
+        UniversalInteractableRenderer renderer = new UniversalInteractableRenderer(manager)
+                .withClickAction(this::onClick);
+        renderer.withRenderStep(location -> new ChunkTimeRenderStep((ChunkTimeLocation) location));
+
+        if (mod == SupportedMods.JourneyMap && Util.isJourneyMapV6Installed()) {
+            // Native overlays are the only route onto the JM6 minimap.
+            renderer.withJourneyMapV6Overlays(
+                    location -> ChunkPolygonJM6.create(
+                            location,
+                            ((ChunkTimeLocation) location).getColor(),
+                            modOpis.overlayAlphaTiming / 255f),
+                    true);
+        }
+        return renderer;
+    }
+
+    @Override
+    public void onUpdatePre(int minX, int maxX, int minZ, int maxZ) {
+        // Fullscreen integrations recache enabled layers even when toggled off.
+        if (!isLayerActive()) return;
+
+        long now = System.currentTimeMillis();
+        if (now - lastRequest < modOpis.overlayRefreshInterval) return;
+
+        lastRequest = now;
+        PacketManager.sendToServer(
+                new PacketReqData(
+                        Message.LIST_TIMING_CHUNK_DIM,
+                        new SerialInt(Minecraft.getMinecraft().thePlayer.dimension)));
+    }
+
+    @Override
+    protected Collection<ChunkTimeLocation> generateVisibleLocations(int minBlockX, int minBlockZ, int maxBlockX,
+            int maxBlockZ, int dimension) {
+        List<StatsChunk> stats = chunkStats;
+
+        // Per dimension: the server's top 100 is global, so a hotter dimension would wash this one out.
+        double maxTime = 0;
+        for (StatsChunk stat : stats) {
+            if (stat.getChunk().dim == dimension) maxTime = Math.max(maxTime, stat.getDataSum());
+        }
+        if (maxTime <= 0) return Collections.emptyList();
+
+        List<ChunkTimeLocation> locations = new ArrayList<>();
+        for (StatsChunk stat : stats) {
+            CoordinatesChunk chunk = stat.getChunk();
+            if (chunk.dim != dimension) continue;
+            if (chunk.x + 15 < minBlockX || chunk.x > maxBlockX) continue;
+            if (chunk.z + 15 < minBlockZ || chunk.z > maxBlockZ) continue;
+
+            locations.add(new ChunkTimeLocation(stat, stat.getDataSum() / maxTime));
+        }
+        return locations;
+    }
+
+    private boolean onClick(ClickPos click) {
+        if (!click.isDoubleClick()) return false;
+
+        LocationInteractableStep step = click.getLocationRenderStep();
+        if (step == null || !(step.getLocation() instanceof ChunkTimeLocation)) return false;
+
+        CoordinatesChunk chunk = ((ChunkTimeLocation) step.getLocation()).getStats().getChunk();
+        SwingUI.instance().showTab(SelectedTab.TIMINGCHUNKS);
+        selectChunkRow(chunk);
+        return true;
+    }
+
+    /** The chunk is only in the table if the server reported it this run. */
+    private static void selectChunkRow(CoordinatesChunk chunk) {
+        SwingUtilities.invokeLater(() -> {
+            PanelTimingChunks panel = (PanelTimingChunks) TabPanelRegistrar.INSTANCE.getTab(SelectedTab.TIMINGCHUNKS);
+            if (panel == null || panel.getTable() == null) return;
+
+            JTableStats table = panel.getTable();
+            List<ISerializable> rows = table.getTableData();
+            if (rows == null) return;
+
+            for (int i = 0; i < rows.size(); i++) {
+                if (!chunk.equals(((StatsChunk) rows.get(i)).getChunk())) continue;
+
+                int view = table.convertRowIndexToView(i);
+                if (view < 0) return;
+                table.setRowSelectionInterval(view, view);
+                table.scrollRectToVisible(table.getCellRect(view, 0, true));
+                return;
+            }
+        });
+    }
+
+    @Override
+    public void onLayerToggled(boolean toEnable) {
+        super.onLayerToggled(toEnable);
+        // Snapshot is kept so re-enabling redraws immediately.
+        if (toEnable) lastRequest = 0;
+    }
+
+    /** Cached data belongs to one server; keeping it would show its chunks in the next session. */
+    public void clearState() {
+        chunkStats = Collections.emptyList();
+        lastRequest = 0;
+        clearFullCache();
+    }
+
+    /** Exact, because the server always sends this ranked, so equal content arrives in equal order. */
+    private static boolean sameData(List<StatsChunk> a, List<StatsChunk> b) {
+        if (a.size() != b.size()) return false;
+
+        for (int i = 0; i < a.size(); i++) {
+            StatsChunk x = a.get(i), y = b.get(i);
+            if (!x.getChunk().equals(y.getChunk())) return false;
+            if (x.tileEntities != y.tileEntities || x.entities != y.entities) return false;
+            if (Double.compare(x.getDataSum(), y.getDataSum()) != 0) return false;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean handleMessage(Message msg, PacketBase rawdata) {
+        if (msg != Message.LIST_TIMING_CHUNK_DIM) return false;
+
+        List<StatsChunk> stats = new ArrayList<>(rawdata.array.size());
+        for (ISerializable data : rawdata.array) stats.add((StatsChunk) data);
+
+        OpisClientTickHandler.INSTANCE.scheduleOnClientThread(() -> {
+            // Polled every second but only changes per profiler run; rebuilding identical data churns JM6 overlays.
+            if (sameData(chunkStats, stats)) return;
+            chunkStats = stats;
+            clearFullCache();
+        });
+        return true;
+    }
+}

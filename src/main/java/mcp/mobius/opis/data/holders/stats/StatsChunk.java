@@ -60,7 +60,11 @@ public class StatsChunk extends StatAbstract {
         double value = o.getDataSum() - this.getDataSum();
         if (value > 0) return 1;
         if (value < 0) return -1;
-        return 0;
+
+        CoordinatesChunk other = ((StatsChunk) o).chunk;
+        if (chunk.dim != other.dim) return Integer.compare(chunk.dim, other.dim);
+        if (chunk.chunkX != other.chunkX) return Integer.compare(chunk.chunkX, other.chunkX);
+        return Integer.compare(chunk.chunkZ, other.chunkZ);
     }
 
     public String toString() {

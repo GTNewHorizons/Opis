@@ -1,5 +1,7 @@
 package mcp.mobius.opis;
 
+import java.util.Map;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraftforge.common.MinecraftForge;
@@ -17,8 +19,11 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppedEvent;
+import cpw.mods.fml.common.network.NetworkCheckHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.common.versioning.ComparableVersion;
 import cpw.mods.fml.relauncher.FMLLaunchHandler;
+import cpw.mods.fml.relauncher.Side;
 import mcp.mobius.Tags;
 import mcp.mobius.mobiuscore.profiler.ProfilerSection;
 import mcp.mobius.opis.api.MessageHandlerRegistrar;
@@ -57,6 +62,7 @@ import mcp.mobius.opis.events.OpisServerTickHandler;
 import mcp.mobius.opis.events.PlayerTracker;
 import mcp.mobius.opis.helpers.ModIdentification;
 import mcp.mobius.opis.network.PacketManager;
+import mcp.mobius.opis.network.ServerMessageHandler;
 import mcp.mobius.opis.network.enums.AccessLevel;
 import mcp.mobius.opis.network.enums.Message;
 import mcp.mobius.opis.proxy.ProxyServer;
@@ -67,6 +73,8 @@ import mcp.mobius.opis.tools.TileLag;
 
 @Mod(modid = "Opis", name = "Opis", version = Tags.VERSION, acceptableRemoteVersions = "*")
 public class modOpis {
+
+    private static final ComparableVersion NAVIGATOR_PROTOCOL_VERSION = new ComparableVersion("1.4.12-mapless");
 
     @Instance("Opis")
     public static modOpis instance;
@@ -83,6 +91,9 @@ public class modOpis {
     public static boolean rconactive = false;
     public static String rconpass = "";
     public static boolean microseconds = true;
+    public static int overlayRefreshInterval = 1000;
+    public static int overlayAlphaTiming = 200;
+    public static int overlayAlphaLoaded = 80;
     private static int lagGenID = -1;
     public static volatile CoordinatesBlock selectedBlock = null;
     public static boolean swingOpen = false;
@@ -92,6 +103,8 @@ public class modOpis {
     public static String commentTables = "Minimum access level to be able to view tables in /opis command. Valid values : NONE, PRIVILEGED, ADMIN";
     public static String commentOpis = "Minimum access level to be open Opis interface. Valid values : NONE, PRIVILEGED, ADMIN";
     public static String commentPrivileged = "List of players with PRIVILEGED access level.";
+    public static String commentOverlayRefresh = "How often the map overlays ask the server for fresh data, in milliseconds. Raise it to cut bandwidth; the loaded chunk overlay sends 13 bytes per loaded chunk each time.";
+    public static String commentOverlayAlpha = "Opacity of the map overlay chunk fill. 0 is invisible, 255 is opaque.";
 
     public modOpis() throws ReflectiveOperationException {
         final boolean isHeadless = Boolean.getBoolean("java.awt.headless");
@@ -104,6 +117,14 @@ public class modOpis {
         MessageHandlerRegistrar.INSTANCE.suppressUnhandledMsgLogs = FMLLaunchHandler.side().isClient() && isHeadless;
     }
 
+    /** Opis remains optional remotely, but peers with the Navigator packet additions must speak the same protocol. */
+    @NetworkCheckHandler
+    public boolean checkRemoteVersion(Map<String, String> remoteVersions, Side remoteSide) {
+        String remoteVersion = remoteVersions.get("Opis");
+        return remoteVersion == null || Tags.VERSION.equals(remoteVersion)
+                || new ComparableVersion(remoteVersion).compareTo(NAVIGATOR_PROTOCOL_VERSION) >= 0;
+    }
+
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
 
@@ -113,6 +134,13 @@ public class modOpis {
         lagGenID = config.get(Configuration.CATEGORY_GENERAL, "laggenerator_id", -1).getInt();
         profilerMaxTicks = config.get(Configuration.CATEGORY_GENERAL, "profiler.maxpts", 250).getInt();
         microseconds = config.get(Configuration.CATEGORY_GENERAL, "display.microseconds", true).getBoolean(true);
+        overlayRefreshInterval = config
+                .get(Configuration.CATEGORY_GENERAL, "overlay.refresh_ms", 1000, commentOverlayRefresh, 250, 60000)
+                .getInt();
+        overlayAlphaTiming = config
+                .get(Configuration.CATEGORY_GENERAL, "overlay.alpha.timing", 200, commentOverlayAlpha, 0, 255).getInt();
+        overlayAlphaLoaded = config
+                .get(Configuration.CATEGORY_GENERAL, "overlay.alpha.loaded", 80, commentOverlayAlpha, 0, 255).getInt();
         rconport = config.get("REMOTE_CONSOLE", "opisrcon.port", 25566).getInt();
         rconactive = config.get("REMOTE_CONSOLE", "opisrcon.active", false).getBoolean(false);
         rconpass = config.get("REMOTE_CONSOLE", "opisrcon.password", "").getString();
@@ -121,10 +149,11 @@ public class modOpis {
         AccessLevel minTables = AccessLevel.PRIVILEGED;
         AccessLevel openOpis = AccessLevel.PRIVILEGED;
         try {
-            openOpis = AccessLevel.valueOf(config.get("ACCESS_RIGHTS", "opis", "NONE", commentTables).getString());
+            openOpis = AccessLevel.valueOf(config.get("ACCESS_RIGHTS", "opis", "PRIVILEGED", commentOpis).getString());
         } catch (IllegalArgumentException e) {}
         try {
-            minTables = AccessLevel.valueOf(config.get("ACCESS_RIGHTS", "tables", "NONE", commentTables).getString());
+            minTables = AccessLevel
+                    .valueOf(config.get("ACCESS_RIGHTS", "tables", "PRIVILEGED", commentTables).getString());
         } catch (IllegalArgumentException e) {}
 
         Message.setTablesMinimumLevel(minTables);
@@ -215,5 +244,8 @@ public class modOpis {
     @EventHandler
     public void serverStopped(FMLServerStoppedEvent event) {
         OpisServerTickHandler.INSTANCE.purgeScheduledCallQueue();
+        OpisServerTickHandler.INSTANCE.cachedAccess.clear();
+        ServerMessageHandler.instance().clearSessionState();
+        PlayerTracker.INSTANCE.clearSessionState();
     }
 }

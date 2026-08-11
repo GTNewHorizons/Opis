@@ -4,18 +4,21 @@ import net.minecraft.util.ResourceLocation;
 
 import org.apache.logging.log4j.Level;
 
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.ModContainer;
+import cpw.mods.fml.common.versioning.VersionParser;
 import cpw.mods.fml.relauncher.Side;
 import mcp.mobius.mobiuscore.profiler.ProfilerSection;
 import mcp.mobius.opis.api.IMessageHandler;
 import mcp.mobius.opis.api.MessageHandlerRegistrar;
 import mcp.mobius.opis.api.TabPanelRegistrar;
 import mcp.mobius.opis.data.client.DataCache;
-import mcp.mobius.opis.data.managers.ChunkManager;
 import mcp.mobius.opis.data.managers.MetaManager;
 import mcp.mobius.opis.data.managers.StringCache;
 import mcp.mobius.opis.events.OpisClientTickHandler;
 import mcp.mobius.opis.gui.font.Fonts;
 import mcp.mobius.opis.gui.font.TrueTypeFont;
+import mcp.mobius.opis.gui.overlay.OpisLayers;
 import mcp.mobius.opis.modOpis;
 import mcp.mobius.opis.network.PacketBase;
 import mcp.mobius.opis.network.enums.Message;
@@ -192,12 +195,30 @@ public class ProxyClient extends ProxyServer implements IMessageHandler {
         MessageHandlerRegistrar.INSTANCE.registerHandler(Message.CLIENT_START_PROFILING, modOpis.proxy);
         MessageHandlerRegistrar.INSTANCE.registerHandler(Message.CLIENT_SHOW_RENDER_TICK, modOpis.proxy);
 
-        MessageHandlerRegistrar.INSTANCE.registerHandler(Message.LIST_TIMING_CHUNK, ChunkManager.INSTANCE);
-        MessageHandlerRegistrar.INSTANCE.registerHandler(Message.LIST_CHUNK_LOADED, ChunkManager.INSTANCE);
-        MessageHandlerRegistrar.INSTANCE.registerHandler(Message.LIST_CHUNK_LOADED_CLEAR, ChunkManager.INSTANCE);
-
         MessageHandlerRegistrar.INSTANCE.registerHandler(Message.STATUS_STRINGUPD, StringCache.INSTANCE);
         MessageHandlerRegistrar.INSTANCE.registerHandler(Message.STATUS_STRINGUPD_FULL, StringCache.INSTANCE);
+
+        MessageHandlerRegistrar.INSTANCE.registerHandler(Message.CLIENT_SHOW_SWING, modOpis.proxy);
+
+        // Keeps every Navigator class behind this branch so Opis still loads without it.
+        if (isNavigatorSupported()) {
+            OpisLayers.init();
+        }
+    }
+
+    /** The layers use APIs added in Navigator 1.1.7, and nothing pins the version for an optional dependency. */
+    private static boolean isNavigatorSupported() {
+        ModContainer navigator = Loader.instance().getIndexedModList().get("navigator");
+        if (navigator == null) return false;
+
+        if (VersionParser.parseRange("[1.1.7,)").containsVersion(navigator.getProcessedVersion())) {
+            return true;
+        }
+
+        modOpis.log.warn(
+                "Navigator {} is too old for the Opis map overlays, which need 1.1.7 or newer. Overlays disabled.",
+                navigator.getVersion());
+        return false;
     }
 
     @Override
@@ -214,6 +235,13 @@ public class ProxyClient extends ProxyServer implements IMessageHandler {
                     modOpis.profilerRun = true;
                     ProfilerSection.activateAll(Side.CLIENT);
                 });
+                break;
+            }
+            case CLIENT_SHOW_SWING: {
+                // First /opis is what puts the layer buttons on the map.
+                if (isNavigatorSupported()) {
+                    OpisClientTickHandler.INSTANCE.scheduleOnClientThread(OpisLayers::show);
+                }
                 break;
             }
             case CLIENT_SHOW_RENDER_TICK: {

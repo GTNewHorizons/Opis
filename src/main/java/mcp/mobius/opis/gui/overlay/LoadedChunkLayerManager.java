@@ -1,0 +1,164 @@
+package mcp.mobius.opis.gui.overlay;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Nullable;
+
+import net.minecraft.client.Minecraft;
+
+import com.gtnewhorizons.navigator.api.model.SupportedMods;
+import com.gtnewhorizons.navigator.api.model.layers.InteractableLayerManager;
+import com.gtnewhorizons.navigator.api.model.layers.LayerRenderer;
+import com.gtnewhorizons.navigator.api.model.layers.UniversalInteractableRenderer;
+import com.gtnewhorizons.navigator.api.model.steps.LocationInteractableStep;
+import com.gtnewhorizons.navigator.api.util.ClickPos;
+import com.gtnewhorizons.navigator.api.util.Util;
+
+import mcp.mobius.opis.api.IMessageHandler;
+import mcp.mobius.opis.api.MessageHandlerRegistrar;
+import mcp.mobius.opis.data.holders.ISerializable;
+import mcp.mobius.opis.data.holders.basetypes.CoordinatesChunk;
+import mcp.mobius.opis.data.holders.basetypes.SerialInt;
+import mcp.mobius.opis.events.OpisClientTickHandler;
+import mcp.mobius.opis.modOpis;
+import mcp.mobius.opis.network.PacketBase;
+import mcp.mobius.opis.network.PacketManager;
+import mcp.mobius.opis.network.enums.Message;
+import mcp.mobius.opis.network.packets.client.PacketReqData;
+import mcp.mobius.opis.swing.SelectedTab;
+import mcp.mobius.opis.swing.SwingUI;
+
+/** Navigator layer showing which chunks the server has loaded, and which are held by a ticket. */
+public class LoadedChunkLayerManager extends InteractableLayerManager implements IMessageHandler {
+
+    public static final LoadedChunkLayerManager INSTANCE = new LoadedChunkLayerManager();
+
+    /** The server splits a set across several packets and ends it with a clear. */
+    private final List<CoordinatesChunk> pending = new ArrayList<>();
+    private List<CoordinatesChunk> chunks = Collections.emptyList();
+    private long lastRequest = 0;
+
+    private LoadedChunkLayerManager() {
+        super(LoadedChunkButtonManager.INSTANCE);
+    }
+
+    /** Listens for data without showing a button yet. */
+    public static void init() {
+        MessageHandlerRegistrar.INSTANCE.registerHandler(Message.LIST_CHUNK_LOADED, INSTANCE);
+        MessageHandlerRegistrar.INSTANCE.registerHandler(Message.LIST_CHUNK_LOADED_CLEAR, INSTANCE);
+    }
+
+    @Override
+    protected @Nullable LayerRenderer addLayerRenderer(InteractableLayerManager manager, SupportedMods mod) {
+        UniversalInteractableRenderer renderer = new UniversalInteractableRenderer(manager)
+                .withClickAction(this::onClick);
+        renderer.withRenderStep(location -> new LoadedChunkRenderStep((LoadedChunkLocation) location));
+
+        if (mod == SupportedMods.JourneyMap && Util.isJourneyMapV6Installed()) {
+            renderer.withJourneyMapV6Overlays(
+                    location -> ChunkPolygonJM6.create(
+                            location,
+                            ((LoadedChunkLocation) location).getColor(),
+                            modOpis.overlayAlphaLoaded / 255f),
+                    true);
+        }
+        return renderer;
+    }
+
+    @Override
+    public void onUpdatePre(int minX, int maxX, int minZ, int maxZ) {
+        // Fullscreen integrations recache enabled layers even when toggled off.
+        if (!isLayerActive()) return;
+
+        long now = System.currentTimeMillis();
+        if (now - lastRequest < modOpis.overlayRefreshInterval) return;
+
+        lastRequest = now;
+        PacketManager.sendToServer(
+                new PacketReqData(
+                        Message.LIST_CHUNK_LOADED,
+                        new SerialInt(Minecraft.getMinecraft().thePlayer.dimension)));
+    }
+
+    @Override
+    protected Collection<LoadedChunkLocation> generateVisibleLocations(int minBlockX, int minBlockZ, int maxBlockX,
+            int maxBlockZ, int dimension) {
+        List<LoadedChunkLocation> locations = new ArrayList<>();
+
+        for (CoordinatesChunk chunk : chunks) {
+            if (chunk.dim != dimension) continue;
+            if (chunk.x + 15 < minBlockX || chunk.x > maxBlockX) continue;
+            if (chunk.z + 15 < minBlockZ || chunk.z > maxBlockZ) continue;
+
+            locations.add(new LoadedChunkLocation(chunk));
+        }
+        return locations;
+    }
+
+    /** Only forced chunks have a table to open, so other clicks are left unconsumed. */
+    private boolean onClick(ClickPos click) {
+        if (!click.isDoubleClick()) return false;
+
+        LocationInteractableStep step = click.getLocationRenderStep();
+        if (step == null || !(step.getLocation() instanceof LoadedChunkLocation)) return false;
+        if (!((LoadedChunkLocation) step.getLocation()).isForced()) return false;
+
+        SwingUI.instance().showTab(SelectedTab.FORCELOADS);
+        return true;
+    }
+
+    @Override
+    public void onLayerToggled(boolean toEnable) {
+        super.onLayerToggled(toEnable);
+        // Snapshot is kept so re-enabling redraws immediately.
+        if (toEnable) lastRequest = 0;
+    }
+
+    /** Exact rather than hashed, and order-independent because the server builds the list from a HashSet. */
+    private static boolean sameChunks(List<CoordinatesChunk> a, List<CoordinatesChunk> b) {
+        if (a.size() != b.size()) return false;
+
+        // CoordinatesChunk.equals ignores metadata, which is the colour, so compare it explicitly.
+        Map<CoordinatesChunk, Byte> previous = new HashMap<>(a.size());
+        for (CoordinatesChunk chunk : a) previous.put(chunk, chunk.metadata);
+
+        for (CoordinatesChunk chunk : b) {
+            Byte metadata = previous.get(chunk);
+            if (metadata == null || metadata != chunk.metadata) return false;
+        }
+        return true;
+    }
+
+    /** Wipes everything tied to one server, so a later session cannot show its chunks. */
+    public void clearState() {
+        pending.clear();
+        chunks = Collections.emptyList();
+        lastRequest = 0;
+        clearFullCache();
+    }
+
+    @Override
+    public boolean handleMessage(Message msg, PacketBase rawdata) {
+        if (msg == Message.LIST_CHUNK_LOADED) {
+            for (ISerializable chunk : rawdata.array) pending.add((CoordinatesChunk) chunk);
+            return true;
+        }
+        if (msg != Message.LIST_CHUNK_LOADED_CLEAR) return false;
+
+        // Sent after a batch, so it marks the set complete.
+        List<CoordinatesChunk> updated = new ArrayList<>(pending);
+        pending.clear();
+        OpisClientTickHandler.INSTANCE.scheduleOnClientThread(() -> {
+            // Resent every second even when unchanged; rebuilding identical data churns the JM6 overlays.
+            if (sameChunks(chunks, updated)) return;
+            chunks = updated;
+            clearFullCache();
+        });
+        return true;
+    }
+}
